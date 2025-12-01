@@ -1,0 +1,797 @@
+SCR_PlayerController DefaultPlayerControllerMP1 : "{225E51284CC95CFA}Prefabs/Characters/Core/DefaultPlayerControllerMP.et" {
+ components {
+  SCR_ResourceComponent "{66F0562B874E5274}" {
+   m_aContainers {
+    SCR_ResourceContainer "{66F0562B8EC63284}" {
+     m_eResourceRights ALL
+     m_fResourceValueMax 9999999827968
+    }
+   }
+   m_aConsumers {
+    SCR_ResourceConsumer "{66F0562BF7AA46EA}" {
+     m_eResourceRights ALL
+     m_eGeneratorIdentifier DEFAULT
+    }
+   }
+   m_aGenerators {
+    SCR_ResourceGenerator "{66F0562A13B97F07}" {
+     m_eResourceRights ALL
+     m_eIdentifier DEFAULT
+     m_aActions {
+      SCR_ResourceGeneratorActionStore "{66F408A816AB3242}" {
+      }
+     }
+    }
+   }
+  }
+ }
+ coords 130.659 1 158.002
+}
+GenericEntity : "{1326C928CD27EC87}Prefabs/Compositions/Misc/SubCompositions/Storage/Slotted/Shelter_Arsenal_FIA_01.et" {
+ coords 120.651 1 157.138
+}
+SCR_ChimeraCharacter : "{37578B1666981FCE}Prefabs/Characters/Core/Character_Base.et" {
+ coords 138.175 1 156.427
+}
+GenericEntity : "{658116C15069D447}Prefabs/Compositions/Misc/CustomEntities/InteractionPoints/ArsenalBox_FIA_Weapons_NoAffiliation.et" {
+ coords 125.119 1 159.066
+ angles 0 0 0
+}
+$grp SCR_ChimeraCharacter : "{B3AB6D12D247DDB5}Prefabs/Characters/Factions/CIV/Businessman/Character_CIV_Businessman_Randomized.et" {
+ {
+  components {
+   DE_TraderComponent "{66F20DAF30BD62A3}" {
+   }
+   SCR_ResourceComponent "{66F20DAF2584F583}" {
+    m_aConsumers {
+     SCR_ResourceConsumer "{66F20DAF54748533}" {
+      m_sDebugName "Trader - Consumer"
+      m_eResourceRights ALL
+      m_eResourceType CASH
+      m_eGeneratorIdentifier DEFAULT
+      m_fResourceRange 185
+      m_ContainerQueue SCR_ResourceConsumerContainerQueue "{66F20DAF4DEFB827}" {
+       m_StoragePolicies {
+        SCR_ResourceConsumerStoragePolicy "{66F20DAF4ECF13E4}" {
+         m_StorageQueue SCR_ResourceConsumerContainerStorageQueueExtended "{66F20DAF4F1C0C65}" {
+         }
+        }
+       }
+      }
+     }
+    }
+    m_aGenerators {
+     SCR_ResourceGenerator "{66F20DAF5CA1D753}" {
+      m_sDebugName "Trader - Generator"
+      m_eResourceRights ALL
+      m_eResourceType CASH
+      m_fStorageRange 135
+      m_ContainerQueue SCR_ResourceGeneratorContainerQueue "{66F20DAF47615FEB}" {
+       m_StoragePolicies {
+        SCR_ResourceGeneratorStoragePolicy "{66F20DAF4946B77F}" {
+         m_StorageQueue SCR_ResourceGeneratorContainerStorageQueueExtended "{66F20DAF4C884B2F}" {
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+  coords 128.534 1 156.953
+  {
+   DE_TraderEntity {
+    components {
+     SCR_ArsenalComponent "{66F20DAEA9457C3D}" {
+      m_eSupportedArsenalItemTypes 8388606
+      m_eSupportedArsenalItemModes 510
+      m_eEditableAttributeGroups 30
+      m_eArsenalSaveType NO_RESTRICTIONS
+     }
+     SCR_FactionAffiliationComponent "{66F20DA1F1BC7EDE}" {
+      "faction affiliation" "US"
+     }
+     SCR_ResourceComponent "{66F20DA031486D2E}" {
+      m_aConsumers {
+       SCR_ResourceConsumer "{66F20DA039095B8F}" {
+        m_sDebugName "Trader - Consumer"
+        m_eResourceRights ALL
+        m_eResourceType CASH
+        m_eGeneratorIdentifier DEFAULT
+        m_fResourceRange 185
+        m_fSellMultiplier 1
+        m_ContainerQueue SCR_ResourceConsumerContainerQueue "{66F20DA03CBCA387}" {
+         m_StoragePolicies {
+          SCR_ResourceConsumerStoragePolicy "{66F20DA03D935408}" {
+           m_StorageQueue SCR_ResourceConsumerContainerStorageQueueExtended "{66F20DA03EC02B6E}" {
+           }
+          }
+          SCR_ResourceConsumerStoragePolicy "{66F20DA2A13A5227}" {
+           m_StorageQueue SCR_ResourceConsumerContainerStorageQueueExtended "{66F20DA2A3922FF7}" {
+           }
+           m_eStorageType STORED
+          }
+         }
+        }
+       }
+      }
+      m_aGenerators {
+       SCR_ResourceGenerator "{66F20DA0256B4DB7}" {
+        m_sDebugName "Trader - Generator"
+        m_eResourceRights ALL
+        m_eResourceType CASH
+        m_ContainerQueue SCR_ResourceGeneratorContainerQueue "{66F20DA02A2661A6}" {
+         m_StoragePolicies {
+          SCR_ResourceGeneratorStoragePolicy "{66F20DA02B4F3156}" {
+           m_StorageQueue SCR_ResourceGeneratorContainerStorageQueueExtended "{66F20DA02D7D643B}" {
+           }
+          }
+          SCR_ResourceGeneratorStoragePolicy "{66F20DA2BD296802}" {
+           m_StorageQueue SCR_ResourceGeneratorContainerStorageQueueExtended "{66F20DA2BFBE8DF2}" {
+           }
+           m_eStorageType STORED
+          }
+         }
+        }
+        m_aActions {
+         SCR_ResourceGeneratorActionStore "{66F425A9AB877B16}" {
+         }
+        }
+       }
+      }
+     }
+     UniversalInventoryStorageComponent "{66F20DAEAC0ADF9C}" {
+      Attributes SCR_ItemAttributeCollection "{66F20DA116AE1AAC}" {
+       ItemDisplayName SCR_InventoryUIInfo "{58A17A3474A3430E}" {
+        Name "Trader"
+        Description "Trader Inventory"
+        m_aItemHints {
+         SCR_SupplyAvailableItemHintUIInfo "{5E76A7E6F3D189F7}" {
+         }
+        }
+       }
+       m_bDraggable 0
+      }
+      UseCapacityCoefficient 0
+      MaxCumulativeVolume 1000000
+      MaxItemSize 1000 1000 1000
+     }
+     SCR_ArsenalInventoryStorageManagerComponent "{66F20DA1A3BAE463}" {
+     }
+     ActionsManagerComponent "{66F20DAED3B6486F}" {
+      ActionContexts {
+       UserActionContext "{66F20DAEC093B994}" {
+        UIInfo UIInfo "{66F20DAEC370DC80}" {
+         Name "Trader"
+        }
+        ContextName "default"
+        Position PointInfo "{66F20DA10F52CAB5}" {
+        }
+        Radius 3
+       }
+      }
+      additionalActions {
+       SCR_OpenStorageAction "{66F20DAEDC1836CA}" {
+        ParentContextList {
+         "default"
+        }
+        UIInfo UIInfo "{52E6EC759A11C684}" {
+         Name "Trade"
+         Icon "{B4C4D03DEC63F508}UI/Textures/Icons/InventoryHints/InventoryHint_SuppliesCost.edds"
+        }
+       }
+      }
+     }
+     RplComponent "{66F20DAEBCF6C730}" {
+     }
+     Hierarchy "{66F20DAEB91B534F}" {
+     }
+    }
+    coords 0.015 1.61 -0.028
+   }
+  }
+ }
+ {
+  components {
+   DE_TraderComponent "{66F20DAF30BD62A3}" {
+   }
+   SCR_ResourceComponent "{66F20DAF2584F583}" {
+    m_aConsumers {
+     SCR_ResourceConsumer "{66F20DAF54748533}" {
+      m_sDebugName "Trader - Consumer"
+      m_eResourceRights ALL
+      m_eResourceType CASH
+      m_eGeneratorIdentifier DEFAULT
+      m_fResourceRange 185
+      m_ContainerQueue SCR_ResourceConsumerContainerQueue "{66F20DAF4DEFB827}" {
+       m_StoragePolicies {
+        SCR_ResourceConsumerStoragePolicy "{66F20DAF4ECF13E4}" {
+         m_StorageQueue SCR_ResourceConsumerContainerStorageQueueExtended "{66F20DAF4F1C0C65}" {
+         }
+        }
+       }
+      }
+     }
+    }
+    m_aGenerators {
+     SCR_ResourceGenerator "{66F20DAF5CA1D753}" {
+      m_sDebugName "Trader - Generator"
+      m_eResourceRights ALL
+      m_eResourceType CASH
+      m_fStorageRange 135
+      m_ContainerQueue SCR_ResourceGeneratorContainerQueue "{66F20DAF47615FEB}" {
+       m_StoragePolicies {
+        SCR_ResourceGeneratorStoragePolicy "{66F20DAF4946B77F}" {
+         m_StorageQueue SCR_ResourceGeneratorContainerStorageQueueExtended "{66F20DAF4C884B2F}" {
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+  coords 130.667 1 156.953
+  {
+   DE_TraderEntity {
+    components {
+     SCR_ArsenalComponent "{66F20DAEA9457C3D}" {
+      m_eSupportedArsenalItemTypes 394046
+      m_eSupportedArsenalItemModes 510
+      m_eEditableAttributeGroups 30
+      m_eArsenalSaveType NO_RESTRICTIONS
+     }
+     SCR_FactionAffiliationComponent "{66F20DA1F1BC7EDE}" {
+      "faction affiliation" "US"
+     }
+     SCR_ResourceComponent "{66F20DA031486D2E}" {
+      m_aConsumers {
+       SCR_ResourceConsumer "{66F20DA039095B8F}" {
+        m_sDebugName "Trader - Consumer"
+        m_eResourceRights ALL
+        m_eResourceType CASH
+        m_eGeneratorIdentifier DEFAULT
+        m_fResourceRange 185
+        m_fSellMultiplier 1
+        m_ContainerQueue SCR_ResourceConsumerContainerQueue "{66F20DA03CBCA387}" {
+         m_StoragePolicies {
+          SCR_ResourceConsumerStoragePolicy "{66F20DA03D935408}" {
+           m_StorageQueue SCR_ResourceConsumerContainerStorageQueueExtended "{66F20DA03EC02B6E}" {
+           }
+          }
+          SCR_ResourceConsumerStoragePolicy "{66F20DA2A13A5227}" {
+           m_StorageQueue SCR_ResourceConsumerContainerStorageQueueExtended "{66F20DA2A3922FF7}" {
+           }
+           m_eStorageType STORED
+          }
+         }
+        }
+       }
+      }
+      m_aGenerators {
+       SCR_ResourceGenerator "{66F20DA0256B4DB7}" {
+        m_sDebugName "Trader - Generator"
+        m_eResourceRights ALL
+        m_eResourceType CASH
+        m_ContainerQueue SCR_ResourceGeneratorContainerQueue "{66F20DA02A2661A6}" {
+         m_StoragePolicies {
+          SCR_ResourceGeneratorStoragePolicy "{66F20DA02B4F3156}" {
+           m_StorageQueue SCR_ResourceGeneratorContainerStorageQueueExtended "{66F20DA02D7D643B}" {
+           }
+          }
+          SCR_ResourceGeneratorStoragePolicy "{66F20DA2BD296802}" {
+           m_StorageQueue SCR_ResourceGeneratorContainerStorageQueueExtended "{66F20DA2BFBE8DF2}" {
+           }
+           m_eStorageType STORED
+          }
+         }
+        }
+        m_aActions {
+         SCR_ResourceGeneratorActionStore "{66F425A9AB877B16}" {
+         }
+        }
+       }
+      }
+     }
+     UniversalInventoryStorageComponent "{66F20DAEAC0ADF9C}" {
+      Attributes SCR_ItemAttributeCollection "{66F20DA116AE1AAC}" {
+       ItemDisplayName SCR_InventoryUIInfo "{58A17A3474A3430E}" {
+        Name "Trader"
+        Description "Trader Inventory"
+        m_aItemHints {
+         SCR_SupplyAvailableItemHintUIInfo "{5E76A7E6F3D189F7}" {
+         }
+        }
+       }
+       m_bDraggable 0
+      }
+      UseCapacityCoefficient 0
+      MaxCumulativeVolume 1000000
+      MaxItemSize 1000 1000 1000
+     }
+     SCR_ArsenalInventoryStorageManagerComponent "{66F20DA1A3BAE463}" {
+     }
+     ActionsManagerComponent "{66F20DAED3B6486F}" {
+      ActionContexts {
+       UserActionContext "{66F20DAEC093B994}" {
+        UIInfo UIInfo "{66F20DAEC370DC80}" {
+         Name "Trader"
+        }
+        ContextName "default"
+        Position PointInfo "{66F20DA10F52CAB5}" {
+        }
+        Radius 3
+       }
+      }
+      additionalActions {
+       SCR_OpenStorageAction "{66F20DAEDC1836CA}" {
+        ParentContextList {
+         "default"
+        }
+        UIInfo UIInfo "{52E6EC759A11C684}" {
+         Name "Trade"
+         Icon "{B4C4D03DEC63F508}UI/Textures/Icons/InventoryHints/InventoryHint_SuppliesCost.edds"
+        }
+       }
+      }
+     }
+     RplComponent "{66F20DAEBCF6C730}" {
+     }
+     Hierarchy "{66F20DAEB91B534F}" {
+     }
+    }
+    coords 0.015 1.61 -0.028
+    traderName "Arms Dealer"
+   }
+  }
+ }
+ {
+  components {
+   DE_TraderComponent "{66F20DAF30BD62A3}" {
+   }
+   SCR_ResourceComponent "{66F20DAF2584F583}" {
+    m_aConsumers {
+     SCR_ResourceConsumer "{66F20DAF54748533}" {
+      m_sDebugName "Trader - Consumer"
+      m_eResourceRights ALL
+      m_eResourceType CASH
+      m_eGeneratorIdentifier DEFAULT
+      m_fResourceRange 185
+      m_ContainerQueue SCR_ResourceConsumerContainerQueue "{66F20DAF4DEFB827}" {
+       m_StoragePolicies {
+        SCR_ResourceConsumerStoragePolicy "{66F20DAF4ECF13E4}" {
+         m_StorageQueue SCR_ResourceConsumerContainerStorageQueueExtended "{66F20DAF4F1C0C65}" {
+         }
+        }
+       }
+      }
+     }
+    }
+    m_aGenerators {
+     SCR_ResourceGenerator "{66F20DAF5CA1D753}" {
+      m_sDebugName "Trader - Generator"
+      m_eResourceRights ALL
+      m_eResourceType CASH
+      m_fStorageRange 135
+      m_ContainerQueue SCR_ResourceGeneratorContainerQueue "{66F20DAF47615FEB}" {
+       m_StoragePolicies {
+        SCR_ResourceGeneratorStoragePolicy "{66F20DAF4946B77F}" {
+         m_StorageQueue SCR_ResourceGeneratorContainerStorageQueueExtended "{66F20DAF4C884B2F}" {
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+  coords 132.356 1 156.953
+  {
+   DE_TraderEntity {
+    components {
+     SCR_ArsenalComponent "{66F20DAEA9457C3D}" {
+      m_eSupportedArsenalItemTypes HEAL
+      m_eSupportedArsenalItemModes 34
+      m_eEditableAttributeGroups 30
+      m_eArsenalSaveType NO_RESTRICTIONS
+     }
+     SCR_FactionAffiliationComponent "{66F20DA1F1BC7EDE}" {
+      "faction affiliation" "US"
+     }
+     SCR_ResourceComponent "{66F20DA031486D2E}" {
+      m_aConsumers {
+       SCR_ResourceConsumer "{66F20DA039095B8F}" {
+        m_sDebugName "Trader - Consumer"
+        m_eResourceRights ALL
+        m_eResourceType CASH
+        m_eGeneratorIdentifier DEFAULT
+        m_fResourceRange 185
+        m_fSellMultiplier 1
+        m_ContainerQueue SCR_ResourceConsumerContainerQueue "{66F20DA03CBCA387}" {
+         m_StoragePolicies {
+          SCR_ResourceConsumerStoragePolicy "{66F20DA03D935408}" {
+           m_StorageQueue SCR_ResourceConsumerContainerStorageQueueExtended "{66F20DA03EC02B6E}" {
+           }
+          }
+          SCR_ResourceConsumerStoragePolicy "{66F20DA2A13A5227}" {
+           m_StorageQueue SCR_ResourceConsumerContainerStorageQueueExtended "{66F20DA2A3922FF7}" {
+           }
+           m_eStorageType STORED
+          }
+         }
+        }
+       }
+      }
+      m_aGenerators {
+       SCR_ResourceGenerator "{66F20DA0256B4DB7}" {
+        m_sDebugName "Trader - Generator"
+        m_eResourceRights ALL
+        m_eResourceType CASH
+        m_ContainerQueue SCR_ResourceGeneratorContainerQueue "{66F20DA02A2661A6}" {
+         m_StoragePolicies {
+          SCR_ResourceGeneratorStoragePolicy "{66F20DA02B4F3156}" {
+           m_StorageQueue SCR_ResourceGeneratorContainerStorageQueueExtended "{66F20DA02D7D643B}" {
+           }
+          }
+          SCR_ResourceGeneratorStoragePolicy "{66F20DA2BD296802}" {
+           m_StorageQueue SCR_ResourceGeneratorContainerStorageQueueExtended "{66F20DA2BFBE8DF2}" {
+           }
+           m_eStorageType STORED
+          }
+         }
+        }
+        m_aActions {
+         SCR_ResourceGeneratorActionStore "{66F425A9AB877B16}" {
+         }
+        }
+       }
+      }
+     }
+     UniversalInventoryStorageComponent "{66F20DAEAC0ADF9C}" {
+      Attributes SCR_ItemAttributeCollection "{66F20DA116AE1AAC}" {
+       ItemDisplayName SCR_InventoryUIInfo "{58A17A3474A3430E}" {
+        Name "Trader"
+        Description "Trader Inventory"
+        m_aItemHints {
+         SCR_SupplyAvailableItemHintUIInfo "{5E76A7E6F3D189F7}" {
+         }
+        }
+       }
+       m_bDraggable 0
+      }
+      UseCapacityCoefficient 0
+      MaxCumulativeVolume 1000000
+      MaxItemSize 1000 1000 1000
+     }
+     SCR_ArsenalInventoryStorageManagerComponent "{66F20DA1A3BAE463}" {
+     }
+     ActionsManagerComponent "{66F20DAED3B6486F}" {
+      ActionContexts {
+       UserActionContext "{66F20DAEC093B994}" {
+        UIInfo UIInfo "{66F20DAEC370DC80}" {
+         Name "Trader"
+        }
+        ContextName "default"
+        Position PointInfo "{66F20DA10F52CAB5}" {
+        }
+        Radius 3
+       }
+      }
+      additionalActions {
+       SCR_OpenStorageAction "{66F20DAEDC1836CA}" {
+        ParentContextList {
+         "default"
+        }
+        UIInfo UIInfo "{52E6EC759A11C684}" {
+         Name "Trade"
+         Icon "{B4C4D03DEC63F508}UI/Textures/Icons/InventoryHints/InventoryHint_SuppliesCost.edds"
+        }
+       }
+      }
+     }
+     RplComponent "{66F20DAEBCF6C730}" {
+     }
+     Hierarchy "{66F20DAEB91B534F}" {
+     }
+    }
+    coords 0.015 1.61 -0.028
+    traderName "Medic"
+    traderMargin 0.1
+   }
+  }
+ }
+ {
+  components {
+   DE_TraderComponent "{66F20DAF30BD62A3}" {
+   }
+   SCR_ResourceComponent "{66F20DAF2584F583}" {
+    m_aConsumers {
+     SCR_ResourceConsumer "{66F20DAF54748533}" {
+      m_sDebugName "Trader - Consumer"
+      m_eResourceRights ALL
+      m_eResourceType CASH
+      m_eGeneratorIdentifier DEFAULT
+      m_fResourceRange 185
+      m_ContainerQueue SCR_ResourceConsumerContainerQueue "{66F20DAF4DEFB827}" {
+       m_StoragePolicies {
+        SCR_ResourceConsumerStoragePolicy "{66F20DAF4ECF13E4}" {
+         m_StorageQueue SCR_ResourceConsumerContainerStorageQueueExtended "{66F20DAF4F1C0C65}" {
+         }
+        }
+       }
+      }
+     }
+    }
+    m_aGenerators {
+     SCR_ResourceGenerator "{66F20DAF5CA1D753}" {
+      m_sDebugName "Trader - Generator"
+      m_eResourceRights ALL
+      m_eResourceType CASH
+      m_fStorageRange 135
+      m_ContainerQueue SCR_ResourceGeneratorContainerQueue "{66F20DAF47615FEB}" {
+       m_StoragePolicies {
+        SCR_ResourceGeneratorStoragePolicy "{66F20DAF4946B77F}" {
+         m_StorageQueue SCR_ResourceGeneratorContainerStorageQueueExtended "{66F20DAF4C884B2F}" {
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+  coords 133.776 1 156.953
+  {
+   DE_TraderEntity {
+    components {
+     SCR_ArsenalComponent "{66F20DAEA9457C3D}" {
+      m_eSupportedArsenalItemTypes 556160
+      m_eSupportedArsenalItemModes DEFAULT
+      m_eEditableAttributeGroups 30
+      m_eArsenalSaveType NO_RESTRICTIONS
+     }
+     SCR_FactionAffiliationComponent "{66F20DA1F1BC7EDE}" {
+      "faction affiliation" "US"
+     }
+     SCR_ResourceComponent "{66F20DA031486D2E}" {
+      m_aConsumers {
+       SCR_ResourceConsumer "{66F20DA039095B8F}" {
+        m_sDebugName "Trader - Consumer"
+        m_eResourceRights ALL
+        m_eResourceType CASH
+        m_eGeneratorIdentifier DEFAULT
+        m_fResourceRange 185
+        m_fSellMultiplier 1
+        m_ContainerQueue SCR_ResourceConsumerContainerQueue "{66F20DA03CBCA387}" {
+         m_StoragePolicies {
+          SCR_ResourceConsumerStoragePolicy "{66F20DA03D935408}" {
+           m_StorageQueue SCR_ResourceConsumerContainerStorageQueueExtended "{66F20DA03EC02B6E}" {
+           }
+          }
+          SCR_ResourceConsumerStoragePolicy "{66F20DA2A13A5227}" {
+           m_StorageQueue SCR_ResourceConsumerContainerStorageQueueExtended "{66F20DA2A3922FF7}" {
+           }
+           m_eStorageType STORED
+          }
+         }
+        }
+       }
+      }
+      m_aGenerators {
+       SCR_ResourceGenerator "{66F20DA0256B4DB7}" {
+        m_sDebugName "Trader - Generator"
+        m_eResourceRights ALL
+        m_eResourceType CASH
+        m_ContainerQueue SCR_ResourceGeneratorContainerQueue "{66F20DA02A2661A6}" {
+         m_StoragePolicies {
+          SCR_ResourceGeneratorStoragePolicy "{66F20DA02B4F3156}" {
+           m_StorageQueue SCR_ResourceGeneratorContainerStorageQueueExtended "{66F20DA02D7D643B}" {
+           }
+          }
+          SCR_ResourceGeneratorStoragePolicy "{66F20DA2BD296802}" {
+           m_StorageQueue SCR_ResourceGeneratorContainerStorageQueueExtended "{66F20DA2BFBE8DF2}" {
+           }
+           m_eStorageType STORED
+          }
+         }
+        }
+        m_aActions {
+         SCR_ResourceGeneratorActionStore "{66F425A9AB877B16}" {
+         }
+        }
+       }
+      }
+     }
+     UniversalInventoryStorageComponent "{66F20DAEAC0ADF9C}" {
+      Attributes SCR_ItemAttributeCollection "{66F20DA116AE1AAC}" {
+       ItemDisplayName SCR_InventoryUIInfo "{58A17A3474A3430E}" {
+        Name "Trader"
+        Description "Trader Inventory"
+        m_aItemHints {
+         SCR_SupplyAvailableItemHintUIInfo "{5E76A7E6F3D189F7}" {
+         }
+        }
+       }
+       m_bDraggable 0
+      }
+      UseCapacityCoefficient 0
+      MaxCumulativeVolume 1000000
+      MaxItemSize 1000 1000 1000
+     }
+     SCR_ArsenalInventoryStorageManagerComponent "{66F20DA1A3BAE463}" {
+     }
+     ActionsManagerComponent "{66F20DAED3B6486F}" {
+      ActionContexts {
+       UserActionContext "{66F20DAEC093B994}" {
+        UIInfo UIInfo "{66F20DAEC370DC80}" {
+         Name "Trader"
+        }
+        ContextName "default"
+        Position PointInfo "{66F20DA10F52CAB5}" {
+        }
+        Radius 3
+       }
+      }
+      additionalActions {
+       SCR_OpenStorageAction "{66F20DAEDC1836CA}" {
+        ParentContextList {
+         "default"
+        }
+        UIInfo UIInfo "{52E6EC759A11C684}" {
+         Name "Trade"
+         Icon "{B4C4D03DEC63F508}UI/Textures/Icons/InventoryHints/InventoryHint_SuppliesCost.edds"
+        }
+       }
+      }
+     }
+     RplComponent "{66F20DAEBCF6C730}" {
+     }
+     Hierarchy "{66F20DAEB91B534F}" {
+     }
+    }
+    coords 0.015 1.61 -0.028
+    traderName "Swag Merchant"
+    traderMargin 0.1
+   }
+  }
+ }
+ {
+  components {
+   DE_TraderComponent "{66F20DAF30BD62A3}" {
+   }
+   SCR_ResourceComponent "{66F20DAF2584F583}" {
+    m_aConsumers {
+     SCR_ResourceConsumer "{66F20DAF54748533}" {
+      m_sDebugName "Trader - Consumer"
+      m_eResourceRights ALL
+      m_eResourceType CASH
+      m_eGeneratorIdentifier DEFAULT
+      m_fResourceRange 185
+      m_ContainerQueue SCR_ResourceConsumerContainerQueue "{66F20DAF4DEFB827}" {
+       m_StoragePolicies {
+        SCR_ResourceConsumerStoragePolicy "{66F20DAF4ECF13E4}" {
+         m_StorageQueue SCR_ResourceConsumerContainerStorageQueueExtended "{66F20DAF4F1C0C65}" {
+         }
+        }
+       }
+      }
+     }
+    }
+    m_aGenerators {
+     SCR_ResourceGenerator "{66F20DAF5CA1D753}" {
+      m_sDebugName "Trader - Generator"
+      m_eResourceRights ALL
+      m_eResourceType CASH
+      m_fStorageRange 135
+      m_ContainerQueue SCR_ResourceGeneratorContainerQueue "{66F20DAF47615FEB}" {
+       m_StoragePolicies {
+        SCR_ResourceGeneratorStoragePolicy "{66F20DAF4946B77F}" {
+         m_StorageQueue SCR_ResourceGeneratorContainerStorageQueueExtended "{66F20DAF4C884B2F}" {
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+  coords 135.231 1 156.953
+  {
+   DE_BankEntity {
+    components {
+     SignalsManagerComponent "{66F48ECAF9100D7E}" {
+     }
+     ActionsManagerComponent "{66F48E4B62CDEDBF}" {
+      ActionContexts {
+       UserActionContext "{66F48E4B6495FA98}" {
+        UIInfo UIInfo "{66F48E4B922FBE78}" {
+         Name "Bank"
+        }
+        ContextName "default"
+        Position PointInfo "{66F48E4B671818AA}" {
+        }
+        Radius 3
+       }
+      }
+      additionalActions {
+       DE_DepositAllAction "{66F48ECE3B57A8A0}" {
+        ParentContextList {
+         "default"
+        }
+        UIInfo UIInfo "{66F48ECE2EBED3F2}" {
+         Name "Deposit All"
+        }
+        Duration 1
+       }
+       DE_BankAmountAction "{66F48E4FA796F507}" {
+        ParentContextList {
+         "default"
+        }
+        UIInfo UIInfo "{66F48E4FE6AC6871}" {
+         Name "Amount"
+        }
+        Duration -1
+        PerformPerFrame 1
+        "Sort Priority" 1
+        "Signal name" "amount"
+        "Max value" 100000000
+        m_fAdjustmentStep 1
+        m_bManualAdjustment 1
+       }
+       DE_DepositAction "{66F48ECE201C9106}" {
+        ParentContextList {
+         "default"
+        }
+        UIInfo UIInfo "{66F48ECE5D9C2A50}" {
+         Name "Deposit"
+        }
+        Duration 1
+        "Sort Priority" 2
+       }
+       DE_WithdrawAction "{66F48ECE22AD6255}" {
+        ParentContextList {
+         "default"
+        }
+        UIInfo UIInfo "{66F48ECE4496A382}" {
+         Name "Withdraw"
+        }
+        Duration 1
+        "Sort Priority" 3
+       }
+      }
+     }
+     RplComponent "{66F48E4B7B363104}" {
+     }
+     Hierarchy "{66F48E4B796763B4}" {
+     }
+    }
+    coords 0.083 1.592 -0.043
+   }
+  }
+ }
+}
+GenericEntity : "{E5CB44A5FE1DEC03}Prefabs/Compositions/Misc/CustomEntities/InteractionPoints/ArsenalBox_FIA_Equipment_NoAffiliation.et" {
+ coords 126.697 1 159.166
+ angles 0 0 0
+}
+GenericEntity : "{F9C56BFD57E1D1AE}Prefabs/Props/Military/Arsenal/AmmoBoxes/US/AmmoBoxArsenal_Equipment_US.et" {
+ components {
+  SCR_ResourceComponent "{5E5ABDF371AE8B21}" {
+   m_aConsumers {
+    SCR_ResourceConsumer "{5E5ABDF28A4FEC1F}" {
+    }
+   }
+   m_aGenerators {
+    SCR_ResourceGenerator "{5E5AD30768BBE3D1}" {
+    }
+   }
+   m_aDisabledResourceTypes {
+   }
+  }
+ }
+ coords 128.528 1 159.339
+}
+GenericEntity : "{FA0E25CE35EE945F}Prefabs/Weapons/Rifles/AKS74U/Rifle_AKS74UN.et" {
+ coords 129.743 1.249 159.551
+ angles 0 0 77.462
+}

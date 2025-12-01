@@ -1,0 +1,55 @@
+SCR_ChimeraCharacter {
+ ID "520EC961A090B1EE"
+ components {
+  SCR_ResourceComponent "{66F48ECF185E25F4}" {
+   m_aContainers {
+    SCR_ResourceContainer "{66F48ECF1C8FE15D}" {
+     m_sDebugName "Wallet"
+     m_eResourceRights ALL
+     m_eResourceType CASH
+     m_eStorageType STORED
+     m_fResourceValueCurrent 1000
+     m_fResourceValueMax 9999999827968
+    }
+   }
+   m_aConsumers {
+    SCR_ResourceConsumer "{66F48ECF0B3936B9}" {
+     m_sDebugName "Wallet - Consumer"
+     m_eResourceRights ALL
+     m_eResourceType CASH
+     m_eGeneratorIdentifier DEFAULT
+     m_fResourceRange 10
+     m_ContainerQueue SCR_ResourceConsumerContainerQueue "{66F48ECF3158EA87}" {
+      m_StoragePolicies {
+       SCR_ResourceConsumerStoragePolicy "{66F48ECF33814E78}" {
+        m_StorageQueue SCR_ResourceConsumerContainerStorageQueueExtended "{66F48ECF35036DB5}" {
+        }
+        m_eStorageType STORED
+       }
+      }
+     }
+    }
+   }
+   m_aGenerators {
+    SCR_ResourceGenerator "{66F48ECF3896CA37}" {
+     m_sDebugName "Wallet - Generator"
+     m_eResourceRights ALL
+     m_eResourceType CASH
+     m_fStorageRange 1
+     m_ContainerQueue SCR_ResourceGeneratorContainerQueue "{66F48ECF3E996C89}" {
+      m_StoragePolicies {
+       SCR_ResourceGeneratorStoragePolicyGeneric "{66F48ECF3F3CF36F}" {
+        m_StorageQueue SCR_ResourceGeneratorContainerStorageQueueExtended "{66F48ECF21C20D74}" {
+        }
+       }
+      }
+     }
+     m_aActions {
+      SCR_ResourceGeneratorActionStore "{66F48ECF2493683F}" {
+      }
+     }
+    }
+   }
+  }
+ }
+}

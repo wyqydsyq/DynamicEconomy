@@ -1,0 +1,222 @@
+FrameWidgetClass {
+ {
+  OverlayWidgetClass "{60DCC8DF2787CD32}" {
+   Prefab "{60DCC8DF2787CD32}"
+   {
+    SizeLayoutWidgetClass "{589F049780D13CA5}" {
+     Prefab "{589F049780D13CA5}"
+     {
+      VerticalLayoutWidgetClass "{589F049780D13CA3}" {
+       Prefab "{589F049780D13CA3}"
+       {
+        SizeLayoutWidgetClass "{589F049780D13CA2}" {
+         Prefab "{589F049780D13CA2}"
+         {
+          OverlayWidgetClass "{589F1BFADB1DDB0A}" {
+           Prefab "{589F1BFADB1DDB0A}"
+           {
+            HorizontalLayoutWidgetClass "{60DCC8DF2787CD09}" {
+             Prefab "{60DCC8DF2787CD09}"
+             {
+              HorizontalLayoutWidgetClass "{60DCC8DF2787CD08}" {
+               Prefab "{60DCC8DF2787CD08}"
+               {
+                OverlayWidgetClass "{66F292CD91940A5D}" {
+                 Name "PlayerOverlay"
+                 Slot LayoutSlot "{66F292CD91940A65}" {
+                  HorizontalAlign 0
+                  VerticalAlign 0
+                  SizeMode Fill
+                 }
+                 {
+                  SizeLayoutWidgetClass "{66F292CDC75C68FC}" {
+                   Name "SizeLayout0"
+                   Slot OverlayWidgetSlot "{66F292C8310C2905}" {
+                    HorizontalAlign 0
+                    VerticalAlign 0
+                   }
+                   AllowWidthOverride 1
+                   WidthOverride 392
+                   AllowMinDesiredHeight 1
+                   MinDesiredHeight 100
+                   AllowMaxDesiredWidth 1
+                   MaxDesiredWidth 300
+                   {
+                    PanelWidgetClass "{66F292CD9A5FDC93}" {
+                     Name "Panel0"
+                     Slot AlignableSlot "{66F292CEC2DCC75D}" {
+                      HorizontalAlign 3
+                      VerticalAlign 3
+                     }
+                     style full
+                    }
+                   }
+                  }
+                  HorizontalLayoutWidgetClass "{66F230791306DCBA}" {
+                   Name "PlayerProfile"
+                   Slot OverlayWidgetSlot "{66F292C8310C293F}" {
+                    HorizontalAlign 3
+                   }
+                   {
+                    SizeLayoutWidgetClass "{66F2307B594F0043}" {
+                     Name "SizeLayout1"
+                     Slot LayoutSlot "{66F2307B594F0069}" {
+                      Padding 4 0 8 0
+                      SizeMode Fill
+                     }
+                     AllowMinDesiredWidth 1
+                     MinDesiredWidth 160
+                     {
+                      VerticalLayoutWidgetClass "{66F2307906778766}" {
+                       Name "PlayerDetails"
+                       Slot AlignableSlot "{66F2307B5947094A}" {
+                        HorizontalAlign 0
+                       }
+                       {
+                        TextWidgetClass "{66F23079347C7A8E}" {
+                         Name "PlayerName"
+                         Slot LayoutSlot "{66F23079347C7A9C}" {
+                          Padding 0 0 0 2
+                         }
+                         Color 1 0.7593 0.0802 1
+                         Text "Player Name"
+                         FontProperties FontProperties "{66F230794790819F}" {
+                          Bold 1
+                          ShadowSize 5
+                          ShadowOffset 0 5
+                         }
+                        }
+                        TextWidgetClass "{66F2307936FFE1FC}" {
+                         Name "PlayerData"
+                         Slot LayoutSlot "{66F2307936FFE182}" {
+                         }
+                         Text "Player Custom Group Name (1.3 Rep)"
+                         "Font Size" 14
+                         "Min Font Size" 14
+                        }
+                       }
+                      }
+                     }
+                    }
+                    SizeLayoutWidgetClass "{66F23079EE120D6D}" {
+                     Name "SizeLayout0"
+                     Slot LayoutSlot "{66F23079EE120D0D}" {
+                      HorizontalAlign 2
+                      Padding 4 0 4 0
+                     }
+                     AllowMinDesiredWidth 1
+                     MinDesiredWidth 140
+                     {
+                      VerticalLayoutWidgetClass "{66F23078265FF34E}" {
+                       Name "PlayerCash"
+                       Slot AlignableSlot "{66F23079EE0A4CB4}" {
+                        HorizontalAlign 3
+                        VerticalAlign 3
+                       }
+                       {
+                        HorizontalLayoutWidgetClass "{66F23079D7DAEF4D}" {
+                         Name "WalletRow"
+                         Slot LayoutSlot "{66F23079D7DAEF57}" {
+                          Padding 0 2 0 2
+                         }
+                         {
+                          TextWidgetClass "{66F2307828C72A36}" {
+                           Name "WalletLabel"
+                           Slot LayoutSlot "{66F23078AC570A07}" {
+                            HorizontalAlign 0
+                            VerticalAlign 1
+                           }
+                           Text "Wallet"
+                           "Font Size" 16
+                           "Min Font Size" 16
+                           FontProperties FontProperties "{66F2307AC4563885}" {
+                            Bold 1
+                            ShadowSize 5
+                            ShadowOffset 0 5
+                           }
+                          }
+                          TextWidgetClass "{66F230782A4E54A3}" {
+                           Name "WalletValue"
+                           Slot LayoutSlot "{66F230782A4E54B4}" {
+                            HorizontalAlign 2
+                            VerticalAlign 1
+                            Padding 4 0 0 0
+                            SizeMode Fill
+                           }
+                           Text "$1,000,000,000.00"
+                           "Font Size" 16
+                           "Min Font Size" 16
+                          }
+                         }
+                        }
+                        HorizontalLayoutWidgetClass "{66F23079CDF6BFED}" {
+                         Name "BankRow"
+                         Slot LayoutSlot "{66F23079CDF6BF88}" {
+                          Padding 0 2 0 2
+                         }
+                         {
+                          TextWidgetClass "{66F23079A40FA0BF}" {
+                           Name "BankLabel"
+                           Slot LayoutSlot "{66F23078AC570A07}" {
+                            HorizontalAlign 0
+                            VerticalAlign 1
+                           }
+                           Text "Bank"
+                           "Font Size" 16
+                           "Min Font Size" 16
+                           FontProperties FontProperties "{66F2307AC7539B16}" {
+                            Bold 1
+                            ShadowSize 5
+                            ShadowOffset 0 5
+                           }
+                          }
+                          TextWidgetClass "{66F23079A541F841}" {
+                           Name "BankValue"
+                           Slot LayoutSlot "{66F23078AC570A07}" {
+                            HorizontalAlign 2
+                            VerticalAlign 1
+                            Padding 4 0 0 0
+                            SizeMode Fill
+                           }
+                           Text "$1,000,000,000.00"
+                           "Font Size" 16
+                           "Min Font Size" 16
+                          }
+                         }
+                        }
+                       }
+                      }
+                     }
+                    }
+                   }
+                  }
+                 }
+                }
+               }
+              }
+              SizeLayoutWidgetClass "{6578BDE4C7DA0A94}" {
+               Prefab "{6578BDE4C7DA0A94}"
+               {
+                HorizontalLayoutWidgetClass "{6578BDE4CCE10E9E}" {
+                 Prefab "{6578BDE4CCE10E9E}"
+                 Slot AlignableSlot "{6578BDE4CCE10EA0}" {
+                  HorizontalAlign 3
+                  VerticalAlign 3
+                 }
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}

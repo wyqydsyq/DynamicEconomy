@@ -1,0 +1,76 @@
+DE_BankEntity {
+ ID "66F686AD80CD41DB"
+ components {
+  SignalsManagerComponent "{66F48ECAF9100D7E}" {
+  }
+  ActionsManagerComponent "{66F48E4B62CDEDBF}" {
+   ActionContexts {
+    UserActionContext "{66F48E4B6495FA98}" {
+     UIInfo UIInfo "{66F48E4B922FBE78}" {
+      Name "Bank"
+     }
+     ContextName "default"
+     Position PointInfo "{66F48E4B671818AA}" {
+     }
+     Radius 3
+     Height 0.5
+    }
+   }
+   additionalActions {
+    DE_DepositAllAction "{66F48ECE3B57A8A0}" {
+     ParentContextList {
+      "default"
+     }
+     UIInfo SCR_ActionUIInfo "{66F48ECE2EBED3F2}" {
+      Name "Deposit All"
+      m_sIconName "getInCommand"
+     }
+     Duration 1
+    }
+    DE_BankAmountAction "{66F48E4FA796F507}" {
+     ParentContextList {
+      "default"
+     }
+     UIInfo SCR_ActionUIInfo "{66F48E4FE6AC6871}" {
+      Name "Amount"
+      m_sIconName "veh_auto_hover"
+     }
+     Duration -1
+     PerformPerFrame 1
+     "Sort Priority" 1
+     "Signal name" "amount"
+     "Max value" 100000000
+     m_fAdjustmentStep 1
+     m_bManualAdjustment 1
+    }
+    DE_DepositAction "{66F48ECE201C9106}" {
+     ParentContextList {
+      "default"
+     }
+     UIInfo SCR_ActionUIInfo "{66F48ECE5D9C2A50}" {
+      Name "Deposit"
+      m_sIconName "getInCommand"
+     }
+     Duration 1
+     "Sort Priority" 2
+    }
+    DE_WithdrawAction "{66F48ECE22AD6255}" {
+     ParentContextList {
+      "default"
+     }
+     UIInfo SCR_ActionUIInfo "{66F48ECE4496A382}" {
+      Name "Withdraw"
+      m_sIconName "getOutCommand"
+     }
+     Duration 1
+     "Sort Priority" 3
+    }
+   }
+  }
+  RplComponent "{66F48E4B7B363104}" {
+  }
+  Hierarchy "{66F48E4B796763B4}" {
+  }
+ }
+ coords 0.083 1.592 -0.043
+}

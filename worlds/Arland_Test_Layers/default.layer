@@ -1,0 +1,57 @@
+GenericEntity : "{1BED8F81D2FA2137}PrefabsEditable/Auto/Compositions/Slotted/SlotFlatSmall/E_AmmoStorage_S_US_01.et" {
+ coords 652.757 0.013 3504.4
+ angles 0 -101.001 0
+}
+SCR_ChimeraCharacter : "{A517C72CEF150898}Prefabs/Characters/Factions/CIV/Businessman/Character_CIV_Businessman_2.et" {
+ components {
+  DE_BankComponent "{66F68382B7675293}" {
+  }
+ }
+ coords 637.865 0.25 3495.201
+ angles 0 84.316 0
+}
+$grp SCR_ChimeraCharacter : "{E024A74F8A4BC644}Prefabs/Characters/Factions/CIV/Businessman/Character_CIV_Businessman_1.et" {
+ {
+  components {
+   DE_TraderComponent "{66F68382BBCE97CA}" {
+    traderName "General Trader"
+    cardPayment 1
+   }
+  }
+  coords 636.985 0.208 3498.323
+  angles 0 115.338 0
+ }
+ {
+  components {
+   DE_TraderComponent "{66F68382BBCE97CA}" {
+    traderName "Soviet Weapon Dealer"
+    types 393534
+    factionKey "USSR"
+   }
+  }
+  coords 644.919 0.184 3494.663
+  angles 0 -19.227 0
+ }
+ {
+  components {
+   DE_TraderComponent "{66F68382BBCE97CA}" {
+    traderName "US Weapon Dealer"
+    types 262462
+    factionKey "US"
+   }
+  }
+  coords 641.83 0.221 3492.77
+  angles 0 1.672 0
+ }
+ {
+  components {
+   DE_TraderComponent "{66F68382BBCE97CA}" {
+    traderName "Tailor"
+    types 556160
+    factionKey "CIV"
+   }
+  }
+  coords 638.323 0.242 3491.858
+  angles 0 34.585 0
+ }
+}

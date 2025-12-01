@@ -1,0 +1,145 @@
+DE_TraderEntity {
+ ID "66F686AD9DE57E77"
+ components {
+  MeshObject "{66FA2B02438AAAC3}" {
+  }
+  SCR_ArsenalComponent "{66F20DAEA9457C3D}" {
+   m_eSupportedArsenalItemTypes 8388606
+   m_eSupportedArsenalItemModes 510
+   m_eEditableAttributeGroups 30
+   m_eArsenalSaveType NO_RESTRICTIONS
+  }
+  SCR_FactionAffiliationComponent "{66F20DA1F1BC7EDE}" {
+   "faction affiliation" "US"
+  }
+  SCR_ResourceComponent "{66F20DA031486D2E}" {
+   m_aContainers {
+    SCR_ResourceContainer "{66F81410B9BD48B0}" {
+     m_sDebugName "Trader - Container"
+     m_eResourceRights ALL
+     m_eResourceType CASH
+     m_eStorageType STORED
+     m_fResourceValueCurrent 10000
+     m_fResourceValueMax 99999997952
+    }
+   }
+   m_aConsumers {
+    SCR_ResourceConsumer "{66F20DA039095B8F}" {
+     m_sDebugName "Trader - Consumer"
+     m_eResourceRights ALL
+     m_eResourceType CASH
+     m_eGeneratorIdentifier DEFAULT
+     m_fResourceRange 1
+     m_fSellMultiplier 1
+     m_ContainerQueue SCR_ResourceConsumerContainerQueue "{66F20DA03CBCA387}" {
+      m_StoragePolicies {
+       SCR_ResourceConsumerStoragePolicy "{66F20DA03D935408}" {
+        m_StorageQueue SCR_ResourceConsumerContainerStorageQueueExtended "{66F20DA03EC02B6E}" {
+        }
+       }
+       SCR_ResourceConsumerStoragePolicy "{66F20DA2A13A5227}" {
+        m_StorageQueue SCR_ResourceConsumerContainerStorageQueueExtended "{66F20DA2A3922FF7}" {
+        }
+        m_eStorageType STORED
+       }
+      }
+     }
+    }
+   }
+   m_aGenerators {
+    SCR_ResourceGenerator "{66F20DA0256B4DB7}" {
+     m_sDebugName "Trader - Generator"
+     m_eResourceRights ALL
+     m_eResourceType CASH
+     m_ContainerQueue SCR_ResourceGeneratorContainerQueue "{66F20DA02A2661A6}" {
+      m_StoragePolicies {
+       SCR_ResourceGeneratorStoragePolicy "{66F20DA02B4F3156}" {
+        m_StorageQueue SCR_ResourceGeneratorContainerStorageQueueExtended "{66F20DA02D7D643B}" {
+        }
+       }
+       SCR_ResourceGeneratorStoragePolicy "{66F20DA2BD296802}" {
+        m_StorageQueue SCR_ResourceGeneratorContainerStorageQueueExtended "{66F20DA2BFBE8DF2}" {
+        }
+        m_eStorageType STORED
+       }
+      }
+     }
+     m_aActions {
+      SCR_ResourceGeneratorActionStore "{66F425A9AB877B16}" {
+      }
+     }
+    }
+   }
+  }
+  UniversalInventoryStorageComponent "{66F20DAEAC0ADF9C}" {
+   Attributes SCR_ItemAttributeCollection "{66F20DA116AE1AAC}" {
+    ItemDisplayName SCR_InventoryUIInfo "{58A17A3474A3430E}" {
+     Name "Trader"
+     Description "Trader Inventory"
+     m_aItemHints {
+      SCR_SupplyAvailableItemHintUIInfo "{5E76A7E6F3D189F7}" {
+      }
+     }
+    }
+    CustomAttributes {
+     SCR_CharacterInventoryPreviewAttributes "{66F979C0C5813C3B}" {
+      PreviewWornModel 1
+      ShowAllChildrens 1
+     }
+    }
+    CommonItemType "NONE"
+    m_Size SLOT_1x1
+    m_eQuickSlotSize SLOT_1x1
+    m_SlotType SLOT_LOOT_STORAGE
+    m_bDraggable 0
+    m_bVisible 0
+    m_bStackable 0
+    m_bRefundable 0
+   }
+   StoragePurpose 0x1 0x1
+   UseCapacityCoefficient 0
+   MaxCumulativeVolume 1000000
+   MaxItemSize 1000 1000 1000
+  }
+  SCR_ArsenalInventoryStorageManagerComponent "{66F20DA1A3BAE463}" {
+  }
+  ActionsManagerComponent "{66F20DAED3B6486F}" {
+   ActionContexts {
+    UserActionContext "{66F20DAEC093B994}" {
+     UIInfo UIInfo "{66F20DAEC370DC80}" {
+      Name "Trader"
+     }
+     ContextName "default"
+     Position PointInfo "{66F20DA10F52CAB5}" {
+     }
+     Radius 0.5
+     Height 0.5
+     LineOfSightCheck 1
+    }
+   }
+   additionalActions {
+    SCR_OpenStorageAction "{66F20DAEDC1836CA}" {
+     ParentContextList {
+      "default"
+     }
+     UIInfo SCR_ActionUIInfo "{52E6EC759A11C684}" {
+      Name "Trade"
+      Icon "{B4C4D03DEC63F508}UI/Textures/Icons/InventoryHints/InventoryHint_SuppliesCost.edds"
+      m_sIconName "warCrimeGeneric"
+     }
+     ActionTitle "Trade"
+     VisibilityRange 0.5
+    }
+   }
+   AllowCrossHierarchy 1
+  }
+  RplComponent "{66F20DAEBCF6C730}" {
+   "Rpl State Override" Runtime
+   AutoHierarchy 1
+  }
+  Hierarchy "{66F20DAEB91B534F}" {
+  }
+ }
+ Flags 0x100 0
+ coords 0.015 1.61 -0.028
+}

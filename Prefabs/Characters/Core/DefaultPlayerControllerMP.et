@@ -1,0 +1,54 @@
+SCR_PlayerController : "{6E2BB64764E3BE9B}Prefabs/Characters/Core/DefaultPlayerController.et" {
+ ID "1A9BA6BEFA06E3B1"
+ components {
+  SCR_ResourceComponent "{66F0562B874E5274}" {
+   m_aContainers {
+    SCR_ResourceContainerVirtual "{66F0562B8EC63284}" {
+     m_sDebugName "Bank Account"
+     m_eResourceRights ALL
+     m_eResourceType CASH
+     m_eStorageType STORED
+     m_fResourceValueCurrent 1000000
+     m_fResourceValueMax 999999995904
+    }
+   }
+   m_aConsumers {
+    SCR_ResourceConsumer "{66F0562BF7AA46EA}" {
+     m_sDebugName "Bank Account - Consumer"
+     m_eResourceRights ALL
+     m_eResourceType CASH
+     m_eGeneratorIdentifier DEFAULT
+     m_ContainerQueue SCR_ResourceConsumerContainerQueue "{66F0562BFE3FA14A}" {
+      m_StoragePolicies {
+       SCR_ResourceConsumerStoragePolicy "{66F0562BE2EAEDE5}" {
+        m_StorageQueue SCR_ResourceConsumerContainerStorageQueueExtended "{66F0562A2EFCD2E2}" {
+        }
+        m_eStorageType STORED
+       }
+      }
+     }
+    }
+   }
+   m_aGenerators {
+    SCR_ResourceGenerator "{66F0562A13B97F07}" {
+     m_sDebugName "Bank Account - Generator"
+     m_eResourceRights ALL
+     m_eResourceType CASH
+     m_ContainerQueue SCR_ResourceGeneratorContainerQueue "{66F0562A178AF3CB}" {
+      m_StoragePolicies {
+       SCR_ResourceGeneratorStoragePolicy "{66F0562A1B8D878F}" {
+        m_StorageQueue SCR_ResourceGeneratorContainerStorageQueueExtended "{66F0562A00E043A3}" {
+        }
+        m_eStorageType STORED
+       }
+      }
+     }
+     m_aActions {
+      SCR_ResourceGeneratorActionStore "{66F408A83BF5CAA2}" {
+      }
+     }
+    }
+   }
+  }
+ }
+}
