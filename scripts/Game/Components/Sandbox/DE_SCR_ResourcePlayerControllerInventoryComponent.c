@@ -49,16 +49,6 @@ modded class SCR_ResourcePlayerControllerInventoryComponent : ScriptComponent
 		if (!consumer)
 			return;
 		
-		SCR_PlayerController pc = SCR_PlayerController.Cast(GetOwner());
-		SCR_ResourceComponent playerResource = SCR_ResourceComponent.Cast(pc.FindComponent(SCR_ResourceComponent));
-		SCR_ResourceConsumer playerConsumer = playerResource.GetConsumer(EResourceGeneratorID.DEFAULT, EResourceType.CASH);
-		SCR_ResourceContainer playerContainer = playerResource.GetContainer(EResourceType.CASH);
-		
-		SCR_ChimeraCharacter char = SCR_ChimeraCharacter.Cast(GetGame().GetPlayerManager().GetPlayerControlledEntity(pc.GetPlayerId()));
-		SCR_ResourceComponent charResource = SCR_ResourceComponent.Cast(char.FindComponent(SCR_ResourceComponent));
-		SCR_ResourceConsumer charConsumer = charResource.GetConsumer(EResourceGeneratorID.DEFAULT, EResourceType.CASH);
-		SCR_ResourceConsumer fundsConsumer = charConsumer;
-		
 		float resourceCost = 0;
 
 		SCR_EntityCatalogManagerComponent entityCatalogManager = SCR_EntityCatalogManagerComponent.GetInstance();
@@ -92,28 +82,43 @@ modded class SCR_ResourcePlayerControllerInventoryComponent : ScriptComponent
 		
 		resourceCost *= economySystem.cashSupplyExchangeRate;
 		resourceCost *= consumer.GetBuyMultiplier();
+				
+		SCR_PlayerController pc = SCR_PlayerController.Cast(GetOwner());
+		SCR_ResourceComponent playerResource = SCR_ResourceComponent.Cast(pc.FindComponent(SCR_ResourceComponent));
+		SCR_ResourceConsumer playerConsumer = playerResource.GetConsumer(EResourceGeneratorID.DEFAULT, EResourceType.CASH);
+		
+		SCR_ChimeraCharacter char = SCR_ChimeraCharacter.Cast(GetGame().GetPlayerManager().GetPlayerControlledEntity(pc.GetPlayerId()));
+		SCR_ResourceComponent charResource = SCR_ResourceComponent.Cast(char.FindComponent(SCR_ResourceComponent));
+		SCR_ResourceConsumer charConsumer = charResource.GetConsumer(EResourceGeneratorID.DEFAULT, EResourceType.CASH);
+		
+		IEntity fundsHolder = char;
 		
 		// if player can't afford from default funds consumer (wallet)
 		if (charConsumer.GetAggregatedResourceValue() < resourceCost)
 		{
 			// set fund consumer to bank account if trader allows card payment and player can afford
 			if (trader.cardPayment && playerConsumer.GetAggregatedResourceValue() >= resourceCost)
-				fundsConsumer = playerConsumer;
+				fundsHolder = pc;
 			else
 			{
-				SCR_NotificationsComponent.SendToPlayer(pc.GetPlayerId(), DE_EconomySystem.GetInstance().insufficientNotification, fundsConsumer.GetAggregatedResourceValue());
+				SCR_NotificationsComponent.SendToPlayer(pc.GetPlayerId(), DE_EconomySystem.GetInstance().insufficientNotification, charConsumer.GetAggregatedResourceValue());
 				return;
 			}
 		}
 		
-		if (!TryPerformResourceConsumption(fundsConsumer, resourceCost))
-			return;
+		SCR_ResourceComponent fundsResource = SCR_ResourceComponent.Cast(fundsHolder.FindComponent(SCR_ResourceComponent));
+		SCR_ResourceConsumer fundsConsumer = fundsResource.GetConsumer(EResourceGeneratorID.DEFAULT, EResourceType.CASH);
+		SCR_ResourceContainer fundsContainer = fundsResource.GetContainer(EResourceType.CASH);
 		
-		fundsConsumer.GetComponent().ReplicateEx();
-		pc.NotifyPlayerDataChange(resourceCost);
+		//if (!TryPerformResourceConsumption(fundsConsumer, resourceCost))
+		//	return;
+		fundsContainer.SetResourceValue(fundsContainer.GetResourceValue() - resourceCost);
+		
+		pc.NotifyBankDataChange(Replication.FindId(fundsHolder), fundsContainer.GetResourceValue());
+		pc.NotifyPlayerDataChange(- resourceCost);
 
 		if (inventoryManagerComponent.TrySpawnPrefabToStorage(resourceNameItem, storageComponent, cb: new SCR_PrefabSpawnCallback(storageComponent)) && s_OnArsenalItemRequested)
-			GetOnArsenalItemRequested().Invoke(resourceComponent, resourceNameItem, GetOwner(), storageComponent, resourceType, - resourceCost);
+			GetOnArsenalItemRequested().Invoke(resourceComponent, resourceNameItem, pc, storageComponent, resourceType, - resourceCost);
 	}
 	
 	[RplRpc(RplChannel.Reliable, RplRcver.Server)]
@@ -171,7 +176,7 @@ modded class SCR_ResourcePlayerControllerInventoryComponent : ScriptComponent
 		if (!entry)
 			return;
 		
-		SCR_ArsenalManagerComponent.OnItemRefunded_S(inventoryItemEntity, PlayerController.Cast(GetOwner()), arsenalComponent);
+		SCR_ArsenalManagerComponent.OnItemRefunded_S(inventoryItemEntity, pc, arsenalComponent);
 		IEntity parentEntity = inventoryItemEntity.GetParent();
 		
 		SCR_InventoryStorageManagerComponent inventoryManagerComponent;
@@ -198,8 +203,8 @@ modded class SCR_ResourcePlayerControllerInventoryComponent : ScriptComponent
 		resourceCost *= consumer.GetSellMultiplier();
 		generator.RequestGeneration(resourceCost, generator);
 		
-		generator.GetComponent().ReplicateEx();
-		pc.NotifyPlayerDataChange(- resourceCost);
+		pc.NotifyBankDataChange(Replication.FindId(generator.GetOwner()), generator.GetComponent().GetContainer(EResourceType.CASH).GetResourceValue());
+		pc.NotifyPlayerDataChange(resourceCost);
 		
 		GetOnArsenalItemRefunded().Invoke(resourceComponent, resourceNameItem, GetOwner(), null, resourceType, resourceCost);
 	}

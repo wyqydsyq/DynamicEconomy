@@ -28,7 +28,8 @@ class DE_TraderEntity : GenericEntity
 	[RplProp()]
 	FactionKey factionKey;
 	
-	ref SCR_ArsenalItemListConfig arsenalConfig;
+	[RplProp()]
+	array<ResourceName> itemWhitelist;
 	
 	void DE_TraderEntity(IEntitySource src, IEntity parent)
 	{
@@ -85,11 +86,8 @@ class DE_TraderEntity : GenericEntity
 			arsenal.SetSupportedArsenalItemModes(traderComp.types);
 		}
 		
-		if (traderComp.arsenalConfig)
-		{
-			arsenalConfig = traderComp.arsenalConfig;
-			arsenal.SetOverwriteArsenalConfig(traderComp.arsenalConfig);
-		}
+		if (traderComp.itemWhitelist)
+			itemWhitelist = traderComp.itemWhitelist;
 		
 		SCR_ChimeraCharacter character = SCR_ChimeraCharacter.Cast(GetParent());
 		if (!character)
@@ -101,7 +99,7 @@ class DE_TraderEntity : GenericEntity
 		
 		characterControllerComponent.GetOnPlayerDeathWithParam().Insert(OnCharacterDeath);
 		
-		arsenal.RefreshArsenal();
+		//arsenal.RefreshArsenal();
 	}
 	
 	void OnCharacterDeath(SCR_CharacterControllerComponent characterControllerComponent, IEntity killerEntity, Instigator killer)
@@ -150,20 +148,20 @@ class DE_TraderComponent : ScriptComponent
 	[Attribute("-1", UIWidgets.Auto, desc: "Supply cost for items w/o one set, leave as -1 to use system default, set to 0 to allow free items", category: "Dynamic Economy")]
 	float fallbackSupplyCost;
 	
+	[Attribute(desc: "Sets Faction Key on underlying SCR_ArsenalComponent, if specified trader will only sell items from matching faction catalogs.", category: "Dynamic Economy")]
+	FactionKey factionKey;
+	
 	[Attribute(desc: "If set, defines what arsenal item types will be available from trader. Leave unset for all", uiwidget: UIWidgets.Flags, enums: ParamEnumArray.FromEnum(SCR_EArsenalItemType), category: "Dynamic Economy")]
 	SCR_EArsenalItemType types;
 
 	[Attribute(desc: "If set, defines what arsenal item modes will be available from trader. Leave unset for all", uiwidget: UIWidgets.Flags, enums: ParamEnumArray.FromEnum(SCR_EArsenalItemMode), category: "Dynamic Economy")]
 	SCR_EArsenalItemMode modes;
 	
-	[Attribute(desc: "If set, defines what editable entity labels will be available from trader. Leave unset for all", uiwidget: UIWidgets.ComboBox, enums: ParamEnumArray.FromEnum(EEditableEntityLabel), category: "Dynamic Economy")]
-	ref array<EEditableEntityLabel> labels;
+	[Attribute(desc: "Optional whitelist of ResourceNames to filter items by for e.g. unique traders that only sell specific items like a Safe Zone trader", uiwidget: UIWidgets.ResourcePickerThumbnail, params: "et", category: "Dynamic Economy")]
+	ref array<ResourceName> itemWhitelist;
 	
-	[Attribute(desc: "Sets SCR_ArsenalItemListConfig on underlying SCR_ArsenalComponent, if specified trader will only sell listed items instead of reading from entity catalogs.", category: "Dynamic Economy")]
-	ref SCR_ArsenalItemListConfig arsenalConfig;
-		
-	[Attribute(desc: "Sets Faction Key on underlying SCR_ArsenalComponent, if specified trader will only sell items from matching faction catalogs.", category: "Dynamic Economy")]
-	FactionKey factionKey;
+	[Attribute(desc: "**NOTE**: Currenly not very useful for filtering arsenal items, but will be useful for filtering editable entities e.g. vehicles or AI characters\n\nIf set, defines what editable entity labels will be available from trader. Leave unset for all", uiwidget: UIWidgets.ComboBox, enums: ParamEnumArray.FromEnum(EEditableEntityLabel), category: "Dynamic Economy")]
+	ref array<EEditableEntityLabel> labels;
 	
 	void DE_TraderComponent(IEntityComponentSource src, IEntity ent, IEntity parent)
 	{

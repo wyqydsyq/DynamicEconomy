@@ -25,8 +25,8 @@ $grp SCR_ChimeraCharacter : "{E024A74F8A4BC644}Prefabs/Characters/Factions/CIV/B
   components {
    DE_TraderComponent "{66F68382BBCE97CA}" {
     traderName "Soviet Weapon Dealer"
-    types 393534
     factionKey "USSR"
+    types 393534
    }
   }
   coords 644.919 0.184 3494.663
@@ -36,8 +36,8 @@ $grp SCR_ChimeraCharacter : "{E024A74F8A4BC644}Prefabs/Characters/Factions/CIV/B
   components {
    DE_TraderComponent "{66F68382BBCE97CA}" {
     traderName "US Weapon Dealer"
-    types 262462
     factionKey "US"
+    types 393534
    }
   }
   coords 641.83 0.221 3492.77
@@ -47,11 +47,32 @@ $grp SCR_ChimeraCharacter : "{E024A74F8A4BC644}Prefabs/Characters/Factions/CIV/B
   components {
    DE_TraderComponent "{66F68382BBCE97CA}" {
     traderName "Tailor"
-    types 556160
     factionKey "CIV"
+    types 556160
    }
   }
   coords 638.323 0.242 3491.858
   angles 0 34.585 0
+ }
+ {
+  components {
+   DE_TraderComponent "{66F68382BBCE97CA}" {
+    traderName "Starter Trader"
+    cardPayment 1
+    traderMargin 0.1
+    fallbackSupplyCost 0.001
+    itemWhitelist {
+     "{A81F501D3EF6F38E}Prefabs/Items/Medicine/FieldDressing_01/FieldDressing_US_01.et"
+     "{0D9A5DCF89AE7AA9}Prefabs/Items/Medicine/MorphineInjection_01/MorphineInjection_01.et"
+     "{3A421547BC29F679}Prefabs/Items/Equipment/Flashlights/Flashlight_MX991/Flashlight_MX991.et"
+     "{1353C6EAD1DCFE43}Prefabs/Weapons/Handguns/M9/Handgun_M9.et"
+     "{9C05543A503DB80E}Prefabs/Weapons/Magazines/Magazine_9x19_M9_15rnd_Ball.et"
+     "{C0F7DD85A86B2900}Prefabs/Weapons/Handguns/PM/Handgun_PM.et"
+     "{8B853CDD11BA916E}Prefabs/Weapons/Magazines/Magazine_9x18_PM_8rnd_Ball.et"
+    }
+   }
+  }
+  coords 640.287 0.162 3501.126
+  angles 0 115.338 0
  }
 }

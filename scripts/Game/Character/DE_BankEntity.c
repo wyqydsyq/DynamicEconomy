@@ -39,12 +39,14 @@ class DE_BankEntity : GenericEntity
 	
 	void RequestDeposit(int playerId, float amount)
 	{
+		PrintFormat("DE: RequestDeposit");
 		Rpc(DoDeposit, playerId, amount);
 	}
 	
 	[RplRpc(RplChannel.Reliable, RplRcver.Server)]
 	void DoDeposit(int playerId, float amount)
 	{
+		PrintFormat("DE: DoDeposit");
 		// bank account lives on PC
 		SCR_PlayerController pc = SCR_PlayerController.Cast(GetGame().GetPlayerManager().GetPlayerController(playerId));
 		SCR_ResourceComponent playerResource = SCR_ResourceComponent.Cast(pc.FindComponent(SCR_ResourceComponent));
@@ -62,15 +64,14 @@ class DE_BankEntity : GenericEntity
 		}
 		
 		charContainer.DecreaseResourceValue(amount);
-		charResource.ReplicateEx();
-		
+		pc.NotifyBankDataChange(Replication.FindId(char), charContainer.GetResourceValue());
 		playerContainer.IncreaseResourceValue(amount);
-		playerResource.ReplicateEx();
+		pc.NotifyBankDataChange(Replication.FindId(pc), playerContainer.GetResourceValue());
 		
 		if (amount > 0)
 			SCR_NotificationsComponent.SendToPlayer(playerId, DE_EconomySystem.GetInstance().depositNotification, amount);
 		
-		pc.NotifyPlayerDataChange();
+		//pc.NotifyPlayerDataChange();
 	}	
 	
 	void RequestWithdraw(int playerId, float amount)
@@ -98,10 +99,9 @@ class DE_BankEntity : GenericEntity
 		}
 		
 		playerContainer.DecreaseResourceValue(amount);
-		playerResource.ReplicateEx();
-		
+		pc.NotifyBankDataChange(Replication.FindId(pc), playerContainer.GetResourceValue());
 		charContainer.IncreaseResourceValue(amount);
-		charResource.ReplicateEx();
+		pc.NotifyBankDataChange(Replication.FindId(char), charContainer.GetResourceValue());
 		
 		if (amount > 0)
 			SCR_NotificationsComponent.SendToPlayer(playerId, DE_EconomySystem.GetInstance().withdrawNotification, amount);
@@ -169,6 +169,11 @@ class DE_BankAmountAction : SCR_AdjustSignalAction
 		input.AddActionListener("BankIncrementModifier10x", EActionTrigger.DOWN, OnIncrement10x);
 		input.AddActionListener("BankIncrementModifier100x", EActionTrigger.DOWN, OnIncrement100x);
 		input.AddActionListener("BankIncrementModifier1000x", EActionTrigger.DOWN, OnIncrement1000x);
+	}
+	
+	override bool HasLocalEffectOnlyScript()
+	{
+		return true;
 	}
 	
 	override bool GetActionNameScript(out string outName)
@@ -262,6 +267,11 @@ class DE_BankAmountAction : SCR_AdjustSignalAction
 
 class DE_DepositAllAction : SCR_ScriptedUserAction
 {
+	override bool HasLocalEffectOnlyScript()
+	{
+		return true;
+	}
+	
 	override bool GetActionNameScript(out string outName)
 	{
 		SCR_ChimeraCharacter char = SCR_ChimeraCharacter.Cast(GetGame().GetPlayerManager().GetPlayerControlledEntity(SCR_PlayerController.GetLocalPlayerId()));
@@ -285,15 +295,22 @@ class DE_DepositAllAction : SCR_ScriptedUserAction
 		SCR_ResourceComponent charResource = SCR_ResourceComponent.Cast(char.FindComponent(SCR_ResourceComponent));
 		if (!charResource)
 			return;
-		
 		SCR_ResourceContainer charContainer = charResource.GetContainer(EResourceType.CASH);
+		PrintFormat("DE: DepositAll");
 		
-		bank.DoDeposit(GetGame().GetPlayerManager().GetPlayerIdFromControlledEntity(pUserEntity), charContainer.GetResourceValue());
+		SCR_PlayerController pc = SCR_PlayerController.Cast(GetGame().GetPlayerController());
+		pc.RequestDeposit(Replication.FindId(bank), pc.GetPlayerId(), charContainer.GetResourceValue());
+		//bank.RequestDeposit(GetGame().GetPlayerManager().GetPlayerIdFromControlledEntity(pUserEntity), charContainer.GetResourceValue());
 	}
 }
 
 class DE_DepositAction : SCR_ScriptedUserAction
 {
+	override bool HasLocalEffectOnlyScript()
+	{
+		return true;
+	}
+	
 	override bool GetActionNameScript(out string outName)
 	{
 		outName = "Deposit";
@@ -306,12 +323,19 @@ class DE_DepositAction : SCR_ScriptedUserAction
 		if (!bank)
 			return;
 		
-		bank.DoDeposit(GetGame().GetPlayerManager().GetPlayerIdFromControlledEntity(pUserEntity), bank.currentAmount);
+		SCR_PlayerController pc = SCR_PlayerController.Cast(GetGame().GetPlayerController());
+		pc.RequestDeposit(Replication.FindId(bank), pc.GetPlayerId(), bank.currentAmount);
+		//bank.DoDeposit(GetGame().GetPlayerManager().GetPlayerIdFromControlledEntity(pUserEntity), bank.currentAmount);
 	}
 }
 
 class DE_WithdrawAction : SCR_ScriptedUserAction
 {
+	override bool HasLocalEffectOnlyScript()
+	{
+		return true;
+	}
+	
 	override bool GetActionNameScript(out string outName)
 	{
 		outName = "Withdraw";
@@ -324,6 +348,8 @@ class DE_WithdrawAction : SCR_ScriptedUserAction
 		if (!bank)
 			return;
 		
-		bank.DoWithdraw(GetGame().GetPlayerManager().GetPlayerIdFromControlledEntity(pUserEntity), bank.currentAmount);
+		SCR_PlayerController pc = SCR_PlayerController.Cast(GetGame().GetPlayerController());
+		pc.RequestWithdraw(Replication.FindId(bank), pc.GetPlayerId(), bank.currentAmount);
+		//bank.DoWithdraw(GetGame().GetPlayerManager().GetPlayerIdFromControlledEntity(pUserEntity), bank.currentAmount);
 	}
 }
