@@ -18,8 +18,6 @@ GenericEntity : "{4CC2C69DE1AEF103}Prefabs/Props/Core/DestructibleMultiPhase_Pro
    ResponseIndex "Normal"
   }
   RplComponent "{5624A88DC2D9928D}" {
-   Enabled 1
-   AutoHierarchy 1
   }
   Hierarchy "{67049881593035FB}" {
   }

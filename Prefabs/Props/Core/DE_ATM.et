@@ -9,7 +9,6 @@ GenericEntity : "{0364B49EC9ED8337}Prefabs/Props/Core/DE_ATM_Prop.et" {
   }
   RplComponent "{5624A88DC2D9928D}" {
    Enabled 0
-   AutoHierarchy 1
   }
  }
  coords 4.023 -0.013 6.478

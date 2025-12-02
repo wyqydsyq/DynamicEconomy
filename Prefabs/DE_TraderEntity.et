@@ -132,8 +132,6 @@ DE_TraderEntity {
    AllowCrossHierarchy 1
   }
   RplComponent "{66F20DAEBCF6C730}" {
-   "Rpl State Override" Runtime
-   AutoHierarchy 1
   }
   Hierarchy "{66F20DAEB91B534F}" {
   }

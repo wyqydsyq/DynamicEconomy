@@ -68,7 +68,6 @@ DE_BankEntity {
    }
   }
   RplComponent "{66F48E4B7B363104}" {
-   AutoHierarchy 1
   }
   Hierarchy "{66F48E4B796763B4}" {
   }
