@@ -126,7 +126,7 @@ DE_TraderEntity {
       m_sIconName "warCrimeGeneric"
      }
      ActionTitle "Trade"
-     VisibilityRange 1
+     VisibilityRange 1.5
     }
    }
    AllowCrossHierarchy 1

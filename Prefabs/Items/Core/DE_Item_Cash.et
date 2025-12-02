@@ -1,0 +1,36 @@
+GenericEntity : "{C95E11C60810F432}Prefabs/Items/Core/Item_Base.et" {
+ ID "508AB2013EEE1E00"
+ components {
+  Persistence "{64CAA9135F15F7D0}" {
+   Enabled 0
+  }
+  DE_CashComponent "{670418B090C46931}" {
+  }
+  InventoryItemComponent "{5222EB4D0C73006B}" {
+   Attributes SCR_ItemAttributeCollection "{5222EB4D0A2B466B}" {
+    ItemDisplayName SCR_ItemHintUIInfo "{5222EB4D07D865FA}" {
+     Name "Cash Stack"
+     Description "$0.00"
+    }
+    ItemPhysAttributes ItemPhysicalAttributes PhysicalAttributes {
+     SizeSetupStrategy Volume
+     ItemVolume 1
+    }
+    CustomAttributes {
+     PreviewRenderAttributes "{670418B7598C6FD7}" {
+      CameraPreset Top
+      CameraOrbitAngles 15 -35 -25
+      CameraDistanceToItem 0.16
+      PreviewModel "{556A6D51AD68711D}Assets/Cash/Cash.xob"
+      LodModel 0
+     }
+    }
+    m_bStackable 0
+    m_bRefundable 0
+   }
+  }
+  MeshObject "{670418B73536EE86}" {
+   Object "{556A6D51AD68711D}Assets/Cash/Cash.xob"
+  }
+ }
+}

@@ -45,7 +45,7 @@ modded class SCR_ResourcePlayerControllerInventoryComponent : ScriptComponent
 		if (!trader)
 			return super.RpcAsk_ArsenalRequestItem_(rplIdResourceComponent, rplIdInventoryManager, rplIdStorageComponent, resourceNameItem, resourceType);
 		
-		SCR_ResourceConsumer consumer = resourceComponent.GetConsumer(EResourceGeneratorID.DEFAULT, resourceType);
+		SCR_ResourceConsumer consumer = resourceComponent.GetConsumer(EResourceGeneratorID.DEFAULT, EResourceType.CASH);
 		if (!consumer)
 			return;
 		

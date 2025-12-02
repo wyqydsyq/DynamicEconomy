@@ -1,0 +1,10 @@
+MatPBRBasic {
+ Cull none
+ AddWetness 1
+ SpecularMul 2.19
+ RoughnessScale 0.748
+ MetalnessScale 0.482
+ AOScale 1.683
+ DielectricReflectance 0.05
+ BCRMap "{5F99242F0D5DC835}Assets/Cash/cash_material.edds"
+}

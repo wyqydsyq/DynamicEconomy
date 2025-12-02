@@ -10,6 +10,40 @@ SCR_ChimeraCharacter : "{A517C72CEF150898}Prefabs/Characters/Factions/CIV/Busine
  coords 637.865 0.25 3495.201
  angles 0 84.316 0
 }
+$grp GenericEntity : "{C6EA723C0E2C52E7}Prefabs/Items/Core/DE_Item_Cash.et" {
+ {
+  components {
+   DE_CashComponent "{670418B090C46931}" {
+    value 420
+   }
+  }
+  coords 642.888 0.19 3498.962
+ }
+ {
+  components {
+   DE_CashComponent "{670418B090C46931}" {
+    value 1000
+   }
+  }
+  coords 642.888 0.19 3499.208
+ }
+ {
+  components {
+   DE_CashComponent "{670418B090C46931}" {
+    value 1000
+   }
+  }
+  coords 642.52 0.193 3499.139
+ }
+ {
+  components {
+   DE_CashComponent "{670418B090C46931}" {
+    value 1000
+   }
+  }
+  coords 642.459 0.199 3498.815
+ }
+}
 $grp SCR_ChimeraCharacter : "{E024A74F8A4BC644}Prefabs/Characters/Factions/CIV/Businessman/Character_CIV_Businessman_1.et" {
  {
   components {

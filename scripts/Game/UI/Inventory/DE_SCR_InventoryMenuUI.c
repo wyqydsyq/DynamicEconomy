@@ -337,6 +337,17 @@ modded class SCR_InventoryMenuUI : ChimeraMenuBase
 	}
 }
 
+modded class SCR_InvCallBack : ScriptedInventoryOperationCallback
+{
+	override void OnComplete()
+	{
+		if (!m_pItem)
+			return;
+		
+		return super.OnComplete();
+	}
+}
+
 class DL_PlayerInfoWidgetData
 {
 	TextWidget widgetPlayerName;

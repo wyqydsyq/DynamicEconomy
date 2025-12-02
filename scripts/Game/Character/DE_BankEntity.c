@@ -70,8 +70,6 @@ class DE_BankEntity : GenericEntity
 		
 		if (amount > 0)
 			SCR_NotificationsComponent.SendToPlayer(playerId, DE_EconomySystem.GetInstance().depositNotification, amount);
-		
-		//pc.NotifyPlayerDataChange();
 	}	
 	
 	void RequestWithdraw(int playerId, float amount)

@@ -7,13 +7,28 @@ class DE_EconomySystem : WorldSystem
 	float tickInterval;
 	
 	[Attribute("0.3", UIWidgets.Auto, desc: "Default profit margin for traders, can be overridden on specific DE_TraderComponent", category: "Dynamic Economy")]
-	float traderMargin;	
+	float traderMargin;
 	
 	[Attribute("0.25", UIWidgets.Auto, desc: "Default supply cost for items w/o one set, set to 0 to allow free items", category: "Dynamic Economy")]
 	float fallbackSupplyCost;
 	
 	[Attribute("50", UIWidgets.Auto, desc: "Cash:Supply exchange rate, how much cash 1 unit of supply costs", category: "Dynamic Economy")]
 	float cashSupplyExchangeRate;
+	
+	[Attribute("0", UIWidgets.Auto, desc: "Minimum randomized wallet value of AI characters", category: "Dynamic Economy")]
+	float minAiWalletValue;
+	
+	[Attribute("50000", UIWidgets.Auto, desc: "Maximum randomized wallet value of AI characters", category: "Dynamic Economy")]
+	float maxAiWalletValue;
+	
+	[Attribute("0.2", UIWidgets.Auto, desc: "% of max wallet value that can drop in non-jackpot wallets", category: "Dynamic Economy")]
+	float jackpotWalletThreshold;
+	
+	[Attribute("0.1", UIWidgets.Auto, desc: "Likelihood of AI dropping a jackpot wallet", category: "Dynamic Economy")]
+	float jackpotWalletRate;
+	
+	[Attribute("{C6EA723C0E2C52E7}Prefabs/Items/Core/DE_Item_Cash.et", UIWidgets.Auto, desc: "Cash item prefab dropped on character death", uiwidget: UIWidgets.ResourcePickerThumbnail, params: "et", category: "Dynamic Economy")]
+	ResourceName cashPrefab;
 	
 	[Attribute(ENotification.DE_SELL_NOTIFICATION.ToString(), uiwidget: UIWidgets.ComboBox, enums: ParamEnumArray.FromEnum(ENotification))]
 	ENotification sellNotification;

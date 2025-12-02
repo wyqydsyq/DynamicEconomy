@@ -52,4 +52,63 @@ class DE_DynamicEconomyComponent : SCR_BaseGameModeComponent
 		pc.NotifyBankDataChange(Replication.FindId(pc), playerContainer.GetResourceValue());
 		pc.NotifyBankDataChange(Replication.FindId(char), charContainer.GetResourceValue());
 	}
+	
+	override void OnControllableDestroyed(notnull SCR_InstigatorContextData instigatorContextData)
+	{
+		super.OnControllableDestroyed(instigatorContextData);
+		
+		if (IsProxy())
+			return;
+		
+		IEntity victim = instigatorContextData.GetVictimEntity();
+		if (!victim)
+			return;
+		
+		DE_EconomySystem.GetInstance().callQueue.Call(OnCharacterKilled, victim);
+	}
+	
+	void OnCharacterKilled(IEntity victim)
+	{
+		DE_EconomySystem economySystem = DE_EconomySystem.GetInstance();
+		if (!economySystem)
+			return;
+		
+		SCR_ChimeraCharacter char = SCR_ChimeraCharacter.Cast(victim);
+		if (!char)
+			return;
+		
+		SCR_InventoryStorageManagerComponent inv = SCR_InventoryStorageManagerComponent.Cast(char.FindComponent(SCR_InventoryStorageManagerComponent));
+		if (!inv)
+			return;
+		
+		SCR_ResourceComponent resource = SCR_ResourceComponent.Cast(char.FindComponent(SCR_ResourceComponent));
+		if (!resource)
+			return;
+		
+		SCR_ResourceContainer wallet = resource.GetContainer(EResourceType.CASH);
+		if (!wallet)
+			return;
+		
+		EntitySpawnParams params = new EntitySpawnParams();
+		params.Parent = char;
+		IEntity cashEnt = GetGame().SpawnEntityPrefabEx(economySystem.cashPrefab, true, null, params);
+		DE_CashComponent cash = DE_CashComponent.Cast(cashEnt.FindComponent(DE_CashComponent));
+		if (!cash)
+			return;
+		
+		float value = wallet.GetResourceValue();
+		
+		// randomize AI character wallet values
+		if (!EntityUtils.IsPlayer(char))
+		{
+			float maxValue = economySystem.maxAiWalletValue;
+			if (Math.RandomFloat(0, 1) > economySystem.jackpotWalletRate)
+				maxValue *= economySystem.jackpotWalletThreshold;
+			
+			value = Math.RandomFloat(economySystem.minAiWalletValue, maxValue);
+		}
+		
+		cash.value = value;
+		inv.TryInsertItem(cashEnt, EStoragePurpose.PURPOSE_ANY);
+	}
 }
