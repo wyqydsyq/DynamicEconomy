@@ -23,6 +23,9 @@ class DE_BankEntity : GenericEntity
 			return;
 		
 		DE_BankComponent bankComp = DE_BankComponent.Cast(owner.GetParent().FindComponent(DE_BankComponent));
+		if (!bankComp)
+			return;
+		
 		bankerName = bankComp.bankerName;
 		OnBankerNameChanged();
 		
