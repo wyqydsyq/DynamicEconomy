@@ -8,7 +8,7 @@ SCR_PlayerController : "{6E2BB64764E3BE9B}Prefabs/Characters/Core/DefaultPlayerC
      m_eResourceRights ALL
      m_eResourceType CASH
      m_eStorageType STORED
-     m_fResourceValueCurrent 100000
+     m_fResourceValueCurrent 1000
      m_fResourceValueMax 999999995904
     }
    }
