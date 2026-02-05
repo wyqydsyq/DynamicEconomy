@@ -110,9 +110,20 @@ modded class SCR_ResourcePlayerControllerInventoryComponent : ScriptComponent
 		SCR_ResourceConsumer fundsConsumer = fundsResource.GetConsumer(EResourceGeneratorID.DEFAULT, EResourceType.CASH);
 		SCR_ResourceContainer fundsContainer = fundsResource.GetContainer(EResourceType.CASH);
 		
+		// consume funds from selected source
 		if (!TryPerformResourceConsumption(fundsConsumer, resourceCost))
 			return;
-		//fundsContainer.SetResourceValue(fundsContainer.GetResourceValue() - resourceCost);
+		
+		// increase rep for this trader based on trader profit
+		float repChange = resourceCost * trader.traderMargin;
+		
+		UUID playerUuid = SCR_PlayerIdentityUtils.GetPlayerIdentityId(pc.GetPlayerId());
+		if (!trader.repMap.Contains(playerUuid))
+			trader.repMap.Insert(playerUuid, 0);
+		
+		trader.repMap.Set(playerUuid, trader.repMap.Get(playerUuid) + repChange * economySystem.traderRepMultiplier);
+		pc.NotifyRepChange(playerUuid, Replication.FindId(trader), trader.repMap.Get(playerUuid));
+		PrintFormat("DE: Player %1 rep: %2", playerUuid, trader.repMap.Get(playerUuid));
 		
 		pc.NotifyBankDataChange(Replication.FindId(fundsHolder), fundsContainer.GetResourceValue());
 		pc.NotifyPlayerDataChange(- resourceCost);
@@ -215,9 +226,20 @@ modded class SCR_ResourcePlayerControllerInventoryComponent : ScriptComponent
 		SCR_ResourceConsumer consumer = resourceComponent.GetConsumer(EResourceGeneratorID.DEFAULT, EResourceType.CASH);
 		resourceCost *= economySystem.cashSupplyExchangeRate;
 		resourceCost *= consumer.GetSellMultiplier();
-		//generator.RequestGeneration(resourceCost, generator);
+		
 		if (!TryPerformResourceGeneration(generator, resourceCost))
 			return;
+		
+		// increase rep for this trader based on trader profit
+		float repChange = resourceCost * trader.traderMargin;
+		
+		UUID playerUuid = SCR_PlayerIdentityUtils.GetPlayerIdentityId(pc.GetPlayerId());
+		if (!trader.repMap.Contains(playerUuid))
+			trader.repMap.Insert(playerUuid, 0);
+		
+		trader.repMap.Set(playerUuid, trader.repMap.Get(playerUuid) + repChange * economySystem.traderRepMultiplier);
+		pc.NotifyRepChange(playerUuid, Replication.FindId(trader), trader.repMap.Get(playerUuid));
+		PrintFormat("DE: Player %1 rep: %2", playerUuid, trader.repMap.Get(playerUuid));
 		
 		pc.NotifyBankDataChange(Replication.FindId(generator.GetOwner()), generator.GetComponent().GetContainer(EResourceType.CASH).GetResourceValue());
 		pc.NotifyPlayerDataChange(resourceCost);

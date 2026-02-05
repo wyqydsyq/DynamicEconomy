@@ -31,6 +31,9 @@ class DE_TraderEntity : GenericEntity
 	[RplProp()]
 	ref array<ResourceName> itemWhitelist = {};
 	
+	// map of player UUID -> rep value
+	ref map<UUID, float> repMap = new map<UUID, float>();
+	
 	void DE_TraderEntity(IEntitySource src, IEntity parent)
 	{
 		SetEventMask(EntityEvent.INIT);
@@ -71,6 +74,7 @@ class DE_TraderEntity : GenericEntity
 			traderMargin = traderComp.traderMargin;
 		else
 			traderMargin = economySystem.traderMargin;
+		
 		consumer.SetBuyMultiplier(1 + traderMargin, true);
 		consumer.SetSellMultiplier(1 - traderMargin, true);
 		

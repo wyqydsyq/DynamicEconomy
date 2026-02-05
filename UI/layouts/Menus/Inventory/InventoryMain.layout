@@ -108,7 +108,7 @@ FrameWidgetClass {
                      MinDesiredWidth 140
                      {
                       VerticalLayoutWidgetClass "{66F23078265FF34E}" {
-                       Name "PlayerCash"
+                       Name "PlayerFunds"
                        Slot AlignableSlot "{66F23079EE0A4CB4}" {
                         HorizontalAlign 3
                         VerticalAlign 3

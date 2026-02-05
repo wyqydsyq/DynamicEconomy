@@ -1,0 +1,134 @@
+DE_VehicleTraderEntity {
+ ID "68867AF1003E47A0"
+ components {
+  MeshObject "{68867AF1003E47BB}" {
+  }
+  SCR_CampaignBuildingProviderComponent "{6886CD6C7FB88FFF}" {
+   m_sProviderDisplayName "Vehicle Trader"
+   m_bUserActionActivationOnly 1
+   m_bAnyFactionCanUse 1
+   m_iRank RENEGADE
+   m_aBudgetsToEvaluate {
+    SCR_CampaignBuildingCooldownBudgetToEvaluateData "{6886CD6C2F89E194}" {
+     m_eBudget COOLDOWN
+    }
+    SCR_CampaignBuildingCampaignBudgetToEvaluateData "{688A4E339114F422}" {
+     m_eBudget CAMPAIGN
+    }
+    DE_CashBudgetToEvaluateData "{688847346188F947}" {
+     m_eBudget CASH
+    }
+   }
+   m_aAvailableTraits {
+    VEHICLE_CAR VEHICLE_TRUCK VEHICLE_APC VEHICLE_HELICOPTER VEHICLE_AIRPLANE
+   }
+  }
+  SCR_CatalogEntitySpawnerComponent "{6886CD6CDAB689C9}" {
+   m_eType LIGHT_VEHICLE_DEPOT
+   m_eBuildingLabel SERVICE_VEHICLE_DEPOT_LIGHT
+   m_sDelegatePrefab "{5B423F7ACE06881D}Prefabs/Systems/Services/ServicePointDelegate_VehicleDepotLight.et"
+   m_aCatalogTypes {
+    VEHICLE
+   }
+   m_bNeedAllLabels 0
+  }
+  SCR_FactionAffiliationComponent "{68867AF1003E47B5}" {
+   "faction affiliation" "USSR"
+  }
+  SCR_ResourceComponent "{68867AF1003E474B}" {
+   m_aContainers {
+    SCR_ResourceContainer "{68867AF1003E4749}" {
+     m_sDebugName "Trader - Container"
+     m_eResourceRights ALL
+     m_eResourceType CASH
+     m_eStorageType STORED
+     m_fResourceValueCurrent 10000
+     m_fResourceValueMax 99999997952
+    }
+   }
+   m_aConsumers {
+    SCR_ResourceConsumer "{68867AF1003E474F}" {
+     m_sDebugName "Trader - Consumer"
+     m_eResourceRights ALL
+     m_eResourceType CASH
+     m_eGeneratorIdentifier DEFAULT
+     m_fResourceRange 1
+     m_fSellMultiplier 1
+     m_ContainerQueue SCR_ResourceConsumerContainerQueue "{68867AF1003E4742}" {
+      m_StoragePolicies {
+       SCR_ResourceConsumerStoragePolicy "{68867AF1003E4740}" {
+        m_StorageQueue SCR_ResourceConsumerContainerStorageQueueExtended "{68867AF1003E4746}" {
+        }
+       }
+       SCR_ResourceConsumerStoragePolicy "{68867AF1003E4747}" {
+        m_StorageQueue SCR_ResourceConsumerContainerStorageQueueExtended "{68867AF1003E4744}" {
+        }
+        m_eStorageType STORED
+       }
+      }
+     }
+    }
+   }
+   m_aGenerators {
+    SCR_ResourceGenerator "{68867AF1003E475B}" {
+     m_sDebugName "Trader - Generator"
+     m_eResourceRights ALL
+     m_eResourceType CASH
+     m_ContainerQueue SCR_ResourceGeneratorContainerQueue "{68867AF1003E4759}" {
+      m_StoragePolicies {
+       SCR_ResourceGeneratorStoragePolicy "{68867AF1003E4754}" {
+        m_StorageQueue SCR_ResourceGeneratorContainerStorageQueueExtended "{68867AF1003E4755}" {
+        }
+       }
+       SCR_ResourceGeneratorStoragePolicy "{68867AF1003E476B}" {
+        m_StorageQueue SCR_ResourceGeneratorContainerStorageQueueExtended "{68867AF1003E4768}" {
+        }
+        m_eStorageType STORED
+       }
+      }
+     }
+     m_aActions {
+      SCR_ResourceGeneratorActionStore "{68867AF1003E476E}" {
+      }
+     }
+    }
+   }
+  }
+  ActionsManagerComponent "{68867AF1003E4777}" {
+   ActionContexts {
+    UserActionContext "{68867AF1003E4775}" {
+     UIInfo UIInfo "{68867AF1003E470A}" {
+      Name "Trader"
+     }
+     ContextName "default"
+     Position PointInfo "{68867AF1003E4709}" {
+     }
+     Radius 1
+     Height 1
+     LineOfSightCheck 1
+    }
+   }
+   additionalActions {
+    SCR_CampaignBuildingStartUserAction "{68867AF1003E470F}" {
+     ParentContextList {
+      "default"
+     }
+     UIInfo SCR_ActionUIInfo "{68867AF1003E470D}" {
+      Name "Trade"
+      Icon "{B4C4D03DEC63F508}UI/Textures/Icons/InventoryHints/InventoryHint_SuppliesCost.edds"
+      m_sIconName "warCrimeGeneric"
+     }
+     ActionTitle "Trade"
+     VisibilityRange 1.5
+    }
+   }
+   AllowCrossHierarchy 1
+  }
+  RplComponent "{68867AF1003E4700}" {
+  }
+  Hierarchy "{68867AF1003E4706}" {
+  }
+ }
+ Flags 0x100 0
+ coords 0.015 1.61 -0.028
+}

@@ -1,5 +1,7 @@
 modded class SCR_ArsenalInventorySlotUI : SCR_InventorySlotUI
 {
+	float requiredRep = -1;
+	
 	override float GetTotalResources()
 	{
 		m_fSupplyCost = 0;
@@ -49,14 +51,7 @@ modded class SCR_ArsenalInventorySlotUI : SCR_InventorySlotUI
 		if (!consumer)
 			return m_fSupplyCost;
 		
-		DE_EconomySystem system = DE_EconomySystem.GetInstance();
-		if (system.fallbackSupplyCost > 0 && m_fSupplyCost <= 0)
-			m_fSupplyCost = system.fallbackSupplyCost;
-		
-		m_fSupplyCost *= system.cashSupplyExchangeRate;
-		m_fSupplyCost *= consumer.GetBuyMultiplier();
-		
-		return m_fSupplyCost;
+		return DE_EconomySystem.GetInstance().SupplyToCashValue(m_fSupplyCost, consumer.GetBuyMultiplier());
 	}
 	
 	override void UpdateTotalResources(float totalResources)
@@ -82,12 +77,6 @@ modded class SCR_ArsenalInventorySlotUI : SCR_InventorySlotUI
 		
 		m_CostResourceHolderText.SetText(FormatFloat(totalResources));
 		
-		if (!m_ArsenalResourceComponent)
-		{
-			SetItemAvailability(true);
-			return;
-		}
-		
 		SCR_PlayerController pc = SCR_PlayerController.Cast(GetGame().GetPlayerManager().GetPlayerController(SCR_PlayerController.GetLocalPlayerId()));
 		SCR_ResourceComponent traderResource = SCR_ResourceComponent.Cast(trader.FindComponent(SCR_ResourceComponent));
 		SCR_ResourceComponent playerResource = SCR_ResourceComponent.Cast(pc.FindComponent(SCR_ResourceComponent));
@@ -112,6 +101,7 @@ modded class SCR_ArsenalInventorySlotUI : SCR_InventorySlotUI
 		
 		//SCR_ResourceConsumer traderConsumer = traderResource.GetConsumer(EResourceGeneratorID.DEFAULT, EResourceType.CASH);
 		SetItemAvailability(playerCanAfford);
+		CheckRequiredRank();
 	}
 	
 	override protected void CheckPersonalResources(int cost)
@@ -124,17 +114,36 @@ modded class SCR_ArsenalInventorySlotUI : SCR_InventorySlotUI
 	
 	override protected void CheckRequiredRank()
 	{
+		IEntity storageEnt = GetStorageUI().GetCurrentNavigationStorage().GetOwner();
+		DE_EconomySystem economySystem = DE_EconomySystem.GetInstance();
+		DE_TraderEntity trader = DE_TraderEntity.Cast(storageEnt);
+		if (!trader)
+			return super.CheckRequiredRank();
+		
 		ImageWidget rankIcon = ImageWidget.Cast(m_widget.FindAnyWidget(RANK_ICON_WIDGET_NAME));
 		if (!rankIcon)
 			return;
 
 		rankIcon.SetVisible(false);
-		
-		IEntity storageEnt = GetStorageUI().GetCurrentNavigationStorage().GetOwner();
-		DE_TraderEntity trader = DE_TraderEntity.Cast(storageEnt);
-		if (trader)
+	
+		ResourceName resourceName = m_pItem.GetOwner().GetPrefabData().GetPrefabName();
+		ref SCR_EntityCatalogEntry entry = DL_LootSystem.GetInstance().lootCatalog.GetEntryWithPrefab(resourceName);
+		if (!entry)
 			return;
 		
-		return super.CheckRequiredRank();
+		DE_ArsenalItemTraderData data = DE_ArsenalItemTraderData.Cast(entry.GetEntityDataOfType(DE_ArsenalItemTraderData));
+		float repRequirement = DE_ArsenalItemTraderData.GetRepRequirement(entry);
+
+		UUID playerUuid = SCR_PlayerIdentityUtils.GetPlayerIdentityId(SCR_PlayerController.GetLocalPlayerId());
+		if (repRequirement == -1 || (trader.repMap.Contains(playerUuid) && trader.repMap.Get(playerUuid) >= repRequirement))
+			return;
+		
+		SetItemAvailability(false);
+		rankIcon.SetVisible(true);
+		
+		if (m_wMSARIcon)
+			m_wMSARIcon.SetVisible(false);
+		
+		rankIcon.LoadImageFromSet(0, "{37204ADEBD67C8A6}UI/Imagesets/Notifications/NotificationIcons.imageset", "Notification_Squad_Leader");
 	}
 };

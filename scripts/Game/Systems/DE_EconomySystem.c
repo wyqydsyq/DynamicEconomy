@@ -6,29 +6,44 @@ class DE_EconomySystem : WorldSystem
 	[Attribute("0.1", UIWidgets.Auto, desc: "Dynamic Economy system tick rate, only affects initialization of traders and banks.", category: "Dynamic Economy")]
 	float tickInterval;
 	
-	[Attribute("0.3", UIWidgets.Auto, desc: "Default profit margin for traders, can be overridden on specific DE_TraderComponent", category: "Dynamic Economy")]
+	[Attribute("0.3", UIWidgets.Auto, desc: "Default profit margin for traders, can be overridden on specific DE_TraderComponent", category: "Dynamic Economy - Traders")]
 	float traderMargin;
 	
-	[Attribute("0.25", UIWidgets.Auto, desc: "Default supply cost for items w/o one set, set to 0 to allow free items", category: "Dynamic Economy")]
+	[Attribute("0.0001", UIWidgets.Auto, desc: "Fraction of trader profit margin that gets added to rep, 1 = gain as much rep as trader gains in profit", category: "Dynamic Economy - Traders")]
+	float traderRepMultiplier;
+	
+	[Attribute(desc: "Sets base rep requirements based on supply cost thresholds used for items without one set", category: "Dynamic Economy - Traders")]
+	ref array<ref RepSupplyCostRule> repSupplyCostRules;
+	
+	[Attribute("0.25", UIWidgets.Auto, desc: "Default supply cost for items w/o one set, set to 0 to allow free items", category: "Dynamic Economy - Traders")]
 	float fallbackSupplyCost;
 	
-	[RplProp(onRplName: "ExchangeRateChanged"), Attribute("50", UIWidgets.Auto, desc: "Cash:Supply exchange rate, how much cash 1 unit of supply costs", category: "Dynamic Economy")]
+	[Attribute("1", UIWidgets.Auto, desc: "Fraction of exchange rate change to apply, lower number makes trade value impact exchange rate more", category: "Dynamic Economy - Cash")]
+	float exchangeRateChangeScale;
+	
+	[RplProp(onRplName: "ExchangeRateChanged"), Attribute("50", UIWidgets.Auto, desc: "Cash:Supply exchange rate, how much cash 1 unit of supply costs", category: "Dynamic Economy - Cash")]
 	float cashSupplyExchangeRate;
 	
-	[Attribute("0", UIWidgets.Auto, desc: "Minimum randomized wallet value of AI characters", category: "Dynamic Economy")]
+	[Attribute("0", UIWidgets.Auto, desc: "Minimum randomized wallet value of AI characters", category: "Dynamic Economy - AI")]
 	float minAiWalletValue;
 	
-	[Attribute("2500", UIWidgets.Auto, desc: "Maximum randomized wallet value of AI characters", category: "Dynamic Economy")]
+	[Attribute("2500", UIWidgets.Auto, desc: "Maximum randomized wallet value of AI characters", category: "Dynamic Economy - AI")]
 	float maxAiWalletValue;
 	
-	[Attribute("10", UIWidgets.Auto, desc: "% of max wallet value that can drop in non-jackpot wallets", category: "Dynamic Economy")]
+	[Attribute("10", UIWidgets.Auto, desc: "% of max wallet value that can drop in non-jackpot wallets", category: "Dynamic Economy - AI")]
 	float jackpotWalletMultiplier;
 	
-	[Attribute("0.05", UIWidgets.Auto, desc: "Likelihood of AI dropping a jackpot wallet", category: "Dynamic Economy")]
+	[Attribute("0.05", UIWidgets.Auto, desc: "Likelihood of AI dropping a jackpot wallet", category: "Dynamic Economy - AI")]
 	float jackpotWalletRate;
 	
-	[Attribute("{C6EA723C0E2C52E7}Prefabs/Items/Core/DE_Item_Cash.et", UIWidgets.Auto, desc: "Cash item prefab dropped on character death", uiwidget: UIWidgets.ResourcePickerThumbnail, params: "et", category: "Dynamic Economy")]
-	ResourceName cashPrefab;
+	[Attribute("{C6EA723C0E2C52E7}Prefabs/Items/Core/DE_Item_Cash.et", UIWidgets.Auto, desc: "Cash item prefab dropped on character death", uiwidget: UIWidgets.ResourcePickerThumbnail, params: "et", category: "Dynamic Economy - Cash")]
+	ResourceName cashPrefab;	
+	
+	[Attribute("{7037D4A3456F324B}Prefabs/DE_TraderEntity.et", UIWidgets.Auto, desc: "Prefab initialized for DE_TraderComponent instances", uiwidget: UIWidgets.ResourcePickerThumbnail, params: "et", category: "Dynamic Economy - Cash")]
+	ResourceName traderEntityPrefab;	
+	
+	[Attribute("{476C7609DA6F1F6E}Prefabs/DE_VehicleTraderEntity.et", UIWidgets.Auto, desc: "Prefab initialized for DE_VehicleTraderComponent instances", uiwidget: UIWidgets.ResourcePickerThumbnail, params: "et", category: "Dynamic Economy - Cash")]
+	ResourceName vehicleTraderEntityPrefab;
 	
 	[Attribute(ENotification.DE_SELL_NOTIFICATION.ToString(), uiwidget: UIWidgets.ComboBox, enums: ParamEnumArray.FromEnum(ENotification))]
 	ENotification sellNotification;
@@ -127,6 +142,7 @@ class DE_EconomySystem : WorldSystem
 		for (int i = 0; i < Math.Min(100, traderComponents.Count()); i++)
 		{
 			DE_TraderComponent traderComp = traderComponents[i];
+			ResourceName prefab = traderEntityPrefab;
 			if (!traderComp)
 			{
 				traderComponents.Remove(i);
@@ -140,9 +156,13 @@ class DE_EconomySystem : WorldSystem
 				continue;
 			}
 			
+			if (DE_VehicleTraderComponent.Cast(traderComp))
+				prefab = vehicleTraderEntityPrefab;
+			
 			EntitySpawnParams params = new EntitySpawnParams();
 			params.Parent = owner;
-			DE_TraderEntity traderEnt = DE_TraderEntity.Cast(GetGame().SpawnEntityPrefabEx("{7037D4A3456F324B}Prefabs/DE_TraderEntity.et", true, null, params));
+			DE_TraderEntity traderEnt = DE_TraderEntity.Cast(GetGame().SpawnEntityPrefabEx(prefab, true, null, params));
+			
 			owner.AddChild(traderEnt, owner.GetAnimation().GetBoneIndex("Neck1"));
 			traders.Insert(traderEnt);
 			traderOwners.Insert(owner);
@@ -152,7 +172,7 @@ class DE_EconomySystem : WorldSystem
 	
 	float CalculateRateChange(float resourceCost)
 	{
-		float rateChange = (resourceCost / cashSupplyExchangeRate) / (cashSupplyExchangeRate * cashSupplyExchangeRate) / 100;
+		float rateChange = (resourceCost / cashSupplyExchangeRate) / (cashSupplyExchangeRate * cashSupplyExchangeRate) / (100 * exchangeRateChangeScale);
 		cashSupplyExchangeRate += rateChange;
 		//PrintFormat("DE: CalculateRateChange(%1): %2 -> %3", resourceCost, rateChange, cashSupplyExchangeRate);
 		ExchangeRateChanged();
@@ -172,6 +192,63 @@ class DE_EconomySystem : WorldSystem
 			return;
 		
 		inventoryUI.RefreshLootUIListener();
+	}
+	
+	RepSupplyCostRule GetRepRequirement(SCR_EntityCatalogEntry entry)
+	{
+		SCR_ArsenalItem data = SCR_ArsenalItem.Cast(entry.GetEntityDataOfType(SCR_ArsenalItem));
+		if (!data)
+			return null;
+		
+		float supplyCost = data.GetSupplyCost(SCR_EArsenalSupplyCostType.DEFAULT);
+		RepSupplyCostRule highestRule;
+		
+		foreach (RepSupplyCostRule rule : repSupplyCostRules)
+		{
+			if (
+				supplyCost >= rule.supplyCost
+				&& (
+					!highestRule
+					|| highestRule.supplyCost < rule.supplyCost
+				)
+			)
+				highestRule = rule;
+		}
+		
+		return highestRule;
+	}
+	
+	void GetPlayerCashConsumers(int playerId, out SCR_ResourceConsumer bankConsumer, out SCR_ResourceConsumer walletConsumer)
+	{
+		SCR_PlayerController pc = SCR_PlayerController.Cast(GetGame().GetPlayerManager().GetPlayerController(playerId));
+		if (!pc)
+			return;
+		
+		SCR_ResourceComponent playerResource = SCR_ResourceComponent.Cast(pc.FindComponent(SCR_ResourceComponent));
+		bankConsumer = playerResource.GetConsumer(EResourceGeneratorID.DEFAULT, EResourceType.CASH);
+		
+		SCR_ChimeraCharacter char = SCR_ChimeraCharacter.Cast(GetGame().GetPlayerManager().GetPlayerControlledEntity(pc.GetPlayerId()));
+		if (!char)
+			return;
+		
+		SCR_ResourceComponent charResource = SCR_ResourceComponent.Cast(char.FindComponent(SCR_ResourceComponent));
+		walletConsumer = charResource.GetConsumer(EResourceGeneratorID.DEFAULT, EResourceType.CASH);
+	}
+	
+	float SupplyToCashValue(float supplyCost, float margin = -1)
+	{
+		float cashValue = supplyCost;
+		if (fallbackSupplyCost > 0 && supplyCost <= 0)
+			cashValue = fallbackSupplyCost;
+		
+		// multiply supply cost by cash-supply exchange rate
+		cashValue *= cashSupplyExchangeRate;
+		
+		// apply margin
+		if (margin != -1)
+			cashValue *= margin;
+		
+		return cashValue;
 	}
 }
 
@@ -207,4 +284,13 @@ string FormatFloat(float v, int decimals = 2)
 		return result + "." + parts[1];
 	else
 		return result;
+}
+
+[BaseContainerProps()]
+class RepSupplyCostRule {
+	[Attribute("100", UIWidgets.Auto, desc: "Supply Cost threshold items worth equal or more than will have rep requirement applied")]
+	float supplyCost;
+	
+	[Attribute("1", UIWidgets.Auto, desc: "Rep required for any items above supply cost")]
+	float repRequired;
 }

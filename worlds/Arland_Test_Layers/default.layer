@@ -1,4 +1,4 @@
-$grp GenericEntity : "{0364B49EC9ED8337}Prefabs/Props/Core/DE_ATM_Prop.et" {
+$grp GenericEntity : "{0364B49EC9ED8337}Prefabs/Props/DynamicEconomy/DE_ATM_Prop.et" {
  {
   components {
    DE_BankComponent "{6704988146EAFF2B}" {
@@ -36,6 +36,12 @@ $grp GenericEntity : "{0364B49EC9ED8337}Prefabs/Props/Core/DE_ATM_Prop.et" {
 GenericEntity : "{1BED8F81D2FA2137}PrefabsEditable/Auto/Compositions/Slotted/SlotFlatSmall/E_AmmoStorage_S_US_01.et" {
  coords 652.757 0.013 3504.4
  angles 0 -101.001 0
+}
+DE_VehicleTraderEntity : "{476C7609DA6F1F6E}Prefabs/DE_VehicleTraderEntity.et" {
+ coords 644.428 0.187 3497.164
+}
+GenericEntity : "{A0FEA3E718F5B605}PrefabsEditable/Auto/Compositions/Slotted/SlotFlatSmall/E_VehicleMaintenance_S_Conflict_US_01.et" {
+ coords 684.952 0 3515.528
 }
 SCR_ChimeraCharacter : "{A517C72CEF150898}Prefabs/Characters/Factions/CIV/Businessman/Character_CIV_Businessman_2.et" {
  components {
@@ -79,7 +85,7 @@ $grp GenericEntity : "{C6EA723C0E2C52E7}Prefabs/Items/Core/DE_Item_Cash.et" {
   coords 642.459 0.199 3498.815
  }
 }
-DL_LootSpawn : "{E00CB9FFFC6C9339}Prefabs/DL_LootSpawn.et" {
+DL_LootSpawn : "{E00CB9FFFC6C9339}Prefabs/Props/DynamicLoot/DL_LootSpawn.et" {
  coords 639.603 0.225 3496.124
 }
 $grp SCR_ChimeraCharacter : "{E024A74F8A4BC644}Prefabs/Characters/Factions/CIV/Businessman/Character_CIV_Businessman_1.et" {
@@ -146,5 +152,14 @@ $grp SCR_ChimeraCharacter : "{E024A74F8A4BC644}Prefabs/Characters/Factions/CIV/B
   }
   coords 640.287 0.162 3501.126
   angles 0 115.338 0
+ }
+ {
+  components {
+   DE_VehicleTraderComponent "{68867AF14D4DB058}" {
+    traderName "Vehicle Trader"
+   }
+  }
+  coords 646.141 0.154 3496.826
+  angles 0 -47.149 0
  }
 }

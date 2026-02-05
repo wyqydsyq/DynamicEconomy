@@ -33,6 +33,17 @@ modded class SCR_ArsenalComponent : ScriptComponent
 			if (!item)
 				continue;
 			
+			// item has trader data requirements set, filter out item if they are not met
+			DE_ArsenalItemTraderData traderData = DE_ArsenalItemTraderData.Cast(entry.GetEntityDataOfType(DE_ArsenalItemTraderData));
+			float repRequirement = DE_ArsenalItemTraderData.GetRepRequirement(entry);
+			if (traderData && traderData.secret && repRequirement != -1)	
+			{
+				// get player rep for this trader and check it meets requirement
+				float playerRep = trader.repMap.Get(SCR_PlayerIdentityUtils.GetPlayerIdentityId(SCR_PlayerController.GetLocalPlayerId()));
+				if (!playerRep || playerRep < repRequirement)
+					continue;
+			}
+			
 			if (trader.itemWhitelist.Count() > 0 && !trader.itemWhitelist.Contains(item.GetItemResourceName()))
 				continue;
 			

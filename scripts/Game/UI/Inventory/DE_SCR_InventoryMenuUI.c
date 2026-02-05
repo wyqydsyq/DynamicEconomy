@@ -1,5 +1,7 @@
 modded class SCR_InventoryMenuUI : ChimeraMenuBase
 {
+	ref SCR_SupplyCostItemHintUIInfo repRequirementUIInfo;
+	
 	override void OnMenuOpen()
 	{
 		super.OnMenuOpen();
@@ -23,9 +25,36 @@ modded class SCR_InventoryMenuUI : ChimeraMenuBase
 		if (!trader)
 			return;
 	
-		Widget title = m_wLootStorage.FindAnyWidget("Header");
+		Widget header = m_wLootStorage.FindAnyWidget("Header");
+		if (header)
+			header.SetVisible(false);
+		
+		UUID playerUuid = SCR_PlayerIdentityUtils.GetPlayerIdentityId(SCR_PlayerController.GetLocalPlayerId());
+		TextWidget title = TextWidget.Cast(m_wLootStorage.FindAnyWidget("TextC"));
 		if (title)
-			title.SetVisible(false);
+			title.SetText(trader.traderName);
+		
+		Widget previewWidget = m_wLootStorage.FindAnyWidget("itemStorage");
+		if (previewWidget)
+			delete previewWidget; // SetVisible doesn't work to hide, preview widget seems to show itself on update
+		
+		Widget closeWidget = m_wLootStorage.FindAnyWidget("ButtonTraverseBack");
+		if (closeWidget)
+			closeWidget.SetVisible(false);
+		
+		Widget resourcesWidget = m_wLootStorage.FindAnyWidget("ResourceDisplayAvailable");
+		if (resourcesWidget)
+		{
+			resourcesWidget.SetVisible(true);
+			ImageWidget iconWidget = ImageWidget.Cast(resourcesWidget.FindAnyWidget("Image0"));
+			if (iconWidget)
+				iconWidget.LoadImageFromSet(0, "{37204ADEBD67C8A6}UI/Imagesets/Notifications/NotificationIcons.imageset", "Notification_Squad_Leader");
+			
+			TextWidget repWidget = TextWidget.Cast(resourcesWidget.FindAnyWidget("ResourceText"));
+			if (repWidget)
+				repWidget.SetText(string.Format("Rep: %1", trader.repMap.Get(playerUuid)));
+		}
+		
 	}
 	
 	override void ShowVicinity(bool compact = false)
@@ -228,6 +257,8 @@ modded class SCR_InventoryMenuUI : ChimeraMenuBase
 	
 	override protected void GetGeneralItemHintsInfos(out notnull array<SCR_InventoryItemHintUIInfo> hintsInfo)
 	{
+		DL_LootSystem lootSystem = DL_LootSystem.GetInstance();
+		
 		BaseInventoryStorageComponent storage = m_pStorageLootUI.GetCurrentNavigationStorage();
 		if (!storage)
 			return super.GetGeneralItemHintsInfos(hintsInfo);
@@ -238,21 +269,37 @@ modded class SCR_InventoryMenuUI : ChimeraMenuBase
 		
 		m_SupplyCostUIInfo = SCR_SupplyCostItemHintUIInfo.Cast(SCR_BaseContainerTools.CreateInstanceFromPrefab("{975B61E72A80C207}Configs/Inventory/ItemHints/CashCost_ItemHint.conf"));
 		m_SupplyRefundUIInfo = SCR_SupplyRefundItemHintUIInfo.Cast(SCR_BaseContainerTools.CreateInstanceFromPrefab("{A5C5F8503B38DCE6}Configs/Inventory/ItemHints/CashSell_ItemHint.conf"));
-		m_ArsenalItemRankUIInfo = null;
+		repRequirementUIInfo = SCR_SupplyCostItemHintUIInfo.Cast(SCR_BaseContainerTools.CreateInstanceFromPrefab("{1E522AF737B22820}Configs/Inventory/ItemHints/RepRequirement_ItemHint.conf"));
 		
 		SCR_ResourceComponent resource = SCR_ResourceComponent.Cast(trader.FindComponent(SCR_ResourceComponent));
 		SCR_ArsenalInventorySlotUI arsenalSlot = SCR_ArsenalInventorySlotUI.Cast(m_pFocusedSlotUI);
 		SCR_ArsenalComponent arsenalComponent = SCR_ArsenalComponent.Cast(trader.FindComponent(SCR_ArsenalComponent));
-		if (m_SupplyCostUIInfo && IsStorageArsenal(storage))
-		{
-			if (arsenalSlot)
-			{
-				m_SupplyCostUIInfo.SetSupplyCost(arsenalSlot.GetItemSupplyCost());
-				hintsInfo.InsertAt(m_SupplyCostUIInfo, 0);
-			}
-		}
 		
 		ResourceName resourceNameItem = m_pFocusedSlotUI.GetItemResource();
+		
+		SCR_EntityCatalogEntry entry = lootSystem.lootCatalog.GetEntryWithPrefab(resourceNameItem);
+		if (!entry)
+			return;
+		
+		if (m_SupplyCostUIInfo && IsStorageArsenal(storage) && arsenalSlot)
+		{
+				m_SupplyCostUIInfo.SetSupplyCost(arsenalSlot.GetItemSupplyCost());
+				hintsInfo.InsertAt(m_SupplyCostUIInfo, 0);
+				
+				if (repRequirementUIInfo)
+				{
+					float repRequirement = DE_ArsenalItemTraderData.GetRepRequirement(entry);
+					if (repRequirement != -1)
+					{
+						UUID playerUuid = SCR_PlayerIdentityUtils.GetPlayerIdentityId(SCR_PlayerController.GetLocalPlayerId());
+						if (trader.repMap.Contains(playerUuid) && trader.repMap.Get(playerUuid) >= repRequirement)
+							return;				
+						
+						repRequirementUIInfo.SetSupplyCost(repRequirement);
+						hintsInfo.InsertAt(repRequirementUIInfo, 1);
+					}
+				}
+		}
 		
 		if (m_SupplyRefundUIInfo && IsStorageArsenal(storage))
 		{
@@ -269,30 +316,23 @@ modded class SCR_InventoryMenuUI : ChimeraMenuBase
 			if (!isNonRefundable)
 			{
 				SCR_Faction faction = arsenalComponent.GetAssignedFaction();
-				SCR_EntityCatalogEntry entry;
 				SCR_EntityCatalogManagerComponent entityCatalogManager = SCR_EntityCatalogManagerComponent.GetInstance();
-				
-				DL_LootSystem lootSystem = DL_LootSystem.GetInstance();
-				entry = lootSystem.lootCatalog.GetEntryWithPrefab(resourceNameItem);
-				if (entry)
+				SCR_ArsenalItem data = SCR_ArsenalItem.Cast(entry.GetEntityDataOfType(SCR_ArsenalItem));
+				if (data)
 				{
-					SCR_ArsenalItem data = SCR_ArsenalItem.Cast(entry.GetEntityDataOfType(SCR_ArsenalItem));
-					if (data)
-					{
-						if (arsenalComponent)
-							resourceCost = data.GetSupplyRefundAmount(arsenalComponent.GetSupplyCostType());
-						else 
-							resourceCost = data.GetSupplyRefundAmount(SCR_EArsenalSupplyCostType.DEFAULT);
-						
-						DE_EconomySystem economySystem = DE_EconomySystem.GetInstance();
-						if (economySystem.fallbackSupplyCost > 0 && resourceCost <= 0)
-							resourceCost = economySystem.fallbackSupplyCost;
-						
-						// apply cash:supply exchange rate to base supply value for cash transactions
-						SCR_ResourceConsumer consumer = resource.GetConsumer(EResourceGeneratorID.DEFAULT, EResourceType.CASH);
-						resourceCost *= economySystem.cashSupplyExchangeRate;
-						resourceCost *= consumer.GetSellMultiplier();
-					}
+					if (arsenalComponent)
+						resourceCost = data.GetSupplyRefundAmount(arsenalComponent.GetSupplyCostType());
+					else 
+						resourceCost = data.GetSupplyRefundAmount(SCR_EArsenalSupplyCostType.DEFAULT);
+					
+					DE_EconomySystem economySystem = DE_EconomySystem.GetInstance();
+					if (economySystem.fallbackSupplyCost > 0 && resourceCost <= 0)
+						resourceCost = economySystem.fallbackSupplyCost;
+					
+					// apply cash:supply exchange rate to base supply value for cash transactions
+					SCR_ResourceConsumer consumer = resource.GetConsumer(EResourceGeneratorID.DEFAULT, EResourceType.CASH);
+					resourceCost *= economySystem.cashSupplyExchangeRate;
+					resourceCost *= consumer.GetSellMultiplier();
 				}
 				
 				if (resourceCost >= 0)

@@ -1,0 +1,79 @@
+VerticalLayoutWidgetClass "{66F23078265FF34E}" {
+ Name "PlayerFunds"
+ Slot AlignableSlot "{66F23079EE0A4CB4}" {
+  HorizontalAlign 3
+  VerticalAlign 3
+ }
+ {
+  HorizontalLayoutWidgetClass "{66F23079D7DAEF4D}" {
+   Name "WalletRow"
+   Slot LayoutSlot "{66F23079D7DAEF57}" {
+    Padding 0 2 0 2
+   }
+   {
+    TextWidgetClass "{66F2307828C72A36}" {
+     Name "WalletLabel"
+     Slot LayoutSlot "{66F23078AC570A07}" {
+      HorizontalAlign 0
+      VerticalAlign 1
+     }
+     Text "Wallet"
+     "Font Size" 16
+     "Min Font Size" 16
+     FontProperties FontProperties "{66F2307AC4563885}" {
+      Bold 1
+      ShadowSize 5
+      ShadowOffset 0 5
+     }
+    }
+    TextWidgetClass "{66F230782A4E54A3}" {
+     Name "WalletValue"
+     Slot LayoutSlot "{66F230782A4E54B4}" {
+      HorizontalAlign 2
+      VerticalAlign 1
+      Padding 4 0 0 0
+      SizeMode Fill
+     }
+     Text "$1,000,000,000.00"
+     "Font Size" 16
+     "Min Font Size" 16
+    }
+   }
+  }
+  HorizontalLayoutWidgetClass "{66F23079CDF6BFED}" {
+   Name "BankRow"
+   Slot LayoutSlot "{66F23079CDF6BF88}" {
+    Padding 0 2 0 2
+   }
+   {
+    TextWidgetClass "{66F23079A40FA0BF}" {
+     Name "BankLabel"
+     Slot LayoutSlot "{66F23078AC570A07}" {
+      HorizontalAlign 0
+      VerticalAlign 1
+     }
+     Text "Bank"
+     "Font Size" 16
+     "Min Font Size" 16
+     FontProperties FontProperties "{66F2307AC7539B16}" {
+      Bold 1
+      ShadowSize 5
+      ShadowOffset 0 5
+     }
+    }
+    TextWidgetClass "{66F23079A541F841}" {
+     Name "BankValue"
+     Slot LayoutSlot "{66F23078AC570A07}" {
+      HorizontalAlign 2
+      VerticalAlign 1
+      Padding 4 0 0 0
+      SizeMode Fill
+     }
+     Text "$1,000,000,000.00"
+     "Font Size" 16
+     "Min Font Size" 16
+    }
+   }
+  }
+ }
+}

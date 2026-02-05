@@ -5,6 +5,9 @@ modded class SCR_ArsenalItem : SCR_BaseEntityCatalogData
 	{
 		m_EntryParent = entry;
 		
+		if (!m_EntryParent.GetPrefab())
+			return;
+		
 		m_ItemResource = Resource.Load(m_EntryParent.GetPrefab());
 		
 		// BI forgot to null check
