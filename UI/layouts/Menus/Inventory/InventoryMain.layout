@@ -76,7 +76,7 @@ FrameWidgetClass {
                         TextWidgetClass "{66F23079347C7A8E}" {
                          Name "PlayerName"
                          Slot LayoutSlot "{66F23079347C7A9C}" {
-                          Padding 0 0 0 2
+                          Padding 0 -2 0 2
                          }
                          Color 1 0.7593 0.0802 1
                          Text "Player Name"
@@ -216,6 +216,19 @@ FrameWidgetClass {
       }
      }
     }
+   }
+  }
+  FrameWidgetClass "{60DCC8DF2787CCB3}" {
+   Prefab "{60DCC8DF2787CCB3}"
+   Slot FrameWidgetSlot "{5645426F032126C2}" {
+    PositionX -0.429
+    OffsetLeft -0.429
+    PositionY -9
+    OffsetTop -9
+    SizeX 0
+    OffsetRight 0.429
+    SizeY 0
+    OffsetBottom 9
    }
   }
  }

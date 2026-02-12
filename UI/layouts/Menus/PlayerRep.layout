@@ -1,0 +1,56 @@
+VerticalLayoutWidgetClass {
+ Name "PlayerRep"
+ Slot AlignableSlot "{66F23079EE0A4CB4}" {
+  HorizontalAlign 3
+  VerticalAlign 3
+ }
+ {
+  HorizontalLayoutWidgetClass "{689045E302B26CD1}" {
+   Name "RepRow"
+   Slot LayoutSlot "{66F23079D7DAEF57}" {
+    Padding 0 2 0 2
+   }
+   Color 0.761 0.386 0.08 1
+   {
+    ImageWidgetClass "{6890467920F7A833}" {
+     Name "Image0"
+     Slot LayoutSlot "{6890467920F7ABDA}" {
+     }
+     "Inherit Color" 1
+     Texture "{37204ADEBD67C8A6}UI/Imagesets/Notifications/NotificationIcons.imageset"
+     Image "Notification_Squad_Leader"
+     Size 32 32
+    }
+    TextWidgetClass "{689045E302B26CD7}" {
+     Name "RepLabel"
+     Slot LayoutSlot "{66F23078AC570A07}" {
+      HorizontalAlign 0
+      VerticalAlign 1
+     }
+     "Inherit Color" 1
+     Text "Rep"
+     "Font Size" 16
+     "Min Font Size" 16
+     FontProperties FontProperties "{66F2307AC4563885}" {
+      Bold 1
+      ShadowSize 5
+      ShadowOffset 0 5
+     }
+    }
+    TextWidgetClass "{689045E302B26CD4}" {
+     Name "RepValue"
+     Slot LayoutSlot "{66F230782A4E54B4}" {
+      HorizontalAlign 2
+      VerticalAlign 1
+      Padding 4 0 0 0
+      SizeMode Fill
+     }
+     "Inherit Color" 1
+     Text "0.00"
+     "Font Size" 16
+     "Min Font Size" 16
+    }
+   }
+  }
+ }
+}

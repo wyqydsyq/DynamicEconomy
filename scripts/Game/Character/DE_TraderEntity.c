@@ -1,9 +1,13 @@
+typedef map<ref UUID, ref float> DE_TraderRepMap;
+
 class DE_TraderEntityClass : GenericEntityClass
 {
 }
 
 class DE_TraderEntity : GenericEntity
 {
+	DE_EconomySystem economySystem;
+	
 	[RplProp(onRplName: "OnTraderNameChanged")]
 	string traderName;
 	
@@ -32,7 +36,32 @@ class DE_TraderEntity : GenericEntity
 	ref array<ResourceName> itemWhitelist = {};
 	
 	// map of player UUID -> rep value
-	ref map<UUID, float> repMap = new map<UUID, float>();
+	// full map is only held on server, clients instead have their own reps for each trader replicated into economySystem.localRepMap
+	ref DE_TraderRepMap repMap = new DE_TraderRepMap();
+	float GetRep(UUID playerUuid)
+	{
+		float rep = 0;
+		if (playerUuid && repMap.Contains(playerUuid))
+			rep = repMap.Get(playerUuid);
+		
+		return rep;
+	}
+	
+	// grant player rep based on transaction supply value
+	float GrantRep(UUID playerUuid, float supplyValue)
+	{
+		if (!repMap.Contains(playerUuid))
+			repMap.Insert(playerUuid, 0);
+		
+		float newValue = repMap.Get(playerUuid) + (supplyValue * 0.05 * economySystem.traderRepMultiplier);
+		repMap.Set(playerUuid, newValue);
+		return newValue;
+	}
+	
+	float GetLocalPlayerRep()
+	{
+		return economySystem.localRepMap.Get(Replication.FindId(this));
+	}
 	
 	void DE_TraderEntity(IEntitySource src, IEntity parent)
 	{
@@ -41,7 +70,7 @@ class DE_TraderEntity : GenericEntity
 	
 	override void EOnInit(IEntity owner)
 	{
-		DE_EconomySystem economySystem = DE_EconomySystem.GetInstance();
+		economySystem = DE_EconomySystem.GetInstance();
 		if (!economySystem || !owner.GetParent())
 			return;
 		
@@ -113,15 +142,6 @@ class DE_TraderEntity : GenericEntity
 	
 	void OnTraderNameChanged()
 	{
-		UniversalInventoryStorageComponent storage = UniversalInventoryStorageComponent.Cast(FindComponent(UniversalInventoryStorageComponent));
-		if (storage)
-		{
-			UIInfo info = storage.GetUIInfo();
-			if (info)
-				info.SetName("Trader");
-			//	info.SetName(traderName); // for some reason sets on all instances of trader storage prefab?? :( maybe need to create new UIInfo for each
-		}
-		
 		// set character name if trader is a character entity
 		SCR_ChimeraCharacter character = SCR_ChimeraCharacter.Cast(GetParent());
 		if (character)
@@ -131,6 +151,29 @@ class DE_TraderEntity : GenericEntity
 			identity.GetIdentity().SetSurname("");
 			identity.GetIdentity().SetAlias(traderName);
 		}
+	}
+	
+	// get additional trader cash value multipliers
+	float GetCashValueMult(SCR_EditableEntityUIInfo entityUIInfo)
+	{
+		float cashValueMult = 1;
+		
+		if (!DE_VehicleTraderEntity.Cast(this))
+			return cashValueMult;
+		
+		if (
+			entityUIInfo.HasEntityLabel(EEditableEntityLabel.VEHICLE_HELICOPTER)
+			|| entityUIInfo.HasEntityLabel(EEditableEntityLabel.VEHICLE_AIRPLANE)
+		)
+			cashValueMult = economySystem.vehicleTraderAircraftCashValueMultiplier;
+		
+		if (
+			entityUIInfo.HasEntityLabel(EEditableEntityLabel.VEHICLE_APC)
+		)
+			cashValueMult = economySystem.vehicleTraderArmorCashValueMultiplier;
+		
+		// add global vehicle mult on top of any type-specific one
+		return cashValueMult * economySystem.vehicleTraderValueMultiplier;
 	}
 }
 
@@ -166,6 +209,12 @@ class DE_TraderComponent : ScriptComponent
 	
 	[Attribute(desc: "**NOTE**: Currenly not very useful for filtering arsenal items, but will be useful for filtering editable entities e.g. vehicles or AI characters\n\nIf set, defines what editable entity labels will be available from trader. Leave unset for all", uiwidget: UIWidgets.ComboBox, enums: ParamEnumArray.FromEnum(EEditableEntityLabel), category: "Dynamic Economy")]
 	ref array<EEditableEntityLabel> labels;
+	
+	// holds reference to trader entity created by system
+	DE_TraderEntity trader;
+	
+	// gets persisted then set on trader entity upon recreation
+	ref DE_TraderRepMap repMap = new DE_TraderRepMap();
 	
 	void DE_TraderComponent(IEntityComponentSource src, IEntity ent, IEntity parent)
 	{

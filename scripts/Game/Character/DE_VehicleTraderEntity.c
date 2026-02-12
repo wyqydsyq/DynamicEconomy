@@ -6,7 +6,7 @@ class DE_VehicleTraderEntity : DE_TraderEntity
 {
 	override void EOnInit(IEntity owner)
 	{
-		DE_EconomySystem economySystem = DE_EconomySystem.GetInstance();
+		economySystem = DE_EconomySystem.GetInstance();
 		if (!economySystem || !owner.GetParent())
 			return;
 		

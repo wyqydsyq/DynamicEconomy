@@ -1,6 +1,8 @@
 modded class SCR_InventoryMenuUI : ChimeraMenuBase
 {
 	ref SCR_SupplyCostItemHintUIInfo repRequirementUIInfo;
+	DE_TraderEntity trader;
+	TextWidget repWidget;
 	
 	override void OnMenuOpen()
 	{
@@ -21,7 +23,7 @@ modded class SCR_InventoryMenuUI : ChimeraMenuBase
 		if (!storage)
 			 return;
 		
-		DE_TraderEntity trader = DE_TraderEntity.Cast(storage.GetOwner());
+		trader = DE_TraderEntity.Cast(storage.GetOwner());
 		if (!trader)
 			return;
 	
@@ -29,14 +31,13 @@ modded class SCR_InventoryMenuUI : ChimeraMenuBase
 		if (header)
 			header.SetVisible(false);
 		
-		UUID playerUuid = SCR_PlayerIdentityUtils.GetPlayerIdentityId(SCR_PlayerController.GetLocalPlayerId());
 		TextWidget title = TextWidget.Cast(m_wLootStorage.FindAnyWidget("TextC"));
 		if (title)
 			title.SetText(trader.traderName);
 		
 		Widget previewWidget = m_wLootStorage.FindAnyWidget("itemStorage");
 		if (previewWidget)
-			delete previewWidget; // SetVisible doesn't work to hide, preview widget seems to show itself on update
+			delete previewWidget;
 		
 		Widget closeWidget = m_wLootStorage.FindAnyWidget("ButtonTraverseBack");
 		if (closeWidget)
@@ -50,11 +51,27 @@ modded class SCR_InventoryMenuUI : ChimeraMenuBase
 			if (iconWidget)
 				iconWidget.LoadImageFromSet(0, "{37204ADEBD67C8A6}UI/Imagesets/Notifications/NotificationIcons.imageset", "Notification_Squad_Leader");
 			
-			TextWidget repWidget = TextWidget.Cast(resourcesWidget.FindAnyWidget("ResourceText"));
+			repWidget = TextWidget.Cast(resourcesWidget.FindAnyWidget("ResourceText"));
 			if (repWidget)
-				repWidget.SetText(string.Format("Rep: %1", trader.repMap.Get(playerUuid)));
+				repWidget.SetText(string.Format("Rep: %1", trader.GetLocalPlayerRep()));
 		}
 		
+		Widget storedWidget = m_wLootStorage.FindAnyWidget("ResourceDisplayStored");
+		if (!trader.cardPayment)
+			storedWidget.SetVisible(false);
+		else if (storedWidget)
+		{
+			storedWidget.SetVisible(true);
+			ImageWidget iconWidget = ImageWidget.Cast(storedWidget.FindAnyWidget("Image0"));
+			if (iconWidget)
+				iconWidget.LoadImageTexture(0, DE_EconomySystem.GetInstance().cardPaymentIcon);
+			
+			TextWidget textWidget = TextWidget.Cast(storedWidget.FindAnyWidget("ResourceText"));
+			if (textWidget)
+				textWidget.SetText("Card payment available");
+		}
+		
+		UpdatePlayerData();
 	}
 	
 	override void ShowVicinity(bool compact = false)
@@ -89,6 +106,9 @@ modded class SCR_InventoryMenuUI : ChimeraMenuBase
 		DL_PlayerInfoWidgetData data = new DL_PlayerInfoWidgetData();
 		data.InitWidgets(m_widget);
 		data.Update();
+		
+		if (repWidget)
+			repWidget.SetText(string.Format("Rep: %1", trader.GetLocalPlayerRep()));
 	}
 	
 	override protected bool MoveBetweenFromVicinity_VirtualArsenal()
@@ -258,6 +278,7 @@ modded class SCR_InventoryMenuUI : ChimeraMenuBase
 	override protected void GetGeneralItemHintsInfos(out notnull array<SCR_InventoryItemHintUIInfo> hintsInfo)
 	{
 		DL_LootSystem lootSystem = DL_LootSystem.GetInstance();
+		DE_EconomySystem economySystem = DE_EconomySystem.GetInstance();
 		
 		BaseInventoryStorageComponent storage = m_pStorageLootUI.GetCurrentNavigationStorage();
 		if (!storage)
@@ -283,7 +304,7 @@ modded class SCR_InventoryMenuUI : ChimeraMenuBase
 		
 		if (m_SupplyCostUIInfo && IsStorageArsenal(storage) && arsenalSlot)
 		{
-				m_SupplyCostUIInfo.SetSupplyCost(arsenalSlot.GetItemSupplyCost());
+				m_SupplyCostUIInfo.SetSupplyCost(economySystem.SupplyToCashValue(arsenalSlot.GetItemSupplyCost(), trader.traderMargin));
 				hintsInfo.InsertAt(m_SupplyCostUIInfo, 0);
 				
 				if (repRequirementUIInfo)
@@ -291,8 +312,7 @@ modded class SCR_InventoryMenuUI : ChimeraMenuBase
 					float repRequirement = DE_ArsenalItemTraderData.GetRepRequirement(entry);
 					if (repRequirement != -1)
 					{
-						UUID playerUuid = SCR_PlayerIdentityUtils.GetPlayerIdentityId(SCR_PlayerController.GetLocalPlayerId());
-						if (trader.repMap.Contains(playerUuid) && trader.repMap.Get(playerUuid) >= repRequirement)
+						if (trader.GetLocalPlayerRep() >= repRequirement)
 							return;				
 						
 						repRequirementUIInfo.SetSupplyCost(repRequirement);
@@ -325,19 +345,13 @@ modded class SCR_InventoryMenuUI : ChimeraMenuBase
 					else 
 						resourceCost = data.GetSupplyRefundAmount(SCR_EArsenalSupplyCostType.DEFAULT);
 					
-					DE_EconomySystem economySystem = DE_EconomySystem.GetInstance();
 					if (economySystem.fallbackSupplyCost > 0 && resourceCost <= 0)
 						resourceCost = economySystem.fallbackSupplyCost;
-					
-					// apply cash:supply exchange rate to base supply value for cash transactions
-					SCR_ResourceConsumer consumer = resource.GetConsumer(EResourceGeneratorID.DEFAULT, EResourceType.CASH);
-					resourceCost *= economySystem.cashSupplyExchangeRate;
-					resourceCost *= consumer.GetSellMultiplier();
 				}
 				
 				if (resourceCost >= 0)
 				{
-					m_SupplyRefundUIInfo.SetSupplyRefund(resourceCost, true);
+					m_SupplyRefundUIInfo.SetSupplyRefund(economySystem.SupplyToCashValue(resourceCost, -trader.traderMargin), true);
 					hintsInfo.InsertAt(m_SupplyRefundUIInfo, 0);
 				}
 			}

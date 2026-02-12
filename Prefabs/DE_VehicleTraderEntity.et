@@ -3,6 +3,12 @@ DE_VehicleTraderEntity {
  components {
   MeshObject "{68867AF1003E47BB}" {
   }
+  SCR_ArsenalComponent "{66F20DAEA9457C3D}" {
+   m_eSupportedArsenalItemTypes 8388606
+   m_eSupportedArsenalItemModes 510
+   m_eEditableAttributeGroups 30
+   m_eArsenalSaveType NO_RESTRICTIONS
+  }
   SCR_CampaignBuildingProviderComponent "{6886CD6C7FB88FFF}" {
    m_sProviderDisplayName "Vehicle Trader"
    m_bUserActionActivationOnly 1
@@ -18,6 +24,9 @@ DE_VehicleTraderEntity {
     DE_CashBudgetToEvaluateData "{688847346188F947}" {
      m_eBudget CASH
     }
+    DE_RepBudgetToEvaluateData "{688C901D5715973B}" {
+     m_eBudget REP
+    }
    }
    m_aAvailableTraits {
     VEHICLE_CAR VEHICLE_TRUCK VEHICLE_APC VEHICLE_HELICOPTER VEHICLE_AIRPLANE
@@ -31,9 +40,13 @@ DE_VehicleTraderEntity {
     VEHICLE
    }
    m_bNeedAllLabels 0
+   m_bSuppliesConsumptionEnabled 1
+   m_bEnableGracePeriod 1
+   m_fGracePeriodTime 30
+   m_fGracePeriodAreaRange 50
+   m_fPostGracePeriodRefundMultiplier 1
   }
   SCR_FactionAffiliationComponent "{68867AF1003E47B5}" {
-   "faction affiliation" "USSR"
   }
   SCR_ResourceComponent "{68867AF1003E474B}" {
    m_aContainers {
@@ -94,13 +107,16 @@ DE_VehicleTraderEntity {
     }
    }
   }
+  SCR_VehicleSalvageSupportStationComponent "{68916ECAE0698523}" {
+   m_fRange 50
+  }
   ActionsManagerComponent "{68867AF1003E4777}" {
    ActionContexts {
     UserActionContext "{68867AF1003E4775}" {
      UIInfo UIInfo "{68867AF1003E470A}" {
       Name "Trader"
      }
-     ContextName "default"
+     ContextName "SCR_CatalogSpawnerUserAction"
      Position PointInfo "{68867AF1003E4709}" {
      }
      Radius 1
@@ -111,7 +127,7 @@ DE_VehicleTraderEntity {
    additionalActions {
     SCR_CampaignBuildingStartUserAction "{68867AF1003E470F}" {
      ParentContextList {
-      "default"
+      "SCR_CatalogSpawnerUserAction"
      }
      UIInfo SCR_ActionUIInfo "{68867AF1003E470D}" {
       Name "Trade"

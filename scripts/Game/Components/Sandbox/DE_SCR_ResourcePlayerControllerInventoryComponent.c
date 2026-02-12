@@ -12,9 +12,26 @@ modded class SCR_ResourcePlayerControllerInventoryComponent : ScriptComponent
 		return s_OnArsenalItemRefunded;
 	}
 	
+	override bool TryPerformResourceConsumption(notnull SCR_ResourceActor actor, float resourceValue, bool ignoreOnEmptyBehavior = false)
+	{
+		DE_EconomySystem economySystem = DE_EconomySystem.GetInstance();
+		int changeValue = -resourceValue * economySystem.cashSupplyExchangeRate;
+		if (actor.GetComponent().GetContainer(EResourceType.CASH))
+			changeValue = resourceValue;
+		
+		bool result = super.TryPerformResourceConsumption(actor, resourceValue, ignoreOnEmptyBehavior);
+		if (result)
+			economySystem.CalculateRateChange(changeValue);
+		
+		return result;
+	}
+	
 	[RplRpc(RplChannel.Reliable, RplRcver.Server)]
 	override protected void RpcAsk_ArsenalRequestItem_(RplId rplIdResourceComponent, RplId rplIdInventoryManager, RplId rplIdStorageComponent, ResourceName resourceNameItem, EResourceType resourceType)
 	{
+		DE_EconomySystem economySystem = DE_EconomySystem.GetInstance();
+		DL_LootSystem lootSystem = DL_LootSystem.GetInstance();
+		
 		if (!rplIdInventoryManager.IsValid())
 			return;
 		
@@ -62,8 +79,6 @@ modded class SCR_ResourcePlayerControllerInventoryComponent : ScriptComponent
 		if (arsenalComponent)
 			faction = arsenalComponent.GetAssignedFaction();
 		
-		DL_LootSystem lootSystem = DL_LootSystem.GetInstance();
-		DE_EconomySystem economySystem = DE_EconomySystem.GetInstance();
 		SCR_EntityCatalogEntry entry = lootSystem.lootCatalog.GetEntryWithPrefab(resourceNameItem);
 		if (!entry)
 			return;
@@ -80,8 +95,7 @@ modded class SCR_ResourcePlayerControllerInventoryComponent : ScriptComponent
 		if (economySystem.fallbackSupplyCost > 0 && resourceCost <= 0)
 			resourceCost = economySystem.fallbackSupplyCost;
 		
-		resourceCost *= economySystem.cashSupplyExchangeRate;
-		resourceCost *= consumer.GetBuyMultiplier();
+		float cashCost = economySystem.SupplyToCashValue(resourceCost, trader.traderMargin);
 				
 		SCR_PlayerController pc = SCR_PlayerController.Cast(GetOwner());
 		SCR_ResourceComponent playerResource = SCR_ResourceComponent.Cast(pc.FindComponent(SCR_ResourceComponent));
@@ -94,10 +108,10 @@ modded class SCR_ResourcePlayerControllerInventoryComponent : ScriptComponent
 		IEntity fundsHolder = char;
 		
 		// if player can't afford from default funds consumer (wallet)
-		if (charConsumer.GetAggregatedResourceValue() < resourceCost)
+		if (charConsumer.GetAggregatedResourceValue() < cashCost)
 		{
 			// set fund consumer to bank account if trader allows card payment and player can afford
-			if (trader.cardPayment && playerConsumer.GetAggregatedResourceValue() >= resourceCost)
+			if (trader.cardPayment && playerConsumer.GetAggregatedResourceValue() >= cashCost)
 				fundsHolder = pc;
 			else
 			{
@@ -111,44 +125,24 @@ modded class SCR_ResourcePlayerControllerInventoryComponent : ScriptComponent
 		SCR_ResourceContainer fundsContainer = fundsResource.GetContainer(EResourceType.CASH);
 		
 		// consume funds from selected source
-		if (!TryPerformResourceConsumption(fundsConsumer, resourceCost))
+		if (!TryPerformResourceConsumption(fundsConsumer, cashCost))
 			return;
 		
-		// increase rep for this trader based on trader profit
-		float repChange = resourceCost * trader.traderMargin;
-		
 		UUID playerUuid = SCR_PlayerIdentityUtils.GetPlayerIdentityId(pc.GetPlayerId());
-		if (!trader.repMap.Contains(playerUuid))
-			trader.repMap.Insert(playerUuid, 0);
+		trader.GrantRep(playerUuid, resourceCost);
 		
-		trader.repMap.Set(playerUuid, trader.repMap.Get(playerUuid) + repChange * economySystem.traderRepMultiplier);
-		pc.NotifyRepChange(playerUuid, Replication.FindId(trader), trader.repMap.Get(playerUuid));
-		PrintFormat("DE: Player %1 rep: %2", playerUuid, trader.repMap.Get(playerUuid));
-		
+		pc.NotifyRepChange(Replication.FindId(trader), trader.GetRep(playerUuid));
 		pc.NotifyBankDataChange(Replication.FindId(fundsHolder), fundsContainer.GetResourceValue());
-		pc.NotifyPlayerDataChange(- resourceCost);
+		pc.NotifyPlayerDataChange(-cashCost);
 
 		if (inventoryManagerComponent.TrySpawnPrefabToStorage(resourceNameItem, storageComponent, cb: new SCR_PrefabSpawnCallback(storageComponent)) && s_OnArsenalItemRequested)
-			GetOnArsenalItemRequested().Invoke(resourceComponent, resourceNameItem, pc, storageComponent, resourceType, - resourceCost);
-	}
-	
-	override bool TryPerformResourceConsumption(notnull SCR_ResourceActor actor, float resourceValue, bool ignoreOnEmptyBehavior = false)
-	{
-		DE_EconomySystem economySystem = DE_EconomySystem.GetInstance();
-		int changeValue = -resourceValue * economySystem.cashSupplyExchangeRate;
-		if (actor.GetComponent().GetContainer(EResourceType.CASH))
-			changeValue = resourceValue;
-		
-		bool result = super.TryPerformResourceConsumption(actor, resourceValue, ignoreOnEmptyBehavior);
-		if (result)
-			economySystem.CalculateRateChange(changeValue);
-		
-		return result;
+			GetOnArsenalItemRequested().Invoke(resourceComponent, resourceNameItem, pc, storageComponent, resourceType, -cashCost);
 	}
 	
 	[RplRpc(RplChannel.Reliable, RplRcver.Server)]
 	override protected void RpcAsk_ArsenalRefundItem_(RplId rplIdResourceComponent, RplId rplIdInventoryItem, EResourceType resourceType)
 	{
+		DE_EconomySystem economySystem = DE_EconomySystem.GetInstance();
 		if (!rplIdInventoryItem.IsValid())
 			return;
 		
@@ -216,7 +210,6 @@ modded class SCR_ResourcePlayerControllerInventoryComponent : ScriptComponent
 		SCR_ArsenalItem data = SCR_ArsenalItem.Cast(entry.GetEntityDataOfType(SCR_ArsenalItem));
 		float resourceCost = data.GetSupplyRefundAmount(arsenalComponent.GetSupplyCostType());
 		
-		DE_EconomySystem economySystem = DE_EconomySystem.GetInstance();
 		if (economySystem.fallbackSupplyCost > 0 && resourceCost <= 0)
 			resourceCost = economySystem.fallbackSupplyCost;
 		
@@ -224,27 +217,20 @@ modded class SCR_ResourcePlayerControllerInventoryComponent : ScriptComponent
 			return;
 
 		SCR_ResourceConsumer consumer = resourceComponent.GetConsumer(EResourceGeneratorID.DEFAULT, EResourceType.CASH);
-		resourceCost *= economySystem.cashSupplyExchangeRate;
-		resourceCost *= consumer.GetSellMultiplier();
+		float cashCost = economySystem.SupplyToCashValue(resourceCost, -trader.traderMargin);
 		
-		if (!TryPerformResourceGeneration(generator, resourceCost))
+		if (!TryPerformResourceGeneration(generator, cashCost))
 			return;
 		
 		// increase rep for this trader based on trader profit
-		float repChange = resourceCost * trader.traderMargin;
-		
 		UUID playerUuid = SCR_PlayerIdentityUtils.GetPlayerIdentityId(pc.GetPlayerId());
-		if (!trader.repMap.Contains(playerUuid))
-			trader.repMap.Insert(playerUuid, 0);
+		trader.GrantRep(playerUuid, resourceCost);
 		
-		trader.repMap.Set(playerUuid, trader.repMap.Get(playerUuid) + repChange * economySystem.traderRepMultiplier);
-		pc.NotifyRepChange(playerUuid, Replication.FindId(trader), trader.repMap.Get(playerUuid));
-		PrintFormat("DE: Player %1 rep: %2", playerUuid, trader.repMap.Get(playerUuid));
-		
+		pc.NotifyRepChange(Replication.FindId(trader), trader.GetRep(playerUuid));
 		pc.NotifyBankDataChange(Replication.FindId(generator.GetOwner()), generator.GetComponent().GetContainer(EResourceType.CASH).GetResourceValue());
-		pc.NotifyPlayerDataChange(resourceCost);
+		pc.NotifyPlayerDataChange(cashCost);
 		
-		GetOnArsenalItemRefunded().Invoke(resourceComponent, resourceNameItem, GetOwner(), null, resourceType, resourceCost);
+		GetOnArsenalItemRefunded().Invoke(resourceComponent, resourceNameItem, GetOwner(), null, resourceType, cashCost);
 	}
 	
 	override bool TryPerformResourceGeneration(notnull SCR_ResourceActor actor, float resourceValue)

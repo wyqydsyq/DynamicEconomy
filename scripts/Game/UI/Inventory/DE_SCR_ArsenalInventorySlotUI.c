@@ -1,6 +1,20 @@
 modded class SCR_ArsenalInventorySlotUI : SCR_InventorySlotUI
 {
-	float requiredRep = -1;
+	string suppliesIconWidgetName = "SuppliesIcon";
+	
+	override void SetSlotVisible(bool bVisible)
+	{
+		super.SetSlotVisible(bVisible);
+		
+		IEntity storageEnt = GetStorageUI().GetCurrentNavigationStorage().GetOwner();
+		DE_TraderEntity trader = DE_TraderEntity.Cast(storageEnt);
+		if (!trader)
+			return super.SetSlotVisible(bVisible);
+		
+		ImageWidget suppliesIcon = ImageWidget.Cast(m_CostResourceHolder.FindAnyWidget(suppliesIconWidgetName));
+		if (suppliesIcon)
+			suppliesIcon.LoadImageTexture(0, DE_EconomySystem.GetInstance().cashIcon);
+	}
 	
 	override float GetTotalResources()
 	{
@@ -51,7 +65,7 @@ modded class SCR_ArsenalInventorySlotUI : SCR_InventorySlotUI
 		if (!consumer)
 			return m_fSupplyCost;
 		
-		return DE_EconomySystem.GetInstance().SupplyToCashValue(m_fSupplyCost, consumer.GetBuyMultiplier());
+		return DE_EconomySystem.GetInstance().SupplyToCashValue(m_fSupplyCost, trader.traderMargin);
 	}
 	
 	override void UpdateTotalResources(float totalResources)
@@ -99,7 +113,6 @@ modded class SCR_ArsenalInventorySlotUI : SCR_InventorySlotUI
 		if (!playerCanAfford && trader.cardPayment && totalResources < playerContainer.GetResourceValue())
 			playerCanAfford = true;
 		
-		//SCR_ResourceConsumer traderConsumer = traderResource.GetConsumer(EResourceGeneratorID.DEFAULT, EResourceType.CASH);
 		SetItemAvailability(playerCanAfford);
 		CheckRequiredRank();
 	}
@@ -112,6 +125,15 @@ modded class SCR_ArsenalInventorySlotUI : SCR_InventorySlotUI
 			return super.CheckPersonalResources(cost);
 	}
 	
+	override void OnPlayerSupplyAllocationChanged(int amount)
+	{
+		IEntity storageEnt = GetStorageUI().GetCurrentNavigationStorage().GetOwner();
+		DE_TraderEntity trader = DE_TraderEntity.Cast(storageEnt);
+		if (!trader)
+			return super.OnPlayerSupplyAllocationChanged(amount);
+	}
+	
+	// override for DE traders to check rep instead
 	override protected void CheckRequiredRank()
 	{
 		IEntity storageEnt = GetStorageUI().GetCurrentNavigationStorage().GetOwner();
@@ -134,8 +156,7 @@ modded class SCR_ArsenalInventorySlotUI : SCR_InventorySlotUI
 		DE_ArsenalItemTraderData data = DE_ArsenalItemTraderData.Cast(entry.GetEntityDataOfType(DE_ArsenalItemTraderData));
 		float repRequirement = DE_ArsenalItemTraderData.GetRepRequirement(entry);
 
-		UUID playerUuid = SCR_PlayerIdentityUtils.GetPlayerIdentityId(SCR_PlayerController.GetLocalPlayerId());
-		if (repRequirement == -1 || (trader.repMap.Contains(playerUuid) && trader.repMap.Get(playerUuid) >= repRequirement))
+		if (repRequirement == -1 || trader.GetLocalPlayerRep() >= repRequirement)
 			return;
 		
 		SetItemAvailability(false);

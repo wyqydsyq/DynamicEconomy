@@ -16,6 +16,10 @@ modded class SCR_PlayerController : PlayerController
 			menu.RefreshPlayerWidget();
 		}
 		
+		SCR_CampaignBuildingEditorComponent editorComp = SCR_CampaignBuildingEditorComponent.Cast(SCR_CampaignBuildingEditorComponent.GetInstance(SCR_CampaignBuildingEditorComponent));
+		if (editorComp)
+			editorComp.OnResourcesChanged();
+		
 		if (itemCost > 0)
 			SCR_NotificationsComponent.SendLocal(DE_EconomySystem.GetInstance().sellNotification, Math.AbsFloat(itemCost) * 100);
 		else if (itemCost < 0)
@@ -42,24 +46,18 @@ modded class SCR_PlayerController : PlayerController
 		SCR_ResourceContainer container = resource.GetContainer(EResourceType.CASH);
 		container.SetResourceValue(amount);
 		HandlePlayerDataChange(0);
-	}	
+	}
 	
-	void NotifyRepChange(UUID playerUuid, RplId traderRplId, float amount)
+	void NotifyRepChange(RplId traderRplId, float amount)
 	{
-		Rpc(HandleRepChange, playerUuid, traderRplId, amount);
+		Rpc(HandleRepChange, traderRplId, amount);
 	}
 	
 	[RplRpc(RplChannel.Reliable, RplRcver.Owner)]
-	void HandleRepChange(UUID playerUuid, RplId traderRplId, float amount)
+	void HandleRepChange(RplId traderRplId, float amount)
 	{
-		DE_TraderEntity trader = DE_TraderEntity.Cast(Replication.FindItem(traderRplId));
-		if (!trader)
-			return;
-		
-		if (!trader.repMap.Contains(playerUuid))
-			trader.repMap.Insert(playerUuid, 0);
-		
-		trader.repMap.Set(playerUuid, amount);
+		PrintFormat("DE: Set trader rep %1 = %2", traderRplId, amount);
+		DE_EconomySystem.GetInstance().localRepMap.Set(traderRplId, amount);
 	}
 	
 	void RequestDeposit(RplId bankId, int playerId, float amount)

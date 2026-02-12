@@ -1,0 +1,366 @@
+HorizontalLayoutWidgetClass {
+ Name "HorizontalLayout0"
+ Slot OverlayWidgetSlot "{688C8D845CC3A043}" {
+  HorizontalAlign 3
+  VerticalAlign 2
+  Padding 0 0 6 4
+ }
+ {
+  VerticalLayoutWidgetClass "{688C9007F026517A}" {
+   Name "RepCost"
+   Slot LayoutSlot "{688C9007F0265174}" {
+    HorizontalAlign 2
+   }
+   "Z Order" 1
+   {
+    OverlayWidgetClass "{5A14788787D72D5A}" {
+     Name "Cost"
+     Slot LayoutSlot "{5A14788787D72D7D}" {
+      Padding 0 0 0 0
+     }
+     "Ignore Cursor" 0
+     components {
+      SCR_BuildModeShowHideOnSupplyEnabledUIComponent "{607EA2292E51099C}" {
+      }
+     }
+     {
+      SizeLayoutWidgetClass "{5A14789B268441C3}" {
+       Name "SizeLayout0"
+       Slot OverlayWidgetSlot "{5A14789B268441F5}" {
+        HorizontalAlign 3
+        VerticalAlign 3
+        Padding 0 0 0 0
+       }
+       WidthOverride 0
+       AllowHeightOverride 1
+       HeightOverride 24
+       MinDesiredWidth 0
+       AllowMaxDesiredHeight 1
+       {
+        HorizontalLayoutWidgetClass "{5A14A779EF5B143D}" {
+         Name "EffectbackgroundRounded"
+         Slot AlignableSlot "{5A14A779EF5B14E3}" {
+          HorizontalAlign 3
+          VerticalAlign 3
+          Padding 0 0 0 0
+         }
+         "Fill Origin" Center
+         {
+          VerticalLayoutWidgetClass "{5A14A77834E13554}" {
+           Name "Effect_Background_Rounded_Layout_Left"
+           Slot LayoutSlot "{5A14A77834E1356B}" {
+           }
+           {
+            ImageWidgetClass "{5A14A7781948CE28}" {
+             Name "Layout_Left_Top"
+             Slot LayoutSlot "{5A14A7781948CED6}" {
+             }
+             Color 0.445 0.024 0.024 1
+             components {
+              SCR_SetModeColorEditorUIComponent "{5A14A77F09C73370}" {
+              }
+             }
+             Texture "{911C339CEF392AF5}UI/Textures/Editor/Effects/Effect_Badge_TopLeft.edds"
+             Size 8 8
+            }
+            ImageWidgetClass "{5A14A7782735C751}" {
+             Name "Layout_Left_Center"
+             Slot LayoutSlot "{5A14A7782735C775}" {
+             }
+             Color 0.445 0.024 0.024 1
+             components {
+              SCR_SetModeColorEditorUIComponent "{5A14A77F0EB31DC5}" {
+              }
+             }
+             Size 4 8
+            }
+            ImageWidgetClass "{5A14A77826B2C87D}" {
+             Name "Layout_Left_Bottom"
+             Slot LayoutSlot "{5A14A77826B2C811}" {
+             }
+             Color 0.445 0.024 0.024 1
+             components {
+              SCR_SetModeColorEditorUIComponent "{5A14A77F006C7B84}" {
+              }
+             }
+             Texture "{361CF4147F2D9C31}UI/Textures/Editor/Effects/Effect_Badge_BottomLeft.edds"
+             Size 8 8
+            }
+           }
+          }
+          ImageWidgetClass "{5A14A778AC8022F8}" {
+           Name "Effect_background_Rounded_Center"
+           Slot LayoutSlot "{5A14A778AC8022A7}" {
+            Padding 0 0 0 0
+            SizeMode Fill
+           }
+           Color 0.445 0.024 0.024 1
+           components {
+            SCR_SetModeColorEditorUIComponent "{5A14A77F036E5AB3}" {
+            }
+           }
+           Size 32 32
+          }
+          VerticalLayoutWidgetClass "{5A14A74011B4CD3A}" {
+           Name "Effect_Background_Rounded_Layout_Right"
+           Slot LayoutSlot "{5A14A74011B4CDE5}" {
+           }
+           {
+            ImageWidgetClass "{5A14A7400CF59568}" {
+             Name "Layout_Right_Top"
+             Slot LayoutSlot "{5A14A7400CF5950F}" {
+             }
+             Color 0.445 0.024 0.024 1
+             components {
+              SCR_SetModeColorEditorUIComponent "{5A14A740515ED6BC}" {
+              }
+             }
+             Texture "{90D99D79C61FA122}UI/Textures/Editor/Effects/Effect_Badge_TopRight.edds"
+             Size 8 8
+            }
+            ImageWidgetClass "{5A14A74057DE922D}" {
+             Name "Layout_Right_Center"
+             Slot LayoutSlot "{5A14A74057DE92CD}" {
+             }
+             Color 0.445 0.024 0.024 1
+             components {
+              SCR_SetModeColorEditorUIComponent "{5A14A740B96E1731}" {
+              }
+             }
+             Size 8 8
+            }
+            ImageWidgetClass "{5A14A74055BA0BDE}" {
+             Name "Layout_Right_Bottom"
+             Slot LayoutSlot "{5A14A74055BA0BF1}" {
+             }
+             Color 0.445 0.024 0.024 1
+             components {
+              SCR_SetModeColorEditorUIComponent "{5A3A6DECF83EAA51}" {
+              }
+             }
+             Texture "{FFDF441CF890C550}UI/Textures/Editor/Effects/Effect_Badge_BottomRight.edds"
+             Size 8 8
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+      HorizontalLayoutWidgetClass "{5A14788565843477}" {
+       Name "HorizontalLayout0"
+       Slot OverlayWidgetSlot "{5A14788565843416}" {
+        VerticalAlign 3
+        Padding 0 0 0 0
+       }
+       {
+        ImageWidgetClass "{5A14788437376998}" {
+         Name "BudgetIcon"
+         Slot LayoutSlot "{5A147885AF5AB402}" {
+          HorizontalAlign 0
+         }
+         Texture "{37204ADEBD67C8A6}UI/Imagesets/Notifications/NotificationIcons.imageset"
+         Image "Notification_Squad_Leader"
+         Size 20 20
+        }
+        TextWidgetClass "{5A14788473A9F08A}" {
+         Name "CostValue"
+         Slot LayoutSlot "{5A147885AD361511}" {
+          VerticalAlign 1
+          Padding 0 0 4 0
+         }
+         Clipping Ancestor
+         Text "0"
+         "Font Size" 14
+         "Min Font Size" 10
+         FontProperties FontProperties "{5A147884C0072BFB}" {
+          Font "{EABA4FE9D014CCEF}UI/Fonts/RobotoCondensed/RobotoCondensed_Bold.fnt"
+          DisabledColor 1 1 1 1
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+  VerticalLayoutWidgetClass "{688C8D845722F02E}" {
+   Name "CashCost"
+   Slot LayoutSlot "{688C8D845722F1A1}" {
+    HorizontalAlign 2
+    Padding 4 0 0 0
+   }
+   "Z Order" 1
+   {
+    OverlayWidgetClass "{688C8D845722F02F}" {
+     Name "Cost"
+     Slot LayoutSlot "{5A14788787D72D7D}" {
+      Padding 0 0 0 0
+     }
+     "Ignore Cursor" 0
+     components {
+      SCR_BuildModeShowHideOnSupplyEnabledUIComponent "{607EA2292E51099C}" {
+      }
+     }
+     {
+      SizeLayoutWidgetClass "{688C8D845722F02D}" {
+       Name "SizeLayout0"
+       Slot OverlayWidgetSlot "{5A14789B268441F5}" {
+        HorizontalAlign 3
+        VerticalAlign 3
+        Padding 0 0 0 0
+       }
+       WidthOverride 0
+       AllowHeightOverride 1
+       HeightOverride 24
+       MinDesiredWidth 0
+       AllowMaxDesiredHeight 1
+       {
+        HorizontalLayoutWidgetClass "{688C8D845722F023}" {
+         Name "EffectbackgroundRounded"
+         Slot AlignableSlot "{5A14A779EF5B14E3}" {
+          HorizontalAlign 3
+          VerticalAlign 3
+          Padding 0 0 0 0
+         }
+         "Fill Origin" Center
+         {
+          VerticalLayoutWidgetClass "{688C8D8457228E0F}" {
+           Name "Effect_Background_Rounded_Layout_Left"
+           Slot LayoutSlot "{5A14A77834E1356B}" {
+           }
+           {
+            ImageWidgetClass "{688C8D8457228E0C}" {
+             Name "Layout_Left_Top"
+             Slot LayoutSlot "{5A14A7781948CED6}" {
+             }
+             Color 0.445 0.024 0.024 1
+             components {
+              SCR_SetModeColorEditorUIComponent "{5A14A77F09C73370}" {
+              }
+             }
+             Texture "{911C339CEF392AF5}UI/Textures/Editor/Effects/Effect_Badge_TopLeft.edds"
+             Size 8 8
+            }
+            ImageWidgetClass "{688C8D8457228E0A}" {
+             Name "Layout_Left_Center"
+             Slot LayoutSlot "{5A14A7782735C775}" {
+             }
+             Color 0.445 0.024 0.024 1
+             components {
+              SCR_SetModeColorEditorUIComponent "{5A14A77F0EB31DC5}" {
+              }
+             }
+             Size 4 8
+            }
+            ImageWidgetClass "{688C8D845722A927}" {
+             Name "Layout_Left_Bottom"
+             Slot LayoutSlot "{5A14A77826B2C811}" {
+             }
+             Color 0.445 0.024 0.024 1
+             components {
+              SCR_SetModeColorEditorUIComponent "{5A14A77F006C7B84}" {
+              }
+             }
+             Texture "{361CF4147F2D9C31}UI/Textures/Editor/Effects/Effect_Badge_BottomLeft.edds"
+             Size 8 8
+            }
+           }
+          }
+          ImageWidgetClass "{688C8D845722A926}" {
+           Name "Effect_background_Rounded_Center"
+           Slot LayoutSlot "{5A14A778AC8022A7}" {
+            Padding 0 0 0 0
+            SizeMode Fill
+           }
+           Color 0.445 0.024 0.024 1
+           components {
+            SCR_SetModeColorEditorUIComponent "{5A14A77F036E5AB3}" {
+            }
+           }
+           Size 32 32
+          }
+          VerticalLayoutWidgetClass "{688C8D845722A925}" {
+           Name "Effect_Background_Rounded_Layout_Right"
+           Slot LayoutSlot "{5A14A74011B4CDE5}" {
+           }
+           {
+            ImageWidgetClass "{688C8D845722A924}" {
+             Name "Layout_Right_Top"
+             Slot LayoutSlot "{5A14A7400CF5950F}" {
+             }
+             Color 0.445 0.024 0.024 1
+             components {
+              SCR_SetModeColorEditorUIComponent "{5A14A740515ED6BC}" {
+              }
+             }
+             Texture "{90D99D79C61FA122}UI/Textures/Editor/Effects/Effect_Badge_TopRight.edds"
+             Size 8 8
+            }
+            ImageWidgetClass "{688C8D845722A93B}" {
+             Name "Layout_Right_Center"
+             Slot LayoutSlot "{5A14A74057DE92CD}" {
+             }
+             Color 0.445 0.024 0.024 1
+             components {
+              SCR_SetModeColorEditorUIComponent "{5A14A740B96E1731}" {
+              }
+             }
+             Size 8 8
+            }
+            ImageWidgetClass "{688C8D845722A93A}" {
+             Name "Layout_Right_Bottom"
+             Slot LayoutSlot "{5A14A74055BA0BF1}" {
+             }
+             Color 0.445 0.024 0.024 1
+             components {
+              SCR_SetModeColorEditorUIComponent "{5A3A6DECF83EAA51}" {
+              }
+             }
+             Texture "{FFDF441CF890C550}UI/Textures/Editor/Effects/Effect_Badge_BottomRight.edds"
+             Size 8 8
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+      HorizontalLayoutWidgetClass "{688C8D845722A939}" {
+       Name "HorizontalLayout0"
+       Slot OverlayWidgetSlot "{5A14788565843416}" {
+        VerticalAlign 3
+        Padding 0 0 0 0
+       }
+       {
+        ImageWidgetClass "{688C8D845722A938}" {
+         Name "BudgetIcon"
+         Slot LayoutSlot "{5A147885AF5AB402}" {
+          HorizontalAlign 0
+         }
+         Texture "{04CC877B9D9EA4AD}UI/Textures/Editor/ContentBrowser/ContentBrowser_Theme_Commercial.edds"
+         Size 20 20
+        }
+        TextWidgetClass "{688C8D845722A93F}" {
+         Name "CostValue"
+         Slot LayoutSlot "{5A147885AD361511}" {
+          VerticalAlign 1
+          Padding -4 0 4 0
+         }
+         Clipping Ancestor
+         Text "187.50k"
+         "Font Size" 14
+         "Min Font Size" 10
+         FontProperties FontProperties "{5A147884C0072BFB}" {
+          Font "{EABA4FE9D014CCEF}UI/Fonts/RobotoCondensed/RobotoCondensed_Bold.fnt"
+          DisabledColor 1 1 1 1
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}

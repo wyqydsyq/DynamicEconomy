@@ -37,11 +37,31 @@ GenericEntity : "{1BED8F81D2FA2137}PrefabsEditable/Auto/Compositions/Slotted/Slo
  coords 652.757 0.013 3504.4
  angles 0 -101.001 0
 }
-DE_VehicleTraderEntity : "{476C7609DA6F1F6E}Prefabs/DE_VehicleTraderEntity.et" {
- coords 644.428 0.187 3497.164
+GenericEntity : "{5ACECF41C167567D}PrefabsEditable/Auto/Compositions/Slotted/SlotFlatSmall/E_VehicleMaintenance_S_Conflict_USSR_01.et" {
+ coords 711.245 0.324 3529.687
+ {
+  GenericEntity {
+   ID "63068254A1DE6F44"
+   components {
+    SCR_CampaignBuildingProviderComponent "{5ED49CDEA85A0083}" {
+     m_bAnyFactionCanUse 1
+    }
+   }
+  }
+ }
 }
 GenericEntity : "{A0FEA3E718F5B605}PrefabsEditable/Auto/Compositions/Slotted/SlotFlatSmall/E_VehicleMaintenance_S_Conflict_US_01.et" {
  coords 684.952 0 3515.528
+ {
+  GenericEntity {
+   ID "6306825580CCD8B0"
+   components {
+    SCR_CampaignBuildingProviderComponent "{5ED49CDEA85A0083}" {
+     m_bAnyFactionCanUse 1
+    }
+   }
+  }
+ }
 }
 SCR_ChimeraCharacter : "{A517C72CEF150898}Prefabs/Characters/Factions/CIV/Businessman/Character_CIV_Businessman_2.et" {
  components {
@@ -55,7 +75,7 @@ $grp GenericEntity : "{C6EA723C0E2C52E7}Prefabs/Items/Core/DE_Item_Cash.et" {
  {
   components {
    DE_CashComponent "{670418B090C46931}" {
-    value 420
+    value 5000
    }
   }
   coords 642.888 0.19 3498.962
@@ -63,7 +83,7 @@ $grp GenericEntity : "{C6EA723C0E2C52E7}Prefabs/Items/Core/DE_Item_Cash.et" {
  {
   components {
    DE_CashComponent "{670418B090C46931}" {
-    value 1000
+    value 5000
    }
   }
   coords 642.888 0.19 3499.208
@@ -71,7 +91,7 @@ $grp GenericEntity : "{C6EA723C0E2C52E7}Prefabs/Items/Core/DE_Item_Cash.et" {
  {
   components {
    DE_CashComponent "{670418B090C46931}" {
-    value 1000
+    value 5000
    }
   }
   coords 642.52 0.193 3499.139
@@ -79,11 +99,95 @@ $grp GenericEntity : "{C6EA723C0E2C52E7}Prefabs/Items/Core/DE_Item_Cash.et" {
  {
   components {
    DE_CashComponent "{670418B090C46931}" {
-    value 1000
+    value 5000
    }
   }
   coords 642.459 0.199 3498.815
  }
+ {
+  components {
+   DE_CashComponent "{670418B090C46931}" {
+    value 5000
+   }
+  }
+  coords 642.068 0.203 3498.957
+ }
+ {
+  components {
+   DE_CashComponent "{670418B090C46931}" {
+    value 5000
+   }
+  }
+  coords 642.041 0.211 3498.471
+ }
+ {
+  components {
+   DE_CashComponent "{670418B090C46931}" {
+    value 5000
+   }
+  }
+  coords 641.497 0.219 3498.408
+ }
+ {
+  components {
+   DE_CashComponent "{670418B090C46931}" {
+    value 5000
+   }
+  }
+  coords 641.38 0.217 3498.733
+ }
+ {
+  components {
+   DE_CashComponent "{670418B090C46931}" {
+    value 5000
+   }
+  }
+  coords 640.812 0.219 3498.283
+ }
+ {
+  components {
+   DE_CashComponent "{670418B090C46931}" {
+    value 5000
+   }
+  }
+  coords 641.17 0.219 3497.611
+ }
+ {
+  components {
+   DE_CashComponent "{670418B090C46931}" {
+    value 5000
+   }
+  }
+  coords 642.049 0.219 3497.871
+ }
+ {
+  components {
+   DE_CashComponent "{670418B090C46931}" {
+    value 5000
+   }
+  }
+  coords 642.435 0.206 3498.414
+ }
+ {
+  components {
+   DE_CashComponent "{670418B090C46931}" {
+    value 5000
+   }
+  }
+  coords 642.83 0.197 3498.575
+ }
+ {
+  components {
+   DE_CashComponent "{670418B090C46931}" {
+    value 50000
+   }
+  }
+  coords 642.825 0.197 3498.285
+ }
+}
+Vehicle UAZ469_covered_CIV_blue1 : "{C8B16ABCA57679A2}Prefabs/Vehicles/Wheeled/UAZ469/UAZ469_covered_CIV_blue.et" {
+ coords 648.944 0.079 3502.851
+ angles 0 -105.212 0
 }
 DL_LootSpawn : "{E00CB9FFFC6C9339}Prefabs/Props/DynamicLoot/DL_LootSpawn.et" {
  coords 639.603 0.225 3496.124
@@ -155,8 +259,32 @@ $grp SCR_ChimeraCharacter : "{E024A74F8A4BC644}Prefabs/Characters/Factions/CIV/B
  }
  {
   components {
+   SCR_CharacterInventoryStorageComponent "{520EA1D2DB118DAC}" {
+    components {
+     SCR_HandSlotStorageComponent "{5EE8F81540A93631}" {
+      InitialStorageSlots {
+       SCR_HandSlotStorageSlot HandSlot {
+       }
+      }
+     }
+    }
+   }
    DE_VehicleTraderComponent "{68867AF14D4DB058}" {
     traderName "Vehicle Trader"
+   }
+   CharacterHandWeaponSlotComponent "{5C9CA35B6F6B604C}" {
+    AttachType InventoryStorageSlot a {
+    }
+   }
+   BaseLoadoutManagerComponent "{520EA1D2DB11821E}" {
+    Slots {
+     LoadoutSlotInfo Jacket {
+      Prefab "{D78000A3AAAC12AC}Prefabs/Characters/Uniforms/Shirt_CottonShirt_01/Shirt_CottonShirt_01_V6.et"
+     }
+     LoadoutSlotInfo Pants {
+      Prefab "{DC91A67E1074AAC0}Prefabs/Characters/Uniforms/Pants_Tanker_USSR_01/Pants_Tanker_USSR_01_tucked.et"
+     }
+    }
    }
   }
   coords 646.141 0.154 3496.826

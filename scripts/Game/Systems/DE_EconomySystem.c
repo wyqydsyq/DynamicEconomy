@@ -4,46 +4,67 @@ class DE_EconomySystem : WorldSystem
 	ref ScriptCallQueue callQueue = new ScriptCallQueue();
 	
 	[Attribute("0.1", UIWidgets.Auto, desc: "Dynamic Economy system tick rate, only affects initialization of traders and banks.", category: "Dynamic Economy")]
-	float tickInterval;
+	float tickInterval;	
+	
+	[Attribute("100", UIWidgets.Auto, desc: "Multiplier/divisor applied to floats that need to pass through functions that only accept ints to preserve decimal places", category: "Dynamic Economy")]
+	int intPrecisionFactor;
 	
 	[Attribute("0.3", UIWidgets.Auto, desc: "Default profit margin for traders, can be overridden on specific DE_TraderComponent", category: "Dynamic Economy - Traders")]
 	float traderMargin;
 	
-	[Attribute("0.0001", UIWidgets.Auto, desc: "Fraction of trader profit margin that gets added to rep, 1 = gain as much rep as trader gains in profit", category: "Dynamic Economy - Traders")]
+	[Attribute("0.005", UIWidgets.Auto, desc: "Fraction of trader margin that gets added to rep gain, 1 = gain as much rep as trader gains in profit (in supply)", category: "Dynamic Economy - Traders")]
 	float traderRepMultiplier;
 	
-	[Attribute(desc: "Sets base rep requirements based on supply cost thresholds used for items without one set", category: "Dynamic Economy - Traders")]
-	ref array<ref RepSupplyCostRule> repSupplyCostRules;
+	[Attribute("1.5", UIWidgets.Auto, desc: "Multiplier applied to cash value for armor (APCs, Tanks) at vehicle traders, useful for boosting or lowering their cash value as a whole", category: "Dynamic Economy - Traders")]
+	float vehicleTraderArmorCashValueMultiplier;
+	
+	[Attribute("2", UIWidgets.Auto, desc: "Multiplier applied to cash value for aircraft at vehicle traders, useful for boosting or lowering their cash value as a whole", category: "Dynamic Economy - Traders")]
+	float vehicleTraderAircraftCashValueMultiplier;
+	
+	[Attribute("5", UIWidgets.Auto, desc: "Multiplier applied to cash value for vehicle traders, useful for boosting or lowering their cash value as a whole", category: "Dynamic Economy - Traders")]
+	float vehicleTraderValueMultiplier;
+	
+	[Attribute("0.175", UIWidgets.Auto, desc: "Multiplier applied to rep cost for vehicle traders, useful for boosting or lowering their rep value as a whole", category: "Dynamic Economy - Traders")]
+	float vehicleTraderRepValueMultiplier;
 	
 	[Attribute("0.25", UIWidgets.Auto, desc: "Default supply cost for items w/o one set, set to 0 to allow free items", category: "Dynamic Economy - Traders")]
 	float fallbackSupplyCost;
 	
-	[Attribute("1", UIWidgets.Auto, desc: "Fraction of exchange rate change to apply, lower number makes trade value impact exchange rate more", category: "Dynamic Economy - Cash")]
+	[Attribute(desc: "Sets rep requirements based on supply cost thresholds for items without one set directly", category: "Dynamic Economy - Traders")]
+	ref array<ref RepSupplyCostRule> repSupplyCostRules;
+	
+	[Attribute("{7037D4A3456F324B}Prefabs/DE_TraderEntity.et", UIWidgets.Auto, desc: "Prefab initialized for DE_TraderComponent instances", uiwidget: UIWidgets.ResourcePickerThumbnail, params: "et", category: "Dynamic Economy - Traders")]
+	ResourceName traderEntityPrefab;
+	
+	[Attribute("{476C7609DA6F1F6E}Prefabs/DE_VehicleTraderEntity.et", UIWidgets.Auto, desc: "Prefab initialized for DE_VehicleTraderComponent instances", uiwidget: UIWidgets.ResourcePickerThumbnail, params: "et", category: "Dynamic Economy - Traders")]
+	ResourceName vehicleTraderEntityPrefab;
+	
+	[Attribute("0.01", desc: "Fraction of trade value to adjust exchange rate by, lower number makes trades impact exchange rate less", category: "Dynamic Economy - Cash")]
 	float exchangeRateChangeScale;
 	
-	[RplProp(onRplName: "ExchangeRateChanged"), Attribute("50", UIWidgets.Auto, desc: "Cash:Supply exchange rate, how much cash 1 unit of supply costs", category: "Dynamic Economy - Cash")]
+	[RplProp(onRplName: "ExchangeRateChanged"), Attribute("50", desc: "Cash:Supply exchange rate, how much cash 1 unit of supply costs", category: "Dynamic Economy - Cash")]
 	float cashSupplyExchangeRate;
 	
-	[Attribute("0", UIWidgets.Auto, desc: "Minimum randomized wallet value of AI characters", category: "Dynamic Economy - AI")]
+	[Attribute("0", desc: "Minimum randomized wallet value of AI characters", category: "Dynamic Economy - AI")]
 	float minAiWalletValue;
 	
-	[Attribute("2500", UIWidgets.Auto, desc: "Maximum randomized wallet value of AI characters", category: "Dynamic Economy - AI")]
+	[Attribute("2500", desc: "Maximum randomized wallet value of AI characters", category: "Dynamic Economy - AI")]
 	float maxAiWalletValue;
 	
-	[Attribute("10", UIWidgets.Auto, desc: "% of max wallet value that can drop in non-jackpot wallets", category: "Dynamic Economy - AI")]
+	[Attribute("10", desc: "% of max wallet value that can drop in non-jackpot wallets", category: "Dynamic Economy - AI")]
 	float jackpotWalletMultiplier;
 	
-	[Attribute("0.05", UIWidgets.Auto, desc: "Likelihood of AI dropping a jackpot wallet", category: "Dynamic Economy - AI")]
+	[Attribute("0.05", desc: "Likelihood of AI dropping a jackpot wallet", category: "Dynamic Economy - AI")]
 	float jackpotWalletRate;
 	
-	[Attribute("{C6EA723C0E2C52E7}Prefabs/Items/Core/DE_Item_Cash.et", UIWidgets.Auto, desc: "Cash item prefab dropped on character death", uiwidget: UIWidgets.ResourcePickerThumbnail, params: "et", category: "Dynamic Economy - Cash")]
-	ResourceName cashPrefab;	
+	[Attribute("{C6EA723C0E2C52E7}Prefabs/Items/Core/DE_Item_Cash.et", desc: "Cash item prefab dropped on character death", uiwidget: UIWidgets.ResourcePickerThumbnail, params: "et", category: "Dynamic Economy - Cash")]
+	ResourceName cashPrefab;
 	
-	[Attribute("{7037D4A3456F324B}Prefabs/DE_TraderEntity.et", UIWidgets.Auto, desc: "Prefab initialized for DE_TraderComponent instances", uiwidget: UIWidgets.ResourcePickerThumbnail, params: "et", category: "Dynamic Economy - Cash")]
-	ResourceName traderEntityPrefab;	
+	[Attribute("{04CC877B9D9EA4AD}UI/Textures/Editor/ContentBrowser/ContentBrowser_Theme_Commercial.edds", desc: "Icon used to represent traders with card (bank) payment available", uiwidget: UIWidgets.ResourcePickerThumbnail, params: "edds", category: "Dynamic Economy - UI")]
+	ResourceName cashIcon;
 	
-	[Attribute("{476C7609DA6F1F6E}Prefabs/DE_VehicleTraderEntity.et", UIWidgets.Auto, desc: "Prefab initialized for DE_VehicleTraderComponent instances", uiwidget: UIWidgets.ResourcePickerThumbnail, params: "et", category: "Dynamic Economy - Cash")]
-	ResourceName vehicleTraderEntityPrefab;
+	[Attribute("{59A4D48F95F0B476}UI/Textures/InventoryIcons/InventorySlot-Size_v2_UI.edds", desc: "Icon used to represent traders with card (bank) payment available", uiwidget: UIWidgets.ResourcePickerThumbnail, params: "edds", category: "Dynamic Economy - UI")]
+	ResourceName cardPaymentIcon;
 	
 	[Attribute(ENotification.DE_SELL_NOTIFICATION.ToString(), uiwidget: UIWidgets.ComboBox, enums: ParamEnumArray.FromEnum(ENotification))]
 	ENotification sellNotification;
@@ -67,6 +88,9 @@ class DE_EconomySystem : WorldSystem
 	ref array<DE_BankComponent> bankComponents = {};
 	ref array<IEntity> bankOwners = {};
 	ref array<DE_BankEntity> banks = {};
+	
+	// local player rep map of trader rplId -> rep value
+	ref map<RplId, float> localRepMap = new map<RplId, float>();
 	
 	void DE_EconomySystem()
 	{
@@ -115,7 +139,7 @@ class DE_EconomySystem : WorldSystem
 		if (!DL_LootSystem.GetInstance().lootDataReady)
 			return;
 		
-		for (int i = 0; i < Math.Min(100, bankComponents.Count()); i++)
+		for (int i = 0; i < Math.Min(10, bankComponents.Count()); i++)
 		{
 			DE_BankComponent bankComp = bankComponents[i];
 			if (!bankComp)
@@ -139,7 +163,7 @@ class DE_EconomySystem : WorldSystem
 			bankComponents.Remove(i);
 		}
 		
-		for (int i = 0; i < Math.Min(100, traderComponents.Count()); i++)
+		for (int i = 0; i < Math.Min(10, traderComponents.Count()); i++)
 		{
 			DE_TraderComponent traderComp = traderComponents[i];
 			ResourceName prefab = traderEntityPrefab;
@@ -163,18 +187,22 @@ class DE_EconomySystem : WorldSystem
 			params.Parent = owner;
 			DE_TraderEntity traderEnt = DE_TraderEntity.Cast(GetGame().SpawnEntityPrefabEx(prefab, true, null, params));
 			
+			// hydrate trader repMap from persisted data
+			if (traderComp.repMap.Count())
+				traderEnt.repMap = traderComp.repMap;
+			
 			owner.AddChild(traderEnt, owner.GetAnimation().GetBoneIndex("Neck1"));
 			traders.Insert(traderEnt);
 			traderOwners.Insert(owner);
+			traderComp.trader = traderEnt;
 			traderComponents.Remove(i);
 		}
 	}
 	
 	float CalculateRateChange(float resourceCost)
 	{
-		float rateChange = (resourceCost / cashSupplyExchangeRate) / (cashSupplyExchangeRate * cashSupplyExchangeRate) / (100 * exchangeRateChangeScale);
+		float rateChange = resourceCost / 1000 * exchangeRateChangeScale * exchangeRateChangeScale;
 		cashSupplyExchangeRate += rateChange;
-		//PrintFormat("DE: CalculateRateChange(%1): %2 -> %3", resourceCost, rateChange, cashSupplyExchangeRate);
 		ExchangeRateChanged();
 		Replication.BumpMe();
 		return rateChange;
@@ -192,6 +220,8 @@ class DE_EconomySystem : WorldSystem
 			return;
 		
 		inventoryUI.RefreshLootUIListener();
+		
+		// @TODO force-update build menu budget editor component if open?
 	}
 	
 	RepSupplyCostRule GetRepRequirement(SCR_EntityCatalogEntry entry)
@@ -201,6 +231,25 @@ class DE_EconomySystem : WorldSystem
 			return null;
 		
 		float supplyCost = data.GetSupplyCost(SCR_EArsenalSupplyCostType.DEFAULT);
+		RepSupplyCostRule highestRule;
+		
+		foreach (RepSupplyCostRule rule : repSupplyCostRules)
+		{
+			if (
+				supplyCost >= rule.supplyCost
+				&& (
+					!highestRule
+					|| highestRule.supplyCost < rule.supplyCost
+				)
+			)
+				highestRule = rule;
+		}
+		
+		return highestRule;
+	}
+	
+	RepSupplyCostRule GetRepRequirement(float supplyCost)
+	{
 		RepSupplyCostRule highestRule;
 		
 		foreach (RepSupplyCostRule rule : repSupplyCostRules)
@@ -246,14 +295,26 @@ class DE_EconomySystem : WorldSystem
 		
 		// apply margin
 		if (margin != -1)
-			cashValue *= margin;
+			cashValue += cashValue * margin; // 0.3 margin = 130%/1.3x total cost
 		
 		return cashValue;
 	}
 }
 
-string FormatFloat(float v, int decimals = 2)
+string FormatFloat(float v, int decimals = 2, bool preserveZeroDecimals = false)
 {
+	string suffix;
+	if (v >= 1000000)
+	{
+		v /= 1000000;
+		suffix = "m";
+	}
+	else if (v >= 1000)
+	{
+		v /= 1000;
+		suffix = "k";
+	}
+	
 	string str = v.ToString(lenDec: decimals);
 	string result = "";
 	array<string> parts = {};
@@ -280,10 +341,10 @@ string FormatFloat(float v, int decimals = 2)
 		}
 	}
 	
-	if (parts.Count() > 1)
-		return result + "." + parts[1];
+	if (parts.Count() > 1 && (parts[1] != "00" || preserveZeroDecimals))
+		return result + "." + parts[1] + suffix;
 	else
-		return result;
+		return result + suffix;
 }
 
 [BaseContainerProps()]

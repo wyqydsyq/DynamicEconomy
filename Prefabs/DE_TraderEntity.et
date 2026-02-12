@@ -81,12 +81,6 @@ DE_TraderEntity {
       }
      }
     }
-    CustomAttributes {
-     SCR_CharacterInventoryPreviewAttributes "{66F979C0C5813C3B}" {
-      PreviewWornModel 1
-      ShowAllChildrens 1
-     }
-    }
     m_Size SLOT_1x1
     m_eQuickSlotSize SLOT_1x1
     m_SlotType SLOT_LOOT_STORAGE
@@ -132,6 +126,8 @@ DE_TraderEntity {
    AllowCrossHierarchy 1
   }
   RplComponent "{66F20DAEBCF6C730}" {
+   "Rpl State Override" Runtime
+   SpatialRelevancy 0
   }
   Hierarchy "{66F20DAEB91B534F}" {
   }

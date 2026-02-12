@@ -1,46 +1,55 @@
 modded class SCR_CampaignBuildingProviderComponent : SCR_MilitaryBaseLogicComponent
 {
+	DE_TraderEntity trader;
+	
+	override void EOnInit(IEntity owner)
+	{
+		super.EOnInit(owner);
+		trader = DE_TraderEntity.Cast(GetOwner());
+	}
+	
 	void SetDisplayName(string name)
 	{
 		m_sProviderDisplayName = name;
 	}
 	
-	override bool UseMasterProvider()
-	{
-		DE_TraderEntity trader = DE_TraderEntity.Cast(GetOwner());
-		if (!trader)
-			return super.UseMasterProvider();
-		
-		return false;
-	}
-	
 	override int GetBudgetValue(EEditableEntityBudget type, out SCR_CampaignBuildingProviderComponent componentToUse)
 	{
-		if (type != EEditableEntityBudget.CASH)
+		if (!trader)
 			return super.GetBudgetValue(type, componentToUse);
 		
-		return 1;
+		// disable supply for traders
+		if (type == EEditableEntityBudget.CAMPAIGN)
+			return 0;
+		
+		if (type == EEditableEntityBudget.CASH || type == EEditableEntityBudget.REP)
+			return 1;
+		
+		return super.GetBudgetValue(type, componentToUse);
 	}
 	
 	override int GetMaxBudgetValue(EEditableEntityBudget budget)
 	{
-		if (budget != EEditableEntityBudget.CASH)
+		if (!trader)
 			return super.GetMaxBudgetValue(budget);
+		
+		// disable supply for traders
+		if (budget == EEditableEntityBudget.CAMPAIGN)
+			return 0;
+		
+		if (budget == EEditableEntityBudget.CASH || budget == EEditableEntityBudget.REP)
+			return 1;
 		
 		return 1;
 	}
 	
 	override bool IsThereEnoughBudgetToSpawn(notnull array<ref SCR_EntityBudgetValue> budgetCosts)
 	{
-		DE_TraderEntity trader = DE_TraderEntity.Cast(GetOwner());
+		trader = DE_TraderEntity.Cast(GetOwner());
 		if (!trader)
 			return super.IsThereEnoughBudgetToSpawn(budgetCosts);
 		
 		DE_EconomySystem economySystem = DE_EconomySystem.GetInstance();
-		
-		float margin = trader.traderMargin;
-		if (margin == -1)
-			margin = economySystem.traderMargin;
 		
 		if (budgetCosts.IsEmpty())
 			return true;
@@ -57,35 +66,27 @@ modded class SCR_CampaignBuildingProviderComponent : SCR_MilitaryBaseLogicCompon
 			SCR_CampaignBuildingProviderComponent realProvider = this;
 			const int currentBudgetValue = GetBudgetValue(budgetType, realProvider);
 			const int accumulatedBudgetChanges = realProvider.GetAccumulatedBudgetChanges(budgetType);
-			const int budgetIncrease = economySystem.SupplyToCashValue(budget.GetBudgetValue(), margin);
-
-			if (budgetType == EEditableEntityBudget.CAMPAIGN)	
-			{
-				if (!gameMode.IsResourceTypeEnabled(EResourceType.SUPPLIES))
-					continue;
-				
-				const bool enoughSupplies = realProvider.IsThereEnoughSupplies(currentBudgetValue, budgetIncrease, accumulatedBudgetChanges);
-				if (!enoughSupplies)
-					return false;
-				
-				continue;
-			}
+			const int budgetIncrease = budget.GetBudgetValue();
 			
 			if (budgetType == EEditableEntityBudget.CASH)	
 			{
+				float cashIncrease = budgetIncrease / economySystem.intPrecisionFactor;
+				
 				SCR_ResourceConsumer bankConsumer;
 				SCR_ResourceConsumer walletConsumer;
 				economySystem.GetPlayerCashConsumers(SCR_PlayerController.GetLocalPlayerId(), bankConsumer, walletConsumer);
 
-				bool canAfford = budgetIncrease <= walletConsumer.GetAggregatedResourceValue();
+				bool canAfford = cashIncrease <= walletConsumer.GetAggregatedResourceValue();
 				if (!canAfford && trader.cardPayment)
-					canAfford = budgetIncrease <= bankConsumer.GetAggregatedResourceValue();
+					canAfford = cashIncrease <= bankConsumer.GetAggregatedResourceValue();
 				
 				if (!canAfford)
 					return false;
 				
 				continue;
 			}
+			
+			// TODO add rep check
 			
 			const int maxBudgetValue = GetMaxBudgetValueFromMasterIfNeeded(budgetType);
 			if (maxBudgetValue == -1)
@@ -115,9 +116,46 @@ modded class SCR_CampaignBuildingProviderComponent : SCR_MilitaryBaseLogicCompon
 			budgets.Insert(budgetData.GetBudget());
 		}
 		
-		if (supplyBudgetIdx != -1 && hasCashBudget)
+		if (supplyBudgetIdx != -1 && hasCashBudget && trader)
 			budgets.Remove(supplyBudgetIdx);
 		
 		return budgets.Count();
+	}
+	
+	override void RequestEnterBuildingMode(int playerID, bool userActionUsed)
+	{
+		SCR_CampaignBuildingNetworkComponent networkComponent = GetNetworkManager();
+		if (!networkComponent)
+			return;
+
+		SCR_EditorManagerEntity editorManager = GetEditorManager();
+		if (!editorManager)
+			return;
+		
+		trader = DE_TraderEntity.Cast(GetOwner());
+		editorManager.SetTrader(trader);
+
+		SetOnPlayerConsciousnessChanged();
+		SetOnPlayerTeleported(playerID);
+		editorManager.GetOnOpenedServer().Insert(BuildingModeCreated);
+		editorManager.GetOnClosed().Insert(OnModeClosed);
+		networkComponent.RequestEnterBuildingMode(GetOwner(), playerID, m_bUserActionActivationOnly, userActionUsed);
+	}
+	
+	override Faction GetEntityFaction(notnull IEntity ent)
+	{
+		if (!trader)
+			return super.GetEntityFaction(ent);
+		
+		return null;
+	}
+	
+	override void EntitySpawnedByProvider(int prefabID, SCR_EditableEntityComponent editableEntity)
+	{
+		if (!trader)
+			return super.EntitySpawnedByProvider(prefabID, editableEntity);
+		
+		// skip regular conflict spawner logic for DE traders we will implement our own
+		return;
 	}
 }
