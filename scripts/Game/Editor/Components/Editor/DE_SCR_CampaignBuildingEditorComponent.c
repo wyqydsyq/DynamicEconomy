@@ -61,8 +61,18 @@ modded class SCR_CampaignBuildingEditorComponent : SCR_BaseEditorComponent
 		else
 		{
 			// copy trader labels to content browser manager
-			foreach (EEditableEntityLabel label : trader.labels)
-				m_ContentBrowserManager.AddRemoveLabelOfPersistentBrowserState(label, true);
+			if (trader.labels && trader.labels.Count())
+			{
+				foreach (EEditableEntityLabel label : trader.labels)
+				{
+					if (!trader.labelsBlacklist || !trader.labelsBlacklist.Count() || !trader.labelsBlacklist.Contains(label))
+						m_ContentBrowserManager.AddRemoveLabelOfPersistentBrowserState(label, true);
+				}
+			}
+			
+			// remove any blacklisted labels (incl. vanilla and modded ones)
+			if (trader.labelsBlacklist && trader.labelsBlacklist.Count())
+				m_ContentBrowserManager.AddBlackListedLabels(trader.labelsBlacklist);
 		}
 		// end custom
 

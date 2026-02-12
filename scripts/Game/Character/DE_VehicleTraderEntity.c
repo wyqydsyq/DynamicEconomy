@@ -32,7 +32,19 @@ class DE_VehicleTraderEntity : DE_TraderEntity
 			fallbackSupplyCost = economySystem.fallbackSupplyCost;
 
 		if (traderComp.labels && traderComp.labels.Count() > 0)
-			labels = traderComp.labels;
+			labels = traderComp.labels;		
+		
+		if (traderComp.labelsBlacklist && traderComp.labelsBlacklist.Count() > 0)
+			labelsBlacklist = traderComp.labelsBlacklist;
+		
+		if (traderComp.traits && traderComp.traits.Count() > 0)
+		{
+			traits = traderComp.traits;
+			provider.SetAvailableTraits(traits);
+		}
+		
+		if (traderComp.traitsBlacklist && traderComp.traitsBlacklist.Count() > 0)
+			traitsBlacklist = traderComp.traitsBlacklist;
 		
 		if (traderComp.factionKey)
 			factionKey = traderComp.factionKey;

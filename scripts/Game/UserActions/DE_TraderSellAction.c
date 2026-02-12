@@ -19,6 +19,7 @@ class DE_TraderSellAction : SCR_ScriptedUserAction
 		lootSystem = DL_LootSystem.GetInstance();
 		economySystem = DE_EconomySystem.GetInstance();
 		owner = pOwnerEntity;
+		trader = FindTrader();
 		
 		m_CompartmentManager = SCR_BaseCompartmentManagerComponent.Cast(owner.FindComponent(SCR_BaseCompartmentManagerComponent));
 		
@@ -61,27 +62,29 @@ class DE_TraderSellAction : SCR_ScriptedUserAction
 			return;
 		
 		supplyCost = data.GetSupplyCost();
+		
+		// @TODO get data from edidtable entity data if not found in spawner data
 	}
 
 	DE_TraderEntity FindTrader()
 	{
 		if (!owner)
-			return null;
-		
-		DE_TraderEntity nearestTrader;
-		vector vehicleOrigin = owner.GetOrigin();
-		float nearestTraderDistance = 150 * 150;
-		
-		foreach (SCR_CatalogEntitySpawnerComponent component : SCR_CatalogEntitySpawnerComponent.INSTANCES)
 		{
-			DE_TraderEntity foundTrader = DE_TraderEntity.Cast(component.GetOwner());
-			if (!foundTrader)
-				continue;
-			
+			owner = GetOwner();
+			if (!owner)
+				return null;
+		}
+		
+		ref DE_TraderEntity nearestTrader;
+		vector vehicleOrigin = owner.GetOrigin();
+		float nearestTraderDistance = 50; // initial min check radius
+		
+		foreach (ref DE_TraderEntity foundTrader : economySystem.traders)
+		{
 			float traderDistance = vector.DistanceSq(vehicleOrigin, foundTrader.GetOrigin());
 			if (traderDistance < nearestTraderDistance)
 			{
-				nearestTraderDistance = nearestTraderDistance;
+				nearestTraderDistance = traderDistance;
 				nearestTrader = foundTrader;
 			}
 		}
@@ -101,7 +104,7 @@ class DE_TraderSellAction : SCR_ScriptedUserAction
 		
 		// need to get reference to trader and system again on server as it hasn't run Init on the action
 		economySystem = DE_EconomySystem.GetInstance();
-		trader = FindTrader();
+		FindTrader();
 		
 		float cashGain = economySystem.SupplyToCashValue(supplyCost * trader.GetCashValueMult(uiInfo), -trader.traderMargin);
 		int playerId = GetGame().GetPlayerManager().GetPlayerIdFromControlledEntity(pUserEntity);
@@ -117,7 +120,6 @@ class DE_TraderSellAction : SCR_ScriptedUserAction
 		UUID playerUuid = SCR_PlayerIdentityUtils.GetPlayerIdentityId(playerId);
 		trader.GrantRep(playerUuid, supplyCost);
 		
-		PrintFormat("DE: %1 granted player %2 rep from trade worth %3 supply", trader, playerUuid, supplyCost);
 		pc.NotifyRepChange(Replication.FindId(trader), trader.GetRep(playerUuid));
 		pc.NotifyBankDataChange(Replication.FindId(trader), walletContainer.GetResourceValue());
 		pc.NotifyPlayerDataChange(cashGain);
@@ -127,6 +129,7 @@ class DE_TraderSellAction : SCR_ScriptedUserAction
 	
 	override bool GetActionNameScript(out string outName)
 	{
+		FindTrader();
 		if (supplyCost > 0)
 		{
 			ActionNameParams[0] = trader.traderName;

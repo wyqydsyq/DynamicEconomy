@@ -55,9 +55,7 @@ modded class SCR_CampaignBuildingBudgetEditorComponent : SCR_BudgetEditorCompone
 			// if no item-specific rep requirement set, check for rule to apply based on supply cost
 			if (!repRequirement)
 			{
-				float repMult = economySystem.vehicleTraderRepValueMultiplier;
-				float repBudgetValue = supplyBudgetValue * repMult;
-				ref RepSupplyCostRule foundRule = economySystem.GetRepRequirement(repBudgetValue);
+				ref RepSupplyCostRule foundRule = economySystem.GetRepRequirement(supplyBudgetValue * trader.GetRepValueMult(entityUIInfo));
 				if (foundRule)
 					repRequirement = foundRule.repRequired;
 			}

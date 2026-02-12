@@ -19,7 +19,13 @@ class DE_EconomySystem : WorldSystem
 	float vehicleTraderArmorCashValueMultiplier;
 	
 	[Attribute("2", UIWidgets.Auto, desc: "Multiplier applied to cash value for aircraft at vehicle traders, useful for boosting or lowering their cash value as a whole", category: "Dynamic Economy - Traders")]
-	float vehicleTraderAircraftCashValueMultiplier;
+	float vehicleTraderAircraftCashValueMultiplier;	
+	
+	[Attribute("0.1", UIWidgets.Auto, desc: "Multiplier applied to cash value for Civ vehicles at vehicle traders, useful for boosting or lowering their cash value as a whole", category: "Dynamic Economy - Traders")]
+	float vehicleTraderCivCashValueMultiplier;	
+	
+	[Attribute("0.6", UIWidgets.Auto, desc: "Multiplier applied to rep value for Civ vehicles at vehicle traders, useful for boosting or lowering their rep value as a whole", category: "Dynamic Economy - Traders")]
+	float vehicleTraderCivRepValueMultiplier;
 	
 	[Attribute("5", UIWidgets.Auto, desc: "Multiplier applied to cash value for vehicle traders, useful for boosting or lowering their cash value as a whole", category: "Dynamic Economy - Traders")]
 	float vehicleTraderValueMultiplier;
@@ -139,17 +145,15 @@ class DE_EconomySystem : WorldSystem
 		if (!DL_LootSystem.GetInstance().lootDataReady)
 			return;
 		
-		for (int i = 0; i < Math.Min(10, bankComponents.Count()); i++)
+		foreach (DE_BankComponent bankComp : bankComponents)
 		{
-			DE_BankComponent bankComp = bankComponents[i];
-			if (!bankComp)
-				continue;
-			
 			IEntity owner = bankComp.GetOwner();
 			if (!owner)
-				return;
+				continue;
 			
-			DE_BankEntity bankEnt = DE_BankEntity.Cast(GetGame().SpawnEntityPrefabEx("{2EA890EED4EDE0C3}Prefabs/DE_BankEntity.et", true));
+			EntitySpawnParams params = new EntitySpawnParams();
+			params.Parent = owner;
+			DE_BankEntity bankEnt = DE_BankEntity.Cast(GetGame().SpawnEntityPrefabEx("{2EA890EED4EDE0C3}Prefabs/DE_BankEntity.et", true, null, params));
 
 			int attachIdx = -1;
 			if (SCR_ChimeraCharacter.Cast(owner))
@@ -160,26 +164,16 @@ class DE_EconomySystem : WorldSystem
 			owner.AddChild(bankEnt, attachIdx);
 			banks.Insert(bankEnt);
 			bankOwners.Insert(owner);
-			bankComponents.Remove(i);
 		}
-		
-		for (int i = 0; i < Math.Min(10, traderComponents.Count()); i++)
+		bankComponents.Clear();
+	
+		foreach (DE_TraderComponent traderComp : traderComponents)
 		{
-			DE_TraderComponent traderComp = traderComponents[i];
-			ResourceName prefab = traderEntityPrefab;
-			if (!traderComp)
-			{
-				traderComponents.Remove(i);
-				continue;
-			}
-			
 			IEntity owner = traderComp.GetOwner();
-			if (!owner)
-			{
-				traderComponents.Remove(i);
+			if (!owner || traderComp.trader)
 				continue;
-			}
 			
+			ResourceName prefab = traderEntityPrefab;
 			if (DE_VehicleTraderComponent.Cast(traderComp))
 				prefab = vehicleTraderEntityPrefab;
 			
@@ -195,8 +189,8 @@ class DE_EconomySystem : WorldSystem
 			traders.Insert(traderEnt);
 			traderOwners.Insert(owner);
 			traderComp.trader = traderEnt;
-			traderComponents.Remove(i);
 		}
+		traderComponents.Clear();
 	}
 	
 	float CalculateRateChange(float resourceCost)

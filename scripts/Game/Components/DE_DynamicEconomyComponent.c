@@ -63,14 +63,12 @@ class DE_DynamicEconomyComponent : SCR_BaseGameModeComponent
 		// char not spawned/posessed yet, try again after 1sec up to 10 times
 		if (!char || !char.FindComponent(SCR_ResourceComponent))
 		{
-			//PrintFormat("DE: Unable to find character for %1, attempts: %2", pc.GetPlayerId(), attempts);
 			if (attempts < 10)
 				return economySystem.callQueue.CallLater(UpdatePlayerData, 1000, param1: playerId, param2: attempts + 1);
 			else
 				return;
 		}
 		
-		//PrintFormat("DE: Found character for %1, pushing bank data...", pc.GetPlayerId());
 		SCR_ResourceComponent charResource = SCR_ResourceComponent.Cast(char.FindComponent(SCR_ResourceComponent));
 		SCR_ResourceContainer charContainer = charResource.GetContainer(EResourceType.CASH);
 

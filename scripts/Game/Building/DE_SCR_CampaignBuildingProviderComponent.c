@@ -13,6 +13,33 @@ modded class SCR_CampaignBuildingProviderComponent : SCR_MilitaryBaseLogicCompon
 		m_sProviderDisplayName = name;
 	}
 	
+	void SetAvailableTraits(array<EEditableEntityLabel> traits)
+	{
+		m_aAvailableTraits = traits;
+	}
+	
+	override array<EEditableEntityLabel> GetAvailableTraits()
+	{
+		if (!trader)
+			return super.GetAvailableTraits();
+		
+		if (!trader.traitsBlacklist || !trader.traitsBlacklist.Count())
+			return super.GetAvailableTraits();
+		
+		array<EEditableEntityLabel> filteredTraits = {};
+		array<EEditableEntityLabel> traits = super.GetAvailableTraits();
+		foreach (EEditableEntityLabel trait : traits)
+		{
+			// filter out blacklisted traits
+			if (trader.traitsBlacklist.Contains(trait))
+				continue;
+			
+			filteredTraits.Insert(trait);
+		}
+		
+		return filteredTraits;
+	}
+	
 	override int GetBudgetValue(EEditableEntityBudget type, out SCR_CampaignBuildingProviderComponent componentToUse)
 	{
 		if (!trader)
@@ -86,7 +113,11 @@ modded class SCR_CampaignBuildingProviderComponent : SCR_MilitaryBaseLogicCompon
 				continue;
 			}
 			
-			// TODO add rep check
+			if (budgetType == EEditableEntityBudget.REP)
+			{
+				if (trader.GetLocalPlayerRep() < budget.GetBudgetValue())
+					return false;	
+			}
 			
 			const int maxBudgetValue = GetMaxBudgetValueFromMasterIfNeeded(budgetType);
 			if (maxBudgetValue == -1)

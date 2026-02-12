@@ -30,6 +30,15 @@ class DE_TraderEntity : GenericEntity
 	ref array<EEditableEntityLabel> labels;	
 	
 	[RplProp()]
+	ref array<EEditableEntityLabel> labelsBlacklist;
+	
+	[RplProp()]
+	ref array<EEditableEntityLabel> traits;	
+	
+	[RplProp()]
+	ref array<EEditableEntityLabel> traitsBlacklist;
+	
+	[RplProp()]
 	FactionKey factionKey;
 	
 	[RplProp()]
@@ -96,6 +105,15 @@ class DE_TraderEntity : GenericEntity
 		if (traderComp.labels && traderComp.labels.Count() > 0)
 			labels = traderComp.labels;
 		
+		if (traderComp.labelsBlacklist && traderComp.labelsBlacklist.Count() > 0)
+			labelsBlacklist = traderComp.labelsBlacklist;
+		
+		if (traderComp.traits && traderComp.traits.Count() > 0)
+			traits = traderComp.traits;	
+			
+		if (traderComp.traitsBlacklist && traderComp.traitsBlacklist.Count() > 0)
+			traitsBlacklist = traderComp.traitsBlacklist;
+		
 		if (traderComp.factionKey)
 			factionKey = traderComp.factionKey;
 		
@@ -131,8 +149,6 @@ class DE_TraderEntity : GenericEntity
 			return;
 		
 		characterControllerComponent.GetOnPlayerDeathWithParam().Insert(OnCharacterDeath);
-		
-		//arsenal.RefreshArsenal();
 	}
 	
 	void OnCharacterDeath(SCR_CharacterControllerComponent characterControllerComponent, IEntity killerEntity, Instigator killer)
@@ -172,8 +188,30 @@ class DE_TraderEntity : GenericEntity
 		)
 			cashValueMult = economySystem.vehicleTraderArmorCashValueMultiplier;
 		
+		if (
+			entityUIInfo.HasEntityLabel(EEditableEntityLabel.FACTION_CIV)
+		)
+			cashValueMult = economySystem.vehicleTraderCivCashValueMultiplier;
+		
 		// add global vehicle mult on top of any type-specific one
 		return cashValueMult * economySystem.vehicleTraderValueMultiplier;
+	}
+	
+	// get additional trader rep value multipliers
+	float GetRepValueMult(SCR_EditableEntityUIInfo entityUIInfo)
+	{
+		float repValueMult = 1;
+		
+		if (!DE_VehicleTraderEntity.Cast(this))
+			return repValueMult;
+		
+		if (
+			entityUIInfo.HasEntityLabel(EEditableEntityLabel.FACTION_CIV)
+		)
+			repValueMult *= economySystem.vehicleTraderCivRepValueMultiplier;
+		
+		// add global vehicle mult on top of any type-specific one
+		return repValueMult * economySystem.vehicleTraderRepValueMultiplier;
 	}
 }
 
@@ -183,32 +221,41 @@ class DE_TraderComponentClass : ScriptComponentClass
 
 class DE_TraderComponent : ScriptComponent
 {
-	[Attribute("Trader", UIWidgets.Auto, desc: "Character name for this trader shown in UI", category: "Dynamic Economy")]
+	[Attribute("Trader", UIWidgets.Auto, desc: "Character name for this trader shown in UI", category: "Dynamic Economy - Traders")]
 	string traderName;
 	
-	[Attribute("false", UIWidgets.Auto, desc: "Whether trader accepts card payment (bank) or false for cash-only (wallet)", category: "Dynamic Economy")]
+	[Attribute("false", UIWidgets.Auto, desc: "Whether trader accepts card payment (bank) or false for cash-only (wallet)", category: "Dynamic Economy - Traders")]
 	bool cardPayment;	
 	
-	[Attribute("-1", UIWidgets.Auto, desc: "Profit margin for this trader, leave as -1 to use system default", category: "Dynamic Economy")]
+	[Attribute("-1", UIWidgets.Auto, desc: "Profit margin for this trader, leave as -1 to use system default", category: "Dynamic Economy - Traders")]
 	float traderMargin;
 	
-	[Attribute("-1", UIWidgets.Auto, desc: "Supply cost for items w/o one set, leave as -1 to use system default, set to 0 to allow free items", category: "Dynamic Economy")]
+	[Attribute("-1", UIWidgets.Auto, desc: "Supply cost for items w/o one set, leave as -1 to use system default, set to 0 to allow free items", category: "Dynamic Economy - Traders")]
 	float fallbackSupplyCost;
 	
-	[Attribute(desc: "Sets Faction Key on underlying SCR_ArsenalComponent, if specified trader will only sell items from matching faction catalogs.", category: "Dynamic Economy")]
+	[Attribute(desc: "Sets Faction Key on underlying SCR_ArsenalComponent, if specified trader will only sell items from matching faction catalogs.", category: "Dynamic Economy - Item Traders")]
 	FactionKey factionKey;
 	
-	[Attribute(desc: "If set, defines what arsenal item types will be available from trader. Leave unset for all", uiwidget: UIWidgets.Flags, enums: ParamEnumArray.FromEnum(SCR_EArsenalItemType), category: "Dynamic Economy")]
+	[Attribute(desc: "If set, defines what arsenal item types will be available from trader. Leave unset for all", uiwidget: UIWidgets.Flags, enums: ParamEnumArray.FromEnum(SCR_EArsenalItemType), category: "Dynamic Economy - Item Traders")]
 	SCR_EArsenalItemType types;
 
-	[Attribute(desc: "If set, defines what arsenal item modes will be available from trader. Leave unset for all", uiwidget: UIWidgets.Flags, enums: ParamEnumArray.FromEnum(SCR_EArsenalItemMode), category: "Dynamic Economy")]
+	[Attribute(desc: "If set, defines what arsenal item modes will be available from trader. Leave unset for all", uiwidget: UIWidgets.Flags, enums: ParamEnumArray.FromEnum(SCR_EArsenalItemMode), category: "Dynamic Economy - Item Traders")]
 	SCR_EArsenalItemMode modes;
 	
-	[Attribute(desc: "Optional whitelist of ResourceNames to filter items by for e.g. unique traders that only sell specific items like a Safe Zone trader", uiwidget: UIWidgets.ResourcePickerThumbnail, params: "et", category: "Dynamic Economy")]
+	[Attribute(desc: "Optional whitelist of ResourceNames to filter items by for e.g. unique traders that only sell specific items like a Safe Zone trader", uiwidget: UIWidgets.ResourcePickerThumbnail, params: "et", category: "Dynamic Economy - Item Traders")]
 	ref array<ResourceName> itemWhitelist;
 	
-	[Attribute(desc: "**NOTE**: Currenly not very useful for filtering arsenal items, but will be useful for filtering editable entities e.g. vehicles or AI characters\n\nIf set, defines what editable entity labels will be available from trader. Leave unset for all", uiwidget: UIWidgets.ComboBox, enums: ParamEnumArray.FromEnum(EEditableEntityLabel), category: "Dynamic Economy")]
+	[Attribute(desc: "If set, defines what editable entity labels will be available in trader. Leave unset for all", uiwidget: UIWidgets.ComboBox, enums: ParamEnumArray.FromEnum(EEditableEntityLabel), category: "Dynamic Economy - Vehicle Traders")]
 	ref array<EEditableEntityLabel> labels;
+	
+	[Attribute(desc: "If set, defines what editable entity labels will be prohibited to appear in trader. Leave unset for all", uiwidget: UIWidgets.ComboBox, enums: ParamEnumArray.FromEnum(EEditableEntityLabel), category: "Dynamic Economy - Vehicle Traders")]
+	ref array<EEditableEntityLabel> labelsBlacklist;
+	
+	[Attribute(desc: "If set, defines what editable entity traits (labels) will be required to appear in trader. Leave unset for all vehicle types", uiwidget: UIWidgets.ComboBox, enums: ParamEnumArray.FromEnum(EEditableEntityLabel), category: "Dynamic Economy - Vehicle Traders")]
+	ref array<EEditableEntityLabel> traits;	
+	
+	[Attribute(desc: "If set, defines what editable entity traits (labels) will be prohibited to appear in trader", uiwidget: UIWidgets.ComboBox, enums: ParamEnumArray.FromEnum(EEditableEntityLabel), category: "Dynamic Economy - Vehicle Traders")]
+	ref array<EEditableEntityLabel> traitsBlacklist;
 	
 	// holds reference to trader entity created by system
 	DE_TraderEntity trader;

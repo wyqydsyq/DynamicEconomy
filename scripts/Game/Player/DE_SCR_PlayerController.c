@@ -56,7 +56,6 @@ modded class SCR_PlayerController : PlayerController
 	[RplRpc(RplChannel.Reliable, RplRcver.Owner)]
 	void HandleRepChange(RplId traderRplId, float amount)
 	{
-		PrintFormat("DE: Set trader rep %1 = %2", traderRplId, amount);
 		DE_EconomySystem.GetInstance().localRepMap.Set(traderRplId, amount);
 	}
 	

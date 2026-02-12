@@ -5,7 +5,7 @@ Vehicle {
    additionalActions {
     DE_TraderSellAction "{6892D3BF4EEEB561}" {
      ParentContextList {
-      "hood_repair"
+      "hood_front"
      }
      UIInfo SCR_ActionUIInfo "{6892D3BF48701FAF}" {
       Name "#AR-Supplies_Refund_Action_Object"
@@ -13,6 +13,7 @@ Vehicle {
      }
      Duration 1.5
      CanAggregate 1
+     "Sort Priority" 42
      "Inventory action" 1
      m_bLowerWeaponOnUse 1
      m_eShownInVehicleState NOT_IN_VEHICLE

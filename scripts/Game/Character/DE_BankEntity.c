@@ -18,8 +18,7 @@ class DE_BankEntity : GenericEntity
 	
 	override void EOnInit(IEntity owner)
 	{
-		DL_LootSystem sys = DL_LootSystem.GetInstance();
-		if (!sys || !owner.GetParent())
+		if (!owner || !owner.GetParent())
 			return;
 		
 		DE_BankComponent bankComp = DE_BankComponent.Cast(owner.GetParent().FindComponent(DE_BankComponent));
@@ -27,6 +26,7 @@ class DE_BankEntity : GenericEntity
 			return;
 		
 		bankerName = bankComp.bankerName;
+		owner.SetName("Banker-" + bankerName);
 		OnBankerNameChanged();
 		
 		SCR_ChimeraCharacter character = SCR_ChimeraCharacter.Cast(GetParent());
@@ -256,7 +256,6 @@ class DE_BankAmountAction : SCR_AdjustSignalAction
 				m_fTargetValue = SCR_GetMaximumValue();
 		}
 
-		//m_fTargetValue = Math.Round(m_fTargetValue / value) * value;
 		m_fTargetValue = Math.Clamp(m_fTargetValue, SCR_GetMinimumValue(), SCR_GetMaximumValue());
 
 		if (!float.AlmostEqual(m_fTargetValue, SCR_GetCurrentValue()))
@@ -295,11 +294,9 @@ class DE_DepositAllAction : SCR_ScriptedUserAction
 		if (!charResource)
 			return;
 		SCR_ResourceContainer charContainer = charResource.GetContainer(EResourceType.CASH);
-		PrintFormat("DE: DepositAll");
 		
 		SCR_PlayerController pc = SCR_PlayerController.Cast(GetGame().GetPlayerController());
 		pc.RequestDeposit(Replication.FindId(bank), pc.GetPlayerId(), charContainer.GetResourceValue());
-		//bank.RequestDeposit(GetGame().GetPlayerManager().GetPlayerIdFromControlledEntity(pUserEntity), charContainer.GetResourceValue());
 	}
 }
 
@@ -324,7 +321,6 @@ class DE_DepositAction : SCR_ScriptedUserAction
 		
 		SCR_PlayerController pc = SCR_PlayerController.Cast(GetGame().GetPlayerController());
 		pc.RequestDeposit(Replication.FindId(bank), pc.GetPlayerId(), bank.currentAmount);
-		//bank.DoDeposit(GetGame().GetPlayerManager().GetPlayerIdFromControlledEntity(pUserEntity), bank.currentAmount);
 	}
 }
 
@@ -349,6 +345,5 @@ class DE_WithdrawAction : SCR_ScriptedUserAction
 		
 		SCR_PlayerController pc = SCR_PlayerController.Cast(GetGame().GetPlayerController());
 		pc.RequestWithdraw(Replication.FindId(bank), pc.GetPlayerId(), bank.currentAmount);
-		//bank.DoWithdraw(GetGame().GetPlayerManager().GetPlayerIdFromControlledEntity(pUserEntity), bank.currentAmount);
 	}
 }
