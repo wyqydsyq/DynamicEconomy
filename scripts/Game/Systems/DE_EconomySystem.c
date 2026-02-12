@@ -163,7 +163,6 @@ class DE_EconomySystem : WorldSystem
 					targetBoneIdx = anim.GetBoneIndex("Neck1");
 				else
 					targetBoneIdx = anim.GetBoneIndex("Bone_Keypad"); // if not a character, assume ATM
-				}
 			}
 			
 			owner.AddChild(bankEnt, targetBoneIdx);
