@@ -1,0 +1,13 @@
+SCR_ChimeraCharacter : "{36A89DC362B4FC14}Prefabs/Characters/DE_Examples/DE_Trader_Vehicles.et" {
+ ID "520EC961A090B1EE"
+ components {
+  DE_VehicleTraderComponent "{68867AF14D4DB058}" {
+   traderName "Basic Vehicle Trader"
+   labels {
+    FACTION_FIA FACTION_CIV
+   }
+  }
+ }
+ coords 642.648 0.119 3503.003
+ angles 0 151.554 0
+}

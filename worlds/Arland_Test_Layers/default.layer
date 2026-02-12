@@ -37,6 +37,19 @@ GenericEntity : "{1BED8F81D2FA2137}PrefabsEditable/Auto/Compositions/Slotted/Slo
  coords 652.757 0.013 3504.4
  angles 0 -101.001 0
 }
+SCR_ChimeraCharacter : "{36A89DC362B4FC14}Prefabs/Characters/DE_Examples/DE_Trader_Vehicles.et" {
+ components {
+  DE_VehicleTraderComponent "{68867AF14D4DB058}" {
+   traderName "Basic Vehicle Trader"
+   labels {
+    FACTION_FIA
+    FACTION_CIV
+   }
+  }
+ }
+ coords 642.648 0.119 3503.003
+ angles 0 151.554 0
+}
 GenericEntity : "{5ACECF41C167567D}PrefabsEditable/Auto/Compositions/Slotted/SlotFlatSmall/E_VehicleMaintenance_S_Conflict_USSR_01.et" {
  coords 711.245 0.324 3529.687
  {

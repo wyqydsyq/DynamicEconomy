@@ -1,0 +1,34 @@
+SCR_ChimeraCharacter : "{E024A74F8A4BC644}Prefabs/Characters/Factions/CIV/Businessman/Character_CIV_Businessman_1.et" {
+ ID "520EC961A090B1EE"
+ components {
+  SCR_CharacterInventoryStorageComponent "{520EA1D2DB118DAC}" {
+   components {
+    SCR_HandSlotStorageComponent "{5EE8F81540A93631}" {
+     InitialStorageSlots {
+      SCR_HandSlotStorageSlot HandSlot {
+      }
+     }
+    }
+   }
+  }
+  DE_VehicleTraderComponent "{68867AF14D4DB058}" {
+   traderName "Vehicle Trader"
+  }
+  CharacterHandWeaponSlotComponent "{5C9CA35B6F6B604C}" {
+   AttachType InventoryStorageSlot a {
+   }
+  }
+  BaseLoadoutManagerComponent "{520EA1D2DB11821E}" {
+   Slots {
+    LoadoutSlotInfo Jacket {
+     Prefab "{D78000A3AAAC12AC}Prefabs/Characters/Uniforms/Shirt_CottonShirt_01/Shirt_CottonShirt_01_V6.et"
+    }
+    LoadoutSlotInfo Pants {
+     Prefab "{DC91A67E1074AAC0}Prefabs/Characters/Uniforms/Pants_Tanker_USSR_01/Pants_Tanker_USSR_01_tucked.et"
+    }
+   }
+  }
+ }
+ coords 646.141 0.154 3496.826
+ angles 0 -47.149 0
+}

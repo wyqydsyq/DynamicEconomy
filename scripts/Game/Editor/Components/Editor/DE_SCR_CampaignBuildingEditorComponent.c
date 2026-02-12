@@ -58,7 +58,13 @@ modded class SCR_CampaignBuildingEditorComponent : SCR_BaseEditorComponent
 			if (buildingFaction)
 				AddRemoveFactionLabel(SCR_Faction.Cast(buildingFaction), true);
 		}
-		// end custom fix
+		else
+		{
+			// copy trader labels to content browser manager
+			foreach (EEditableEntityLabel label : trader.labels)
+				m_ContentBrowserManager.AddRemoveLabelOfPersistentBrowserState(label, true);
+		}
+		// end custom
 
 		array<SCR_EditorContentBrowserSaveStateDataUI> contentBrowserStates = {};
 		int tabsCount = m_ContentBrowserManager.GetContentBrowserTabStates(contentBrowserStates);
