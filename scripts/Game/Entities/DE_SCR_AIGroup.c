@@ -6,6 +6,9 @@ modded class SCR_AIGroup : ChimeraAIGroup
 		float value = 0;
 		
 		DE_EconomySystem economySystem = DE_EconomySystem.GetInstance();
+		if (!DE_EconomySystem)
+			return true;
+		
 		SCR_ChimeraCharacter char = SCR_ChimeraCharacter.Cast(entity);
 		if (!char)
 			return true;

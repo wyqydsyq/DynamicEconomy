@@ -3,9 +3,6 @@ SCR_ChimeraCharacter : "{36A89DC362B4FC14}Prefabs/Characters/DE_Examples/DE_Trad
  components {
   DE_VehicleTraderComponent "{68867AF14D4DB058}" {
    traderName "Car Dealer"
-   labels {
-    FACTION_FIA FACTION_CIV
-   }
    traits {
     VEHICLE_CAR
    }

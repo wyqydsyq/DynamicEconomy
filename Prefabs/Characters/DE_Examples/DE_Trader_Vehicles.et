@@ -14,6 +14,9 @@ SCR_ChimeraCharacter : "{E024A74F8A4BC644}Prefabs/Characters/Factions/CIV/Busine
   DE_VehicleTraderComponent "{68867AF14D4DB058}" {
    traderName "Vehicle Trader"
   }
+  SCR_CharacterDamageManagerComponent "{55872AD7B4E959F2}" {
+   EnableDamage 0
+  }
   SCR_EditableCharacterComponent "{520EA1D2F659C85C}" {
    m_UIInfo SCR_EditableEntityUIInfo "{5298E609432D192D}" {
     Name "Vehicle Trader"

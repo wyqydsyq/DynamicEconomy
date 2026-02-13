@@ -77,11 +77,11 @@ class DE_TraderSellAction : SCR_ScriptedUserAction
 		
 		ref DE_TraderEntity nearestTrader;
 		vector vehicleOrigin = owner.GetOrigin();
-		float nearestTraderDistance = 50; // initial min check radius
+		float nearestTraderDistance = 25; // initial min check radius
 		
 		foreach (ref DE_TraderEntity foundTrader : economySystem.traders)
 		{
-			float traderDistance = vector.DistanceSq(vehicleOrigin, foundTrader.GetOrigin());
+			float traderDistance = vector.Distance(vehicleOrigin, foundTrader.GetOrigin());
 			if (traderDistance < nearestTraderDistance)
 			{
 				nearestTraderDistance = traderDistance;
@@ -130,6 +130,9 @@ class DE_TraderSellAction : SCR_ScriptedUserAction
 	override bool GetActionNameScript(out string outName)
 	{
 		FindTrader();
+		if (!trader)
+			return false;
+		
 		if (supplyCost > 0)
 		{
 			ActionNameParams[0] = trader.traderName;

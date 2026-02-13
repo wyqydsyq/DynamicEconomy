@@ -13,6 +13,7 @@ DE_VehicleTraderEntity {
    m_sProviderDisplayName "Vehicle Trader"
    m_bUserActionActivationOnly 1
    m_bAnyFactionCanUse 1
+   m_fBuildingRadius 25
    m_iRank RENEGADE
    m_aBudgetsToEvaluate {
     SCR_CampaignBuildingCooldownBudgetToEvaluateData "{6886CD6C2F89E194}" {

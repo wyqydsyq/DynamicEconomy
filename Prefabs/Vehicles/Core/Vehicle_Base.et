@@ -2,14 +2,28 @@ Vehicle {
  ID "BBCBA43A9778AE21"
  components {
   ActionsManagerComponent "{C97BE5489221AE18}" {
+   ActionContexts {
+    UserActionContext "{6898A9B2C3177A1C}" {
+     ContextName "sell"
+     Position PointInfo "{6898A9B2D5EC02B0}" {
+      Offset 0 0.5 0
+     }
+     Radius 3
+     Height 1
+    }
+   }
    additionalActions {
+    SCR_ResourceEntityRefundAction "{5D5EC6128E6342C0}" {
+    }
     DE_TraderSellAction "{6892D3BF4EEEB561}" {
      ParentContextList {
-      "hood_front"
+      "sell"
      }
      UIInfo SCR_ActionUIInfo "{6892D3BF48701FAF}" {
       Name "#AR-Supplies_Refund_Action_Object"
-      m_sIconName "warCrimeGeneric"
+      Icon "{04CC877B9D9EA4AD}UI/Textures/Editor/ContentBrowser/ContentBrowser_Theme_Commercial.edds"
+      m_sInteractionIcon "{04CC877B9D9EA4AD}UI/Textures/Editor/ContentBrowser/ContentBrowser_Theme_Commercial.edds"
+      m_sInteractionGlowIcon ""
      }
      Duration 1.5
      CanAggregate 1
