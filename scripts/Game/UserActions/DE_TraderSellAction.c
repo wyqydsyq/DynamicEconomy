@@ -66,7 +66,7 @@ class DE_TraderSellAction : SCR_ScriptedUserAction
 
 	DE_TraderEntity FindTrader()
 	{
-		if (!owner)
+		if (!owner || !economySystem)
 		{
 			owner = GetOwner();
 			if (!owner)
@@ -79,6 +79,9 @@ class DE_TraderSellAction : SCR_ScriptedUserAction
 		
 		foreach (ref DE_TraderEntity foundTrader : economySystem.traders)
 		{
+			if (!foundTrader)
+				continue;
+			
 			float traderDistance = vector.Distance(vehicleOrigin, foundTrader.GetOrigin());
 			if (traderDistance < nearestTraderDistance)
 			{
