@@ -58,6 +58,9 @@ class DE_TraderComponentSerializer : ScriptedComponentSerializer
 		const DE_TraderComponentPersistenceData data = new DE_TraderComponentPersistenceData();
 		
 		context.ReadValue("data", data);
+		if (!data)
+			return false;
+		
 		DE_TraderRepMap repMap = data.Zip();
 		foreach (UUID playerID, float playerRep : repMap)
 			traderComp.repMap.Insert(playerID, playerRep);

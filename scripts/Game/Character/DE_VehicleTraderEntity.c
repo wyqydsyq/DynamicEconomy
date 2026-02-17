@@ -63,6 +63,8 @@ class DE_VehicleTraderEntity : DE_TraderEntity
 		if (traderComp.itemWhitelist)
 			itemWhitelist = traderComp.itemWhitelist;
 		
+		RegisterTrader(owner);
+		
 		SCR_ChimeraCharacter character = SCR_ChimeraCharacter.Cast(GetParent());
 		if (!character)
 			return;
@@ -72,6 +74,17 @@ class DE_VehicleTraderEntity : DE_TraderEntity
 			return;
 		
 		characterControllerComponent.GetOnPlayerDeathWithParam().Insert(OnCharacterDeath);
+	}
+	
+	override void OnTraderNameChanged()
+	{
+		super.OnTraderNameChanged();
+		
+		SCR_CampaignBuildingProviderComponent provider = SCR_CampaignBuildingProviderComponent.Cast(FindComponent(SCR_CampaignBuildingProviderComponent));
+		if (!provider)
+			PrintFormat("DE: Unable to find building provider for %1!", this, level: LogLevel.WARNING);
+		
+		provider.SetDisplayName(traderName);
 	}
 }
 

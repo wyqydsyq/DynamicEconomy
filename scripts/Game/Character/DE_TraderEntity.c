@@ -32,7 +32,7 @@ class DE_TraderEntity : GenericEntity
 	[RplProp()]
 	ref array<EEditableEntityLabel> labelsBlacklist;
 	
-	[RplProp()]
+	[RplProp(onRplName: "OnTraderTraitsChanged")]
 	ref array<EEditableEntityLabel> traits;	
 	
 	[RplProp()]
@@ -140,6 +140,8 @@ class DE_TraderEntity : GenericEntity
 		if (traderComp.itemWhitelist)
 			itemWhitelist = traderComp.itemWhitelist;
 		
+		RegisterTrader(owner);
+		
 		SCR_ChimeraCharacter character = SCR_ChimeraCharacter.Cast(GetParent());
 		if (!character)
 			return;
@@ -151,6 +153,26 @@ class DE_TraderEntity : GenericEntity
 		characterControllerComponent.GetOnPlayerDeathWithParam().Insert(OnCharacterDeath);
 	}
 	
+	void RegisterTrader(IEntity owner)
+	{
+		economySystem = DE_EconomySystem.GetInstance();
+		if (!economySystem)
+		{
+			PrintFormat("DE: Unable to find DE_EconomySystem, trader cannot be registered!", level: LogLevel.ERROR);
+			return;
+		}
+		
+		DE_TraderComponent traderComp = DE_TraderComponent.Cast(owner.GetParent().FindComponent(DE_TraderComponent));
+		if (!traderComp)
+		{
+			PrintFormat("DE: Unable to find DE_TraderComponent for %1, trader cannot be registered!", this, level: LogLevel.ERROR);
+			return;
+		}
+		
+		traderComp.trader = this;
+		economySystem.traders.Insert(this);
+	}
+	
 	void OnCharacterDeath(SCR_CharacterControllerComponent characterControllerComponent, IEntity killerEntity, Instigator killer)
 	{
 		delete this;
@@ -158,6 +180,10 @@ class DE_TraderEntity : GenericEntity
 	
 	void OnTraderNameChanged()
 	{
+		// ensure trader is registered on local client system on first RPL
+		if (!Replication.IsServer() && economySystem && !economySystem.traders.Contains(this))
+			RegisterTrader(this);
+		
 		// set character name if trader is a character entity
 		SCR_ChimeraCharacter character = SCR_ChimeraCharacter.Cast(GetParent());
 		if (character)
@@ -167,6 +193,15 @@ class DE_TraderEntity : GenericEntity
 			identity.GetIdentity().SetSurname("");
 			identity.GetIdentity().SetAlias(traderName);
 		}
+	}	
+	
+	void OnTraderTraitsChanged()
+	{
+		SCR_CampaignBuildingProviderComponent provider = SCR_CampaignBuildingProviderComponent.Cast(FindComponent(SCR_CampaignBuildingProviderComponent));
+		if (!provider)
+			PrintFormat("DE: Unable to find building provider for %1!", this, level: LogLevel.WARNING);
+		
+		provider.SetAvailableTraits(traits);
 	}
 	
 	// get additional trader cash value multipliers

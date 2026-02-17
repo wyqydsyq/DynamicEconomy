@@ -166,8 +166,6 @@ class DE_EconomySystem : WorldSystem
 			}
 			
 			owner.AddChild(bankEnt, targetBoneIdx);
-			banks.Insert(bankEnt);
-			bankOwners.Insert(owner);
 		}
 		bankComponents.Clear();
 	
@@ -195,9 +193,6 @@ class DE_EconomySystem : WorldSystem
 				targetBoneIdx = anim.GetBoneIndex("Neck1");
 				
 			owner.AddChild(traderEnt, targetBoneIdx);
-			traders.Insert(traderEnt);
-			traderOwners.Insert(owner);
-			traderComp.trader = traderEnt;
 		}
 		traderComponents.Clear();
 	}

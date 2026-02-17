@@ -4,6 +4,8 @@ class DE_BankEntityClass : GenericEntityClass
 
 class DE_BankEntity : GenericEntity
 {
+	DE_EconomySystem economySystem;
+	
 	[RplProp(onRplName: "OnBankerNameChanged")]
 	string bankerName;
 	
@@ -18,7 +20,8 @@ class DE_BankEntity : GenericEntity
 	
 	override void EOnInit(IEntity owner)
 	{
-		if (!owner || !owner.GetParent())
+		economySystem = DE_EconomySystem.GetInstance();
+		if (!owner || !owner.GetParent() || !economySystem)
 			return;
 		
 		DE_BankComponent bankComp = DE_BankComponent.Cast(owner.GetParent().FindComponent(DE_BankComponent));
@@ -28,6 +31,9 @@ class DE_BankEntity : GenericEntity
 		bankerName = bankComp.bankerName;
 		owner.SetName("Banker-" + bankerName);
 		OnBankerNameChanged();
+		
+		economySystem.banks.Insert(this);
+		economySystem.bankOwners.Insert(owner.GetParent());
 		
 		SCR_ChimeraCharacter character = SCR_ChimeraCharacter.Cast(GetParent());
 		if (!character)

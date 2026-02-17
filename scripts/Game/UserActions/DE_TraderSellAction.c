@@ -50,20 +50,18 @@ class DE_TraderSellAction : SCR_ScriptedUserAction
 			foreach (SCR_EntityBudgetValue budget : budgets)
 			{
 				if (budget.GetBudgetType() == EEditableEntityBudget.CAMPAIGN)
-				{
-					supplyCost = budget.GetBudgetValue();
-					return;
-				}
+					supplyCost += budget.GetBudgetValue();
 			}
 		}
+		
+		if (supplyCost != -1)
+			return;
 		
 		SCR_EntityCatalogSpawnerData data = SCR_EntityCatalogSpawnerData.Cast(entry.GetEntityDataOfType(SCR_EntityCatalogSpawnerData));
 		if (!data)
 			return;
 		
 		supplyCost = data.GetSupplyCost();
-		
-		// @TODO get data from edidtable entity data if not found in spawner data
 	}
 
 	DE_TraderEntity FindTrader()
@@ -168,7 +166,7 @@ class DE_TraderSellAction : SCR_ScriptedUserAction
 	
 	override bool CanBeShownScript(IEntity user)
 	{
-		if (supplyCost <= 0 || !FindTrader())
+		if (!FindTrader())
 			return false;
 		
 		return super.CanBeShownScript(user);

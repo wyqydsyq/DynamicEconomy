@@ -110,11 +110,7 @@ modded class SCR_CampaignBuildingSupplyEditorUIComponent : SCR_BaseEditorUICompo
 	{
 		if (!trader)
 			return super.SetProviderName(targetEntity);
-		
-		SCR_CampaignBuildingProviderComponent providerComponent = SCR_CampaignBuildingProviderComponent.Cast(targetEntity.FindComponent(SCR_CampaignBuildingProviderComponent));
-		if (!providerComponent)
-			return;
 
-		m_ProviderCallsign.SetText(providerComponent.GetProviderDisplayName());
+		m_ProviderCallsign.SetText(trader.traderName);
 	}
 }
