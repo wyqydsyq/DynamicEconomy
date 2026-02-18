@@ -122,10 +122,10 @@ class DE_TraderSellAction : SCR_ScriptedUserAction
 		trader.GrantRep(playerUuid, supplyCost);
 		
 		pc.NotifyRepChange(Replication.FindId(trader), trader.GetRep(playerUuid));
-		pc.NotifyBankDataChange(Replication.FindId(trader), walletContainer.GetResourceValue());
+		pc.NotifyBankDataChange(Replication.FindId(pc.GetControlledEntity()), walletContainer.GetResourceValue());
 		pc.NotifyPlayerDataChange(cashGain);
 		
-		RplComponent.DeleteRplEntity(GetOwner(), false);
+		economySystem.callQueue.Call(RplComponent.DeleteRplEntity, GetOwner(), false);
 	}
 	
 	override bool GetActionNameScript(out string outName)
