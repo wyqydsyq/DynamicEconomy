@@ -17,14 +17,30 @@ modded class SCR_ArsenalComponent : ScriptComponent
 			return false;
 		
 		DL_LootSystem lootSystem = DL_LootSystem.GetInstance();
+		ref array<SCR_EntityCatalogEntry> filteredEntityList = {};
+		ref SCR_EntityCatalog catalog;
 		
-		SCR_EntityCatalog catalog;
-		if (trader.factionKey)
-			catalog = catalogManager.GetFactionEntityCatalogOfType(EEntityCatalogType.ITEM, trader.factionKey);
+		if (trader.factions && trader.factions.Count())
+		{
+			catalog = new SCR_EntityCatalog();
+			catalog.SetCatalogType(EEntityCatalogType.ITEM);
+			catalog.SetEntityList({});
+				
+			array<Faction> factions = {};
+			GetGame().GetFactionManager().GetFactionsList(factions);
+			foreach (Faction f : factions)
+			{
+				SCR_Faction fact = SCR_Faction.Cast(f);
+				if (!fact || !trader.factions.Contains(f.GetFactionKey()))
+					continue;
+				
+				SCR_EntityCatalog factionCatalog = fact.GetFactionEntityCatalogOfType(EEntityCatalogType.ITEM);
+				catalog.MergeEntityListRef(factionCatalog.GetEntityListRef(), EEntityCatalogType.ITEM, f.GetFactionKey(), false);
+			}
+		}
 		else
 			catalog = lootSystem.lootCatalog;
 		
-		array<SCR_EntityCatalogEntry> filteredEntityList = {};
 		catalog.GetFullFilteredEntityListWithLabels(filteredEntityList, trader.labels);
 		
 		foreach (SCR_EntityCatalogEntry entry : filteredEntityList)

@@ -3,7 +3,9 @@ SCR_ChimeraCharacter : "{E024A74F8A4BC644}Prefabs/Characters/Factions/CIV/Busine
  components {
   DE_TraderComponent "{66F68382BBCE97CA}" {
    traderName "US Weapon Dealer"
-   factionKey "US"
+   factions {
+    "US"
+   }
    types 393534
   }
   SCR_EditableCharacterComponent "{520EA1D2F659C85C}" {

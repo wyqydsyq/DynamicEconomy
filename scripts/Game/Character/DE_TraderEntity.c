@@ -26,7 +26,7 @@ class DE_TraderEntity : GenericEntity
 	[RplProp()]
 	SCR_EArsenalItemMode modes;
 	
-	[RplProp()]
+	[RplProp(onRplName: "OnTraderLabelsChanged")]
 	ref array<EEditableEntityLabel> labels;	
 	
 	[RplProp()]
@@ -39,7 +39,7 @@ class DE_TraderEntity : GenericEntity
 	ref array<EEditableEntityLabel> traitsBlacklist;
 	
 	[RplProp()]
-	FactionKey factionKey;
+	ref array<FactionKey> factions = {};
 	
 	[RplProp()]
 	ref array<ResourceName> itemWhitelist = {};
@@ -114,8 +114,8 @@ class DE_TraderEntity : GenericEntity
 		if (traderComp.traitsBlacklist && traderComp.traitsBlacklist.Count() > 0)
 			traitsBlacklist = traderComp.traitsBlacklist;
 		
-		if (traderComp.factionKey)
-			factionKey = traderComp.factionKey;
+		if (traderComp.factions)
+			factions = traderComp.factions;
 		
 		if (traderComp.traderMargin != -1)
 			traderMargin = traderComp.traderMargin;
@@ -202,6 +202,15 @@ class DE_TraderEntity : GenericEntity
 			PrintFormat("DE: Unable to find building provider for %1!", this, level: LogLevel.WARNING);
 		
 		provider.SetAvailableTraits(traits);
+	}	
+	
+	void OnTraderLabelsChanged()
+	{
+		SCR_CatalogEntitySpawnerComponent spawner = SCR_CatalogEntitySpawnerComponent.Cast(FindComponent(SCR_CatalogEntitySpawnerComponent));
+		if (!spawner)
+			PrintFormat("DE: Unable to find catalog spawner for %1!", this, level: LogLevel.WARNING);
+		
+		spawner.SetAllowedLabels(labels);
 	}
 	
 	// get additional trader cash value multipliers
@@ -269,7 +278,7 @@ class DE_TraderComponent : ScriptComponent
 	float fallbackSupplyCost;
 	
 	[Attribute(desc: "Sets Faction Key on underlying SCR_ArsenalComponent, if specified trader will only sell items from matching faction catalogs.", category: "Dynamic Economy - Item Traders")]
-	FactionKey factionKey;
+	ref array<FactionKey> factions;
 	
 	[Attribute(desc: "If set, defines what arsenal item types will be available from trader. Leave unset for all", uiwidget: UIWidgets.Flags, enums: ParamEnumArray.FromEnum(SCR_EArsenalItemType), category: "Dynamic Economy - Item Traders")]
 	SCR_EArsenalItemType types;

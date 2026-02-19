@@ -46,8 +46,8 @@ class DE_VehicleTraderEntity : DE_TraderEntity
 		if (traderComp.traitsBlacklist && traderComp.traitsBlacklist.Count() > 0)
 			traitsBlacklist = traderComp.traitsBlacklist;
 		
-		if (traderComp.factionKey)
-			factionKey = traderComp.factionKey;
+		if (traderComp.factions)
+			factions = traderComp.factions;
 		
 		if (traderComp.traderMargin != -1)
 			traderMargin = traderComp.traderMargin;

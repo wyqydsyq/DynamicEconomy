@@ -24,13 +24,13 @@ class DE_EconomySystem : WorldSystem
 	[Attribute("0.85", UIWidgets.Auto, desc: "Multiplier applied to cash value for Civ vehicles at vehicle traders, useful for boosting or lowering their cash value as a whole", category: "Dynamic Economy - Traders")]
 	float vehicleTraderCivCashValueMultiplier;	
 	
-	[Attribute("0.6", UIWidgets.Auto, desc: "Multiplier applied to rep value for Civ vehicles at vehicle traders, useful for boosting or lowering their rep value as a whole", category: "Dynamic Economy - Traders")]
+	[Attribute("0.25", UIWidgets.Auto, desc: "Multiplier applied to rep value for Civ vehicles at vehicle traders, useful for boosting or lowering their rep value as a whole", category: "Dynamic Economy - Traders")]
 	float vehicleTraderCivRepValueMultiplier;
 	
 	[Attribute("5", UIWidgets.Auto, desc: "Multiplier applied to cash value for vehicle traders, useful for boosting or lowering their cash value as a whole", category: "Dynamic Economy - Traders")]
 	float vehicleTraderValueMultiplier;
 	
-	[Attribute("0.175", UIWidgets.Auto, desc: "Multiplier applied to rep cost for vehicle traders, useful for boosting or lowering their rep value as a whole", category: "Dynamic Economy - Traders")]
+	[Attribute("0.15", UIWidgets.Auto, desc: "Multiplier applied to rep cost for vehicle traders, useful for boosting or lowering their rep value as a whole", category: "Dynamic Economy - Traders")]
 	float vehicleTraderRepValueMultiplier;
 	
 	[Attribute("0.25", UIWidgets.Auto, desc: "Default supply cost for items w/o one set, set to 0 to allow free items", category: "Dynamic Economy - Traders")]
