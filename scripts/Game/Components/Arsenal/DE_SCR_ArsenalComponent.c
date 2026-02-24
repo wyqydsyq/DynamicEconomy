@@ -55,7 +55,7 @@ modded class SCR_ArsenalComponent : ScriptComponent
 			if (traderData && traderData.secret && repRequirement != -1)	
 			{
 				// get player rep for this trader and check it meets requirement
-				float playerRep = trader.repMap.Get(SCR_PlayerIdentityUtils.GetPlayerIdentityId(SCR_PlayerController.GetLocalPlayerId()));
+				float playerRep = trader.GetLocalPlayerRep();
 				if (!playerRep || playerRep < repRequirement)
 					continue;
 			}

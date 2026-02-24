@@ -12,7 +12,7 @@ class DE_EconomySystem : WorldSystem
 	[Attribute("0.3", UIWidgets.Auto, desc: "Default profit margin for traders, can be overridden on specific DE_TraderComponent", category: "Dynamic Economy - Traders")]
 	float traderMargin;
 	
-	[Attribute("0.005", UIWidgets.Auto, desc: "Fraction of trader margin that gets added to rep gain, 1 = gain as much rep as trader gains in profit (in supply)", category: "Dynamic Economy - Traders")]
+	[Attribute("0.025", UIWidgets.Auto, desc: "Fraction of trader margin that gets added to rep gain, 1 = gain as much rep as trader gains in profit (in supply)", category: "Dynamic Economy - Traders")]
 	float traderRepMultiplier;
 	
 	[Attribute("1.5", UIWidgets.Auto, desc: "Multiplier applied to cash value for armor (APCs, Tanks) at vehicle traders, useful for boosting or lowering their cash value as a whole", category: "Dynamic Economy - Traders")]

@@ -103,7 +103,7 @@ modded class SCR_CampaignBuildingSupplyEditorUIComponent : SCR_BaseEditorUICompo
 			bankWidget.SetText("$" + FormatFloat(bankConsumer.GetAggregatedResourceValue()));
 		
 		if (repWidget)
-			repWidget.SetText(DE_EconomySystem.GetInstance().localRepMap.Get(Replication.FindId(trader)).ToString());
+			repWidget.SetText(trader.GetLocalPlayerRep().ToString());
 	}
 	
 	override protected void SetProviderName(IEntity targetEntity)

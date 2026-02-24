@@ -24,7 +24,7 @@ class DE_TraderComponentPersistenceData {
 		foreach (int idx, UUID playerID : playerIDs)
 		{
 			float playerRep = repValues[idx];
-			result.Insert(playerID, playerRep);
+			result.Set(playerID, playerRep);
 		}
 		
 		return result;
@@ -63,7 +63,7 @@ class DE_TraderComponentSerializer : ScriptedComponentSerializer
 		
 		DE_TraderRepMap repMap = data.Zip();
 		foreach (UUID playerID, float playerRep : repMap)
-			traderComp.repMap.Insert(playerID, playerRep);
+			traderComp.repMap.Set(playerID, playerRep);
 		
 		return true;
 	}

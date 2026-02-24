@@ -31,19 +31,19 @@ class DE_DynamicEconomyComponent : SCR_BaseGameModeComponent
 			return;
 		
 		economySystem = DE_EconomySystem.GetInstance();
-		economySystem.callQueue.CallLater(UpdatePlayerData, 1000, param1: pc.GetPlayerId(), param2: 0);
+		economySystem.callQueue.CallLater(UpdatePlayerData, 3000, param1: pc.GetPlayerId(), param2: 0);
 	}
 	
 	override void OnPlayerAuditSuccess(int playerId)
 	{
 		economySystem = DE_EconomySystem.GetInstance();
-		economySystem.callQueue.CallLater(UpdatePlayerData, 1000, param1: playerId, param2: 0);
+		economySystem.callQueue.CallLater(UpdatePlayerData, 3000, param1: playerId, param2: 0);
 	}
 	
 	override void OnPlayerConnected(int playerId)
 	{
 		economySystem = DE_EconomySystem.GetInstance();
-		economySystem.callQueue.CallLater(UpdatePlayerData, 1000, param1: playerId, param2: 0);
+		economySystem.callQueue.CallLater(UpdatePlayerData, 3000, param1: playerId, param2: 0);
 	}
 	
 	// notifies existing player their bank data has changed from prefab defaults
@@ -53,9 +53,20 @@ class DE_DynamicEconomyComponent : SCR_BaseGameModeComponent
 		if (!pc)
 			return;
 		
+		// sync player's rep from each trader
+		UUID playerUuid = SCR_PlayerIdentityUtils.GetPlayerIdentityId(playerId);
+		foreach (DE_TraderEntity trader : economySystem.traders)
+		{
+			float rep = trader.GetRep(playerUuid);
+			if (rep)
+				pc.NotifyRepChange(Replication.FindId(trader), rep);
+		}
+		
 		// bank account lives on PC
 		SCR_ResourceComponent playerResource = SCR_ResourceComponent.Cast(pc.FindComponent(SCR_ResourceComponent));
 		SCR_ResourceContainer playerContainer = playerResource.GetContainer(EResourceType.CASH);
+		
+		pc.NotifyBankDataChange(Replication.FindId(pc), playerContainer.GetResourceValue());
 		
 		// wallet lives on SCR_ChimeraCharacter
 		SCR_ChimeraCharacter char = SCR_ChimeraCharacter.Cast(pc.GetControlledEntity());
@@ -63,27 +74,16 @@ class DE_DynamicEconomyComponent : SCR_BaseGameModeComponent
 		// char not spawned/posessed yet, try again after 1sec up to 10 times
 		if (!char || !char.FindComponent(SCR_ResourceComponent))
 		{
-			if (attempts < 10)
-				return economySystem.callQueue.CallLater(UpdatePlayerData, 1000, param1: playerId, param2: attempts + 1);
-			else
+			//if (attempts < 10)
+			//	return economySystem.callQueue.CallLater(UpdatePlayerData, 1000, param1: playerId, param2: attempts + 1);
+			//else
 				return;
 		}
 		
 		SCR_ResourceComponent charResource = SCR_ResourceComponent.Cast(char.FindComponent(SCR_ResourceComponent));
 		SCR_ResourceContainer charContainer = charResource.GetContainer(EResourceType.CASH);
 
-		pc.NotifyBankDataChange(Replication.FindId(pc), playerContainer.GetResourceValue());
 		pc.NotifyBankDataChange(Replication.FindId(char), charContainer.GetResourceValue());
-		
-		UUID playerUuid = SCR_PlayerIdentityUtils.GetPlayerIdentityId(playerId);
-		
-		// sync player's rep from each trader
-		foreach (DE_TraderEntity trader : economySystem.traders)
-		{
-			float rep = trader.GetRep(playerUuid);
-			if (rep)
-				pc.NotifyRepChange(Replication.FindId(trader), rep);
-		}
 	}
 	
 	override void OnControllableDestroyed(notnull SCR_InstigatorContextData instigatorContextData)

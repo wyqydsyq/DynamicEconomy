@@ -28,12 +28,14 @@ modded class SCR_PlayerController : PlayerController
 	
 	void NotifyBankDataChange(RplId containerId, float amount)
 	{
+		//PrintFormat("DE: NotifyBankDataChange(%1, %2)", containerId, amount);
 		Rpc(HandleBankDataChange, containerId, amount);
 	}
 	
 	[RplRpc(RplChannel.Reliable, RplRcver.Owner)]
 	void HandleBankDataChange(RplId containerId, float amount)
 	{
+		//PrintFormat("DE: HandleBankDataChange(%1, %2)", containerId, amount);
 		// either player controller or character depending on bank or wallet
 		IEntity containerOwner = IEntity.Cast(Replication.FindItem(containerId));
 		if (!containerOwner) // wait for owner entity to be replicated (sometimes character takes a few frames)
@@ -41,7 +43,7 @@ modded class SCR_PlayerController : PlayerController
 		
 		SCR_ResourceComponent resource = SCR_ResourceComponent.Cast(containerOwner.FindComponent(SCR_ResourceComponent));
 		if (!resource)
-			return;
+			return DE_EconomySystem.GetInstance().callQueue.CallLater(HandleBankDataChange, 1000, param1: containerId, param2: amount);
 		
 		SCR_ResourceContainer container = resource.GetContainer(EResourceType.CASH);
 		container.SetResourceValue(amount);
@@ -50,13 +52,16 @@ modded class SCR_PlayerController : PlayerController
 	
 	void NotifyRepChange(RplId traderRplId, float amount)
 	{
+		//PrintFormat("DE: NotifyRepChange(%1, %2)", traderRplId, amount);
 		Rpc(HandleRepChange, traderRplId, amount);
 	}
 	
 	[RplRpc(RplChannel.Reliable, RplRcver.Owner)]
 	void HandleRepChange(RplId traderRplId, float amount)
 	{
+		//PrintFormat("DE: HandleRepChange(%1, %2)", traderRplId, amount);
 		DE_EconomySystem.GetInstance().localRepMap.Set(traderRplId, amount);
+		HandlePlayerDataChange(0);
 	}
 	
 	void RequestDeposit(RplId bankId, int playerId, float amount)

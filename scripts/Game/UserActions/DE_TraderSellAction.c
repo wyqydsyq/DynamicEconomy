@@ -35,6 +35,9 @@ class DE_TraderSellAction : SCR_ScriptedUserAction
 	
 	void GetSupplyCost()
 	{
+		if (!owner)
+			return;
+		
 		// find prefab in DL's merged entity catalog that contains all factions vehicles
 		ResourceName prefabName = owner.GetPrefabData().GetPrefabName();
 		SCR_EntityCatalogEntry entry = lootSystem.vehicleCatalog.GetEntryWithPrefab(prefabName);

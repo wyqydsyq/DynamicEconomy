@@ -49,6 +49,7 @@ class DE_TraderEntity : GenericEntity
 	ref DE_TraderRepMap repMap = new DE_TraderRepMap();
 	float GetRep(UUID playerUuid)
 	{
+		playerUuid.ToLower();
 		float rep = 0;
 		if (playerUuid && repMap.Contains(playerUuid))
 			rep = repMap.Get(playerUuid);
@@ -59,6 +60,7 @@ class DE_TraderEntity : GenericEntity
 	// grant player rep based on transaction supply value
 	float GrantRep(UUID playerUuid, float supplyValue)
 	{
+		playerUuid.ToLower();
 		if (!repMap.Contains(playerUuid))
 			repMap.Insert(playerUuid, 0);
 		
