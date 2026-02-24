@@ -185,7 +185,7 @@ class DE_BankAmountAction : SCR_AdjustSignalAction
 	{
 		input.ActivateContext("BankContext");
 		bank.currentAmount = m_fTargetValue;
-		outName = string.Format("Amount: $%1", FormatFloat(bank.currentAmount, 0));
+		outName = string.Format("Amount: $%1", FormatFloat(bank.currentAmount, 2, true));
 		return true;
 	}
 	
@@ -285,7 +285,7 @@ class DE_DepositAllAction : SCR_ScriptedUserAction
 		
 		SCR_ResourceContainer charContainer = charResource.GetContainer(EResourceType.CASH);
 		
-		outName = string.Format("Deposit All ($%1)", FormatFloat(charContainer.GetResourceValue(), 0));
+		outName = string.Format("Deposit All ($%1)", FormatFloat(charContainer.GetResourceValue(), 2, true));
 		return true;
 	}
 	
