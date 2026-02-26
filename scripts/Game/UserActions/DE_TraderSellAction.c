@@ -167,7 +167,11 @@ class DE_TraderSellAction : SCR_ScriptedUserAction
 			return false;
 		}
 		
-		return true;
+		if (supplyCost > 0)
+			return true;
+		
+		m_sCannotPerformReason = string.Format("%1 is not interested in buying this", trader.traderName);
+		return false;
 	}
 	
 	override bool CanBeShownScript(IEntity user)
