@@ -108,10 +108,10 @@ modded class SCR_ResourcePlayerControllerInventoryComponent : ScriptComponent
 		IEntity fundsHolder = char;
 		
 		// if player can't afford from default funds consumer (wallet)
-		if (charConsumer.GetAggregatedResourceValue() < cashCost)
+		if (charConsumer.GetComponent().GetContainer(EResourceType.CASH).GetResourceValue() < cashCost)
 		{
 			// set fund consumer to bank account if trader allows card payment and player can afford
-			if (trader.cardPayment && playerConsumer.GetAggregatedResourceValue() >= cashCost)
+			if (trader.cardPayment && playerConsumer.GetComponent().GetContainer(EResourceType.CASH).GetResourceValue() >= cashCost)
 				fundsHolder = pc;
 			else
 			{
@@ -133,7 +133,7 @@ modded class SCR_ResourcePlayerControllerInventoryComponent : ScriptComponent
 		
 		pc.NotifyRepChange(Replication.FindId(trader), trader.GetRep(playerUuid));
 		pc.NotifyBankDataChange(Replication.FindId(fundsHolder), fundsContainer.GetResourceValue());
-		pc.NotifyPlayerDataChange(-cashCost);
+		pc.NotifyPlayerTransaction(-cashCost);
 
 		if (inventoryManagerComponent.TrySpawnPrefabToStorage(resourceNameItem, storageComponent, cb: new SCR_PrefabSpawnCallback(storageComponent)) && s_OnArsenalItemRequested)
 			GetOnArsenalItemRequested().Invoke(resourceComponent, resourceNameItem, pc, storageComponent, resourceType, -cashCost);
@@ -216,7 +216,6 @@ modded class SCR_ResourcePlayerControllerInventoryComponent : ScriptComponent
 		if (resourceCost <= 0)
 			return;
 
-		SCR_ResourceConsumer consumer = resourceComponent.GetConsumer(EResourceGeneratorID.DEFAULT, EResourceType.CASH);
 		float cashCost = economySystem.SupplyToCashValue(resourceCost, -trader.traderMargin);
 		
 		if (!TryPerformResourceGeneration(generator, cashCost))
@@ -228,7 +227,7 @@ modded class SCR_ResourcePlayerControllerInventoryComponent : ScriptComponent
 		
 		pc.NotifyRepChange(Replication.FindId(trader), trader.GetRep(playerUuid));
 		pc.NotifyBankDataChange(Replication.FindId(generator.GetOwner()), generator.GetComponent().GetContainer(EResourceType.CASH).GetResourceValue());
-		pc.NotifyPlayerDataChange(cashCost);
+		pc.NotifyPlayerTransaction(cashCost);
 		
 		GetOnArsenalItemRefunded().Invoke(resourceComponent, resourceNameItem, GetOwner(), null, resourceType, cashCost);
 	}

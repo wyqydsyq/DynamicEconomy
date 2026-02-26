@@ -103,9 +103,9 @@ modded class SCR_CampaignBuildingProviderComponent : SCR_MilitaryBaseLogicCompon
 				SCR_ResourceConsumer walletConsumer;
 				economySystem.GetPlayerCashConsumers(SCR_PlayerController.GetLocalPlayerId(), bankConsumer, walletConsumer);
 
-				bool canAfford = cashIncrease <= walletConsumer.GetAggregatedResourceValue();
+				bool canAfford = cashIncrease <= walletConsumer.GetComponent().GetContainer(EResourceType.CASH).GetResourceValue();
 				if (!canAfford && trader.cardPayment)
-					canAfford = cashIncrease <= bankConsumer.GetAggregatedResourceValue();
+					canAfford = cashIncrease <= bankConsumer.GetComponent().GetContainer(EResourceType.CASH).GetResourceValue();
 				
 				if (!canAfford)
 					return false;

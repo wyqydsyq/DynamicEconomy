@@ -84,9 +84,9 @@ modded class SCR_CampaignBuildingBudgetEditorComponent : SCR_BudgetEditorCompone
 			economySystem.GetPlayerCashConsumers(SCR_PlayerController.GetLocalPlayerId(), bankConsumer, walletConsumer);
 			
 			if (!trader.cardPayment)
-				maxBudget = walletConsumer.GetAggregatedResourceValue() * economySystem.intPrecisionFactor;
+				maxBudget = walletConsumer.GetComponent().GetContainer(EResourceType.CASH).GetResourceValue() * economySystem.intPrecisionFactor;
 			else if (trader.cardPayment)
-				maxBudget = bankConsumer.GetAggregatedResourceValue() * economySystem.intPrecisionFactor;
+				maxBudget = bankConsumer.GetComponent().GetContainer(EResourceType.CASH).GetResourceValue() * economySystem.intPrecisionFactor;
 		}
 		if (type == EEditableEntityBudget.REP)
 		{

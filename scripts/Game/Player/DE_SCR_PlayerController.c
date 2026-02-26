@@ -1,12 +1,26 @@
 modded class SCR_PlayerController : PlayerController
 {
-	void NotifyPlayerDataChange(float resourceCost = 0)
+	void NotifyPlayerTransaction(float resourceCost = 0)
 	{
-		Rpc(HandlePlayerDataChange, resourceCost);
+		Rpc(HandlePlayerTransaction, resourceCost);
 	}
 	
 	[RplRpc(RplChannel.Reliable, RplRcver.Owner)]
-	void HandlePlayerDataChange(float itemCost)
+	void HandlePlayerTransaction(float itemCost)
+	{
+		if (itemCost > 0)
+			SCR_NotificationsComponent.SendLocal(DE_EconomySystem.GetInstance().sellNotification, Math.AbsFloat(itemCost) * 100);
+		else if (itemCost < 0)
+			SCR_NotificationsComponent.SendLocal(DE_EconomySystem.GetInstance().buyNotification, Math.AbsFloat(itemCost) * 100);
+	}
+	
+	void NotifyPlayerDataChange()
+	{
+		Rpc(HandlePlayerDataChange);
+	}
+	
+	[RplRpc(RplChannel.Reliable, RplRcver.Owner)]
+	void HandlePlayerDataChange()
 	{
 		SCR_InventoryMenuUI menu = SCR_InventoryMenuUI.GetInventoryMenu();
 		if (menu)
@@ -19,11 +33,6 @@ modded class SCR_PlayerController : PlayerController
 		SCR_CampaignBuildingEditorComponent editorComp = SCR_CampaignBuildingEditorComponent.Cast(SCR_CampaignBuildingEditorComponent.GetInstance(SCR_CampaignBuildingEditorComponent));
 		if (editorComp)
 			editorComp.OnResourcesChanged();
-		
-		if (itemCost > 0)
-			SCR_NotificationsComponent.SendLocal(DE_EconomySystem.GetInstance().sellNotification, Math.AbsFloat(itemCost) * 100);
-		else if (itemCost < 0)
-			SCR_NotificationsComponent.SendLocal(DE_EconomySystem.GetInstance().buyNotification, Math.AbsFloat(itemCost) * 100);
 	}
 	
 	void NotifyBankDataChange(RplId containerId, float amount)
@@ -47,7 +56,7 @@ modded class SCR_PlayerController : PlayerController
 		
 		SCR_ResourceContainer container = resource.GetContainer(EResourceType.CASH);
 		container.SetResourceValue(amount);
-		HandlePlayerDataChange(0);
+		HandlePlayerDataChange();
 	}
 	
 	void NotifyRepChange(RplId traderRplId, float amount)
@@ -61,7 +70,7 @@ modded class SCR_PlayerController : PlayerController
 	{
 		//PrintFormat("DE: HandleRepChange(%1, %2)", traderRplId, amount);
 		DE_EconomySystem.GetInstance().localRepMap.Set(traderRplId, amount);
-		HandlePlayerDataChange(0);
+		HandlePlayerDataChange();
 	}
 	
 	void RequestDeposit(RplId bankId, int playerId, float amount)

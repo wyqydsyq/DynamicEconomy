@@ -97,10 +97,10 @@ modded class SCR_CampaignBuildingSupplyEditorUIComponent : SCR_BaseEditorUICompo
 			return;
 		
 		if (walletWidget)
-			walletWidget.SetText("$" + FormatFloat(walletConsumer.GetAggregatedResourceValue()));
+			walletWidget.SetText("$" + FormatFloat(walletConsumer.GetComponent().GetContainer(EResourceType.CASH).GetResourceValue()));
 
 		if (bankWidget)
-			bankWidget.SetText("$" + FormatFloat(bankConsumer.GetAggregatedResourceValue()));
+			bankWidget.SetText("$" + FormatFloat(bankConsumer.GetComponent().GetContainer(EResourceType.CASH).GetResourceValue()));
 		
 		if (repWidget)
 			repWidget.SetText(trader.GetLocalPlayerRep().ToString());

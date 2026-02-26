@@ -55,7 +55,7 @@ modded class SCR_CampaignBuildingPlacingEditorComponent : SCR_PlacingEditorCompo
 			
 			// select bank consumer if player cant afford wallet payment and trader accepts card
 			SCR_ResourceConsumer selectedConsumer = walletConsumer;
-			if (walletConsumer.GetAggregatedResourceValue() < cashCost && trader.cardPayment)
+			if (walletConsumer.GetComponent().GetContainer(EResourceType.CASH).GetResourceValue() < cashCost && trader.cardPayment)
 				selectedConsumer = bankConsumer;
 			
 			selectedConsumer.RequestConsumtion(cashCost);
@@ -67,7 +67,7 @@ modded class SCR_CampaignBuildingPlacingEditorComponent : SCR_PlacingEditorCompo
 			SCR_PlayerController pc = SCR_PlayerController.Cast(GetGame().GetPlayerManager().GetPlayerController(playerID));
 			pc.NotifyRepChange(Replication.FindId(trader), trader.GetRep(playerUuid));
 			pc.NotifyBankDataChange(Replication.FindId(generator.GetOwner()), generator.GetComponent().GetContainer(EResourceType.CASH).GetResourceValue());
-			pc.NotifyPlayerDataChange(-cashCost);
+			pc.NotifyPlayerTransaction(-cashCost);
 			break;
 		}
 	}
