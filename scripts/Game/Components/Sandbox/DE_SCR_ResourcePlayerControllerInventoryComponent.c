@@ -15,9 +15,9 @@ modded class SCR_ResourcePlayerControllerInventoryComponent : ScriptComponent
 	override bool TryPerformResourceConsumption(notnull SCR_ResourceActor actor, float resourceValue, bool ignoreOnEmptyBehavior = false)
 	{
 		DE_EconomySystem economySystem = DE_EconomySystem.GetInstance();
-		int changeValue = -resourceValue * economySystem.cashSupplyExchangeRate;
-		if (actor.GetComponent().GetContainer(EResourceType.CASH))
-			changeValue = resourceValue;
+		int changeValue = resourceValue * economySystem.cashSupplyExchangeRate;
+		//if (actor.GetComponent().GetContainer(EResourceType.CASH))
+		//	changeValue = resourceValue;
 		
 		bool result = super.TryPerformResourceConsumption(actor, resourceValue, ignoreOnEmptyBehavior);
 		if (result)
@@ -125,7 +125,7 @@ modded class SCR_ResourcePlayerControllerInventoryComponent : ScriptComponent
 		SCR_ResourceContainer fundsContainer = fundsResource.GetContainer(EResourceType.CASH);
 		
 		// consume funds from selected source
-		if (!TryPerformResourceConsumption(fundsConsumer, cashCost))
+		if (!fundsContainer.DecreaseResourceValue(cashCost))
 			return;
 		
 		UUID playerUuid = SCR_PlayerIdentityUtils.GetPlayerIdentityId(pc.GetPlayerId());
