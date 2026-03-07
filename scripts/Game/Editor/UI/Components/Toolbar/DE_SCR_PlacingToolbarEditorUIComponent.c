@@ -50,7 +50,7 @@ modded class SCR_PlacingToolbarEditorUIComponent : SCR_BaseToolbarEditorUICompon
 				if (trader && budgetValue.GetBudgetType() == EEditableEntityBudget.REP)
 					assetCard.UpdateRepCost(budgetValue);
 			
-				if (budgetValue.GetBudgetType() == m_eBudgetToShow)
+				if (!trader && budgetValue.GetBudgetType() == m_eBudgetToShow)
 					assetCard.UpdateBudgetCost(budgetValue);
 			}
 		

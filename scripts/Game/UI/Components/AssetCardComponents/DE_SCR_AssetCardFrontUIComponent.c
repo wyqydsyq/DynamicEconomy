@@ -6,14 +6,16 @@ modded class SCR_AssetCardFrontUIComponent : SCR_ScriptedWidgetComponent
 	ResourceName traderCostsPrefab = "{5BC579F07D64C156}UI/layouts/Menus/DE_TraderCompositionCost.layout";
 	HorizontalLayoutWidget traderCostsWidget;
 	DE_EconomySystem economySystem;
+	DE_TraderEntity trader;
 	
 	override void InitCard(int prefabID, SCR_UIInfo info, ResourceName prefab, SCR_UIInfo blockingBudgetInfo = null)
 	{
-		super.InitCard(prefabID, info, prefab, blockingBudgetInfo);
-		
 		SCR_EditorManagerCore editorCore = SCR_EditorManagerCore.Cast(SCR_EditorManagerCore.GetInstance(SCR_EditorManagerCore));
 		SCR_EditorManagerEntity editorManager = editorCore.GetEditorManager();
-		DE_TraderEntity trader = editorManager.trader;
+		trader = editorManager.trader;
+		
+		super.InitCard(prefabID, info, prefab, blockingBudgetInfo);
+		
 		if (!trader)
 			return;
 		
@@ -50,7 +52,6 @@ modded class SCR_AssetCardFrontUIComponent : SCR_ScriptedWidgetComponent
 			return;
 		
 		repCostContainer.SetVisible(true);
-		
 		TextWidget valueWidget = TextWidget.Cast(repCostContainer.FindAnyWidget("CostValue"));
 		valueWidget.SetText(FormatFloat(entityBudgetCost.GetBudgetValue() / economySystem.intPrecisionFactor));
 	}
@@ -65,8 +66,19 @@ modded class SCR_AssetCardFrontUIComponent : SCR_ScriptedWidgetComponent
 			return;
 		
 		cashCostContainer.SetVisible(true);
-		
 		TextWidget valueWidget = TextWidget.Cast(cashCostContainer.FindAnyWidget("CostValue"));
 		valueWidget.SetText(FormatFloat(entityBudgetCost.GetBudgetValue() / economySystem.intPrecisionFactor));
+	}
+	
+	override void UpdateBudgetCost(SCR_EntityBudgetValue entityBudgetCost = null)
+	{
+		if (!trader)
+			return super.UpdateBudgetCost(entityBudgetCost);
+		
+		m_BudgetCostLayout = m_wWidget.FindAnyWidget(m_sBudgetCostLayoutName);
+		if (!m_BudgetCostLayout)
+			return;
+		
+		m_BudgetCostLayout.SetVisible(true);
 	}
 }

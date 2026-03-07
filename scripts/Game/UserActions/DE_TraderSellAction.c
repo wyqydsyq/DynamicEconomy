@@ -41,30 +41,31 @@ class DE_TraderSellAction : SCR_ScriptedUserAction
 		// find prefab in DL's merged entity catalog that contains all factions vehicles
 		ResourceName prefabName = owner.GetPrefabData().GetPrefabName();
 		SCR_EntityCatalogEntry entry = lootSystem.vehicleCatalog.GetEntryWithPrefab(prefabName);
-		if (!entry)
-			return;
+		if (entry)
+		{
+			SCR_EntityCatalogSpawnerData data = SCR_EntityCatalogSpawnerData.Cast(entry.GetEntityDataOfType(SCR_EntityCatalogSpawnerData));
+			if (data)
+				supplyCost = data.GetSupplyCost();
+		}
 		
 		uiInfo = SCR_EditableEntityUIInfo.Cast(entry.GetEntityUiInfo());
 		if (uiInfo)
 		{
+			if (supplyCost == -1)
+				supplyCost = 0;
+			
 			array<ref SCR_EntityBudgetValue> budgets = {};
 			uiInfo.GetEntityAndChildrenBudgetCost(budgets);
 			
 			foreach (SCR_EntityBudgetValue budget : budgets)
 			{
-				if (budget.GetBudgetType() == EEditableEntityBudget.CAMPAIGN)
+				if (
+					budget.GetBudgetValue() > supplyCost
+					&& budget.GetBudgetType() == EEditableEntityBudget.CAMPAIGN
+				)
 					supplyCost += budget.GetBudgetValue();
 			}
 		}
-		
-		if (supplyCost != -1)
-			return;
-		
-		SCR_EntityCatalogSpawnerData data = SCR_EntityCatalogSpawnerData.Cast(entry.GetEntityDataOfType(SCR_EntityCatalogSpawnerData));
-		if (!data)
-			return;
-		
-		supplyCost = data.GetSupplyCost();
 	}
 
 	DE_TraderEntity FindTrader()

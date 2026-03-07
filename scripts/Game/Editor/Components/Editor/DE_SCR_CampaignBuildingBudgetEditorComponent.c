@@ -10,7 +10,11 @@ modded class SCR_CampaignBuildingBudgetEditorComponent : SCR_BudgetEditorCompone
 		super.EOnEditorActivate();
 		
 		SCR_CampaignBuildingProviderComponent providerComponent = m_CampaignBuildingComponent.GetProviderComponent();
-		trader = DE_TraderEntity.Cast(providerComponent.GetOwner());
+		if (providerComponent)
+			trader = DE_TraderEntity.Cast(providerComponent.GetOwner());
+		
+		if (!trader && m_ResourceComponent)
+			trader = DE_TraderEntity.Cast(m_ResourceComponent.GetOwner());
 	}
 	
 	void FilterAvailableBudgetsEntity(inout notnull array<ref SCR_EntityBudgetValue> budgetCosts, SCR_EditableEntityUIInfo entityUIInfo)
@@ -21,7 +25,7 @@ modded class SCR_CampaignBuildingBudgetEditorComponent : SCR_BudgetEditorCompone
 		
 		float repRequirement = 0;
 		float cashValueMult = 1;
-		int supplyBudgetValue = 0;
+		int supplyBudgetValue = -1;
 		for (int i = budgetCosts.Count() - 1; i >= 0; i--)
 		{
 			SCR_EntityBudgetValue budget = budgetCosts[i];
@@ -42,7 +46,7 @@ modded class SCR_CampaignBuildingBudgetEditorComponent : SCR_BudgetEditorCompone
 		}
 		
 		// inject cash and rep budgets for any item with supply budget
-		if (supplyBudgetValue)
+		if (supplyBudgetValue != -1)
 		{
 			DE_VehicleTraderEntity vehicleTrader = DE_VehicleTraderEntity.Cast(trader);
 			float traderMult = vehicleTrader.GetCashValueMult(entityUIInfo);
@@ -101,14 +105,35 @@ modded class SCR_CampaignBuildingBudgetEditorComponent : SCR_BudgetEditorCompone
 		if (!trader || !traderBudgets.Contains(type))
 			return super.GetMaxBudget(type, budget);
 		
-		budget.SetBudgetValue(1);
+		int maxBudget = 0;
+
+		DE_EconomySystem economySystem = DE_EconomySystem.GetInstance();
+		if (!economySystem)
+			return true;
+		
+		if (type == EEditableEntityBudget.CASH)
+		{
+			ref SCR_ResourceConsumer bankConsumer;
+			ref SCR_ResourceConsumer walletConsumer;
+			economySystem.GetPlayerCashConsumers(SCR_PlayerController.GetLocalPlayerId(), bankConsumer, walletConsumer);
+			
+			if (!trader.cardPayment)
+				maxBudget = walletConsumer.GetComponent().GetContainer(EResourceType.CASH).GetResourceValue() * economySystem.intPrecisionFactor;
+			else if (trader.cardPayment)
+				maxBudget = bankConsumer.GetComponent().GetContainer(EResourceType.CASH).GetResourceValue() * economySystem.intPrecisionFactor;
+		}
+		if (type == EEditableEntityBudget.REP)
+		{
+			maxBudget = trader.GetLocalPlayerRep() * economySystem.intPrecisionFactor;
+		}
+		budget.SetBudgetValue(maxBudget);
 		
 		return true;
 	}
 
 	override int GetCurrentBudgetValue(EEditableEntityBudget type)
 	{
-		if (!trader || !traderBudgets.Contains(type))
+		if (!trader)
 			return super.GetCurrentBudgetValue(type);
 		
 		return 0;

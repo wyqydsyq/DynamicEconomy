@@ -3,7 +3,7 @@ modded class SCR_InventoryStorageManagerComponent : ScriptedInventoryStorageMana
 	override protected void OnItemAdded(BaseInventoryStorageComponent storageOwner, IEntity item)
 	{
 		DE_CashComponent cashComp = DE_CashComponent.Cast(item.FindComponent(DE_CashComponent));
-		if (!Replication.IsServer() || !cashComp || cashComp.value <= 0 || !item)
+		if (!Replication.IsServer() || !cashComp || !item)
 			return super.OnItemAdded(storageOwner, item);
 		
 		DE_EconomySystem.GetInstance().callQueue.Call(MergeCashIntoWallet, cashComp, storageOwner, item);

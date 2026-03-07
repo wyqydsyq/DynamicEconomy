@@ -115,18 +115,9 @@ modded class SCR_CampaignBuildingProviderComponent : SCR_MilitaryBaseLogicCompon
 			
 			if (budgetType == EEditableEntityBudget.REP)
 			{
-				if (trader.GetLocalPlayerRep() < budget.GetBudgetValue())
-					return false;	
+				if (trader.GetLocalPlayerRep() * economySystem.intPrecisionFactor < budget.GetBudgetValue())
+					return false;
 			}
-			
-			const int maxBudgetValue = GetMaxBudgetValueFromMasterIfNeeded(budgetType);
-			if (maxBudgetValue == -1)
-				continue;
-
-			if (budgetIncrease + accumulatedBudgetChanges + currentBudgetValue > maxBudgetValue)
-				return false;
-			
-			realProvider.AccumulateBudgetChange(budgetType, budget.GetBudgetValue());
 		}
 		
 		return true;

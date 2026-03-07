@@ -8,7 +8,7 @@ GenericEntity : "{44B3AC23A45CE5BE}Prefabs/Props/DynamicEconomy/DE_ATM.et" {
     m_Image "{CC6534D582F20268}UI/Textures/EditorPreviews/Auto/Structures/Infrastructure/Landlines/PhoneBooth_E/E_PhoneBooth_E_01.edds"
     m_sFaction "CIV"
     m_aAuthoredLabels {
-     ENTITYTYPE_OBJECT FACTION_CIV
+     FACTION_CIV
     }
     m_aAutoLabels {
      ENTITYTYPE_OBJECT SIZE_S

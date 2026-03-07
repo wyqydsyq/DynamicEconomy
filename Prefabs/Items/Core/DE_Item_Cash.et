@@ -32,5 +32,19 @@ GenericEntity : "{C95E11C60810F432}Prefabs/Items/Core/Item_Base.et" {
   MeshObject "{670418B73536EE86}" {
    Object "{556A6D51AD68711D}Assets/Cash/Cash.xob"
   }
+  SCR_EditableEntityComponent "{68CA0C0D0E06342F}" {
+   m_EntityType ITEM
+   m_UIInfo SCR_EditableEntityUIInfo "{68CA0C0D16FB94EF}" {
+    Name "Cash Stack"
+    Icon "{04CC877B9D9EA4AD}UI/Textures/Editor/ContentBrowser/ContentBrowser_Theme_Commercial.edds"
+    m_Image "{F47ABA97642A7CC8}UI/Textures/EditorPreviews/Auto/Props/Commercial/E_CashierShop_01.edds"
+    m_sFaction "CIV"
+    m_aAuthoredLabels {
+     FACTION_CIV THEME_COMMERCIAL ENTITYTYPE_OBJECT
+    }
+   }
+   m_bAutoRegister ALWAYS
+   m_Flags PLACEABLE
+  }
  }
 }

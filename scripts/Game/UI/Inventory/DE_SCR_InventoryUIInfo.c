@@ -5,7 +5,7 @@ modded class SCR_InventoryUIInfo : UIInfo
 	{
 		DE_CashComponent cash = DE_CashComponent.Cast(item.GetOwner().FindComponent(DE_CashComponent));
 		if (cash)
-			return "$" + FormatFloat(cash.value);
+			return "$" + FormatFloat(cash.value, 2, true);
 		
 		return GetDescription();
 	}

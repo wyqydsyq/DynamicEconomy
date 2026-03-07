@@ -9,7 +9,9 @@ modded class SCR_InventoryStorageBaseUI : ScriptedWidgetComponent
 		if (!trader)
 			return super.GetAllItems(pItemsInStorage, pStorage);
 		
-		s_OnArsenalEnter.Clear();
+		if (s_OnArsenalEnter)
+			s_OnArsenalEnter.Clear();
+		
 		super.GetAllItems(pItemsInStorage, pStorage);
 	}
 };
