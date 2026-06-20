@@ -144,7 +144,7 @@ modded class SCR_CampaignBuildingProviderComponent : SCR_MilitaryBaseLogicCompon
 		return budgets.Count();
 	}
 	
-	override void RequestEnterBuildingMode(int playerID, bool userActionUsed)
+	override void RequestEnterBuildingMode(int playerID, bool userActionUsed, bool useAllAvailableProviders = false)
 	{
 		SCR_CampaignBuildingNetworkComponent networkComponent = GetNetworkManager();
 		if (!networkComponent)

@@ -8,7 +8,7 @@ modded class SCR_AssetCardFrontUIComponent : SCR_ScriptedWidgetComponent
 	DE_EconomySystem economySystem;
 	DE_TraderEntity trader;
 	
-	override void InitCard(int prefabID, SCR_UIInfo info, ResourceName prefab, SCR_UIInfo blockingBudgetInfo = null)
+	override void InitCard(int prefabID, SCR_UIInfo info, ResourceName prefab, SCR_UIInfo blockingBudgetInfo = null, SCR_ContentBrowserEditorComponent contentBrowser = null)
 	{
 		SCR_EditorManagerCore editorCore = SCR_EditorManagerCore.Cast(SCR_EditorManagerCore.GetInstance(SCR_EditorManagerCore));
 		SCR_EditorManagerEntity editorManager = editorCore.GetEditorManager();

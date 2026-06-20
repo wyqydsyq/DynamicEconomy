@@ -1,6 +1,6 @@
 modded class SCR_PlacingToolbarEditorUIComponent : SCR_BaseToolbarEditorUIComponent
 {
-	override protected Widget CreateItem(int index)
+	override protected Widget CreateItem(int index, Faction factionAffiliationOverride = null)
 	{
 		SCR_EditorManagerCore editorCore = SCR_EditorManagerCore.Cast(SCR_EditorManagerCore.GetInstance(SCR_EditorManagerCore));
 		SCR_EditorManagerEntity editorManager = editorCore.GetEditorManager();

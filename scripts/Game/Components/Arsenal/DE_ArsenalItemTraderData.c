@@ -14,20 +14,20 @@ class DE_ArsenalItemTraderData : SCR_BaseEntityCatalogData
 	
 	static float GetRepRequirement(SCR_EntityCatalogEntry entry)
 	{
-		float repRequirement;
+		float result;
 		DE_ArsenalItemTraderData data = DE_ArsenalItemTraderData.Cast(entry.GetEntityDataOfType(DE_ArsenalItemTraderData));
 		
 		if (data && data.repRequirement != -1)
-			repRequirement = data.repRequirement;
+			result = data.repRequirement;
 		else
 		{
 			RepSupplyCostRule foundRule = DE_EconomySystem.GetInstance().GetRepRequirement(entry);
 			if (!foundRule)
 				return -1;
 			
-			repRequirement = foundRule.repRequired;
+			result = foundRule.repRequired;
 		}
 		
-		return repRequirement;
+		return result;
 	}
 }

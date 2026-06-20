@@ -138,7 +138,7 @@ modded class SCR_InventoryMenuUI : ChimeraMenuBase
 			resourceMode = EResourceType.CASH;
 		
 		if (invManagerTo.CanInsertItemInStorage(slotEntity, storageTo))
-			resourceInventoryComponent.RpcAsk_ArsenalRequestItem(Replication.FindId(resourceComponent), Replication.FindId(invManagerTo),  Replication.FindId(storageTo), resourceName, resourceMode);
+			resourceInventoryComponent.RpcAsk_ArsenalRequestItem(Replication.FindId(resourceComponent), Replication.FindId(storageTo), resourceName, resourceMode);
 		
 		return true;
 	}
@@ -268,7 +268,7 @@ modded class SCR_InventoryMenuUI : ChimeraMenuBase
 			resourceMode = EResourceType.CASH;
 	
 		if (invManagerTo.CanInsertItemInStorage(arsenalInventorySlotUI.GetInventoryItemComponent().GetOwner(), storageTo))
-			resourceInventoryComponent.RpcAsk_ArsenalRequestItem(Replication.FindId(resourceComponent), Replication.FindId(invManagerTo),  Replication.FindId(storageTo), resourceName, resourceMode);
+			resourceInventoryComponent.RpcAsk_ArsenalRequestItem(Replication.FindId(resourceComponent), Replication.FindId(storageTo), resourceName, resourceMode);
 		else
 			operationFailed = true;
 		

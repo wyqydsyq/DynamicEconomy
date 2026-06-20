@@ -39,7 +39,7 @@ class DE_TraderComponentSerializer : ScriptedComponentSerializer
 	}
 
 	// find trader attached to component and serialize it's current rep list
-	override ESerializeResult Serialize(notnull IEntity owner, notnull GenericComponent component, notnull BaseSerializationSaveContext context)
+	override ESerializeResult Serialize(notnull IEntity owner, notnull GenericComponent component, notnull SaveContext context)
 	{
 		const DE_TraderComponent traderComp = DE_TraderComponent.Cast(component);
 		const DE_TraderEntity trader = DE_TraderEntity.Cast(traderComp.trader);
@@ -52,7 +52,7 @@ class DE_TraderComponentSerializer : ScriptedComponentSerializer
 	}
 
 	// apply saved rep list to component so it can be propagated to created trader entity
-	override protected bool Deserialize(notnull IEntity owner, notnull GenericComponent component, notnull BaseSerializationLoadContext context)
+	override protected bool Deserialize(notnull IEntity owner, notnull GenericComponent component, notnull LoadContext context)
 	{
 		const DE_TraderComponent traderComp = DE_TraderComponent.Cast(component);
 		const DE_TraderComponentPersistenceData data = new DE_TraderComponentPersistenceData();

@@ -10,7 +10,7 @@ class DE_EconomySystemSerializer : ScriptedStateSerializer
 		return DE_EconomySystemData;
 	}
 	
-	override ESerializeResult Serialize(notnull Managed instance, notnull BaseSerializationSaveContext context)
+	override ESerializeResult Serialize(notnull Managed instance, notnull SaveContext context)
 	{
 		DE_EconomySystem system = DE_EconomySystem.GetInstance();
 		DE_EconomySystemData data = DE_EconomySystemData.Cast(instance);
@@ -19,7 +19,7 @@ class DE_EconomySystemSerializer : ScriptedStateSerializer
 		return ESerializeResult.OK;
 	}
 	
-	override bool Deserialize(notnull Managed instance, notnull BaseSerializationLoadContext context)
+	override bool Deserialize(notnull Managed instance, notnull LoadContext context)
 	{
 		DE_EconomySystem system = DE_EconomySystem.GetInstance();
 		DE_EconomySystemData data = DE_EconomySystemData.Cast(instance);
