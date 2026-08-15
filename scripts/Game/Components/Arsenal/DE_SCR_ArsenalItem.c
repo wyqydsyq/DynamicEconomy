@@ -13,9 +13,9 @@ modded class SCR_ArsenalItem : SCR_BaseEntityCatalogData
 		// BI forgot to null check
 		if (m_aArsenalAlternativeCostData && !m_aArsenalAlternativeCostData.IsEmpty())
 		{
-			m_mArsenalAlternativeCostData = new map<SCR_EArsenalSupplyCostType, ref SCR_ArsenalAlternativeCostData>();
+			m_mArsenalAlternativeCostData = new map<SCR_EArsenalSupplyCostType, ref SCR_ArsenalAlternativeData>();
 		
-			foreach (SCR_ArsenalAlternativeCostData data : m_aArsenalAlternativeCostData)
+			foreach (SCR_ArsenalAlternativeData data : m_aArsenalAlternativeCostData)
 			{
 				//~ Ignore default as that is m_iSupplyCost defined in the arsenal item
 				if (data.m_eAlternativeCostType == SCR_EArsenalSupplyCostType.DEFAULT)

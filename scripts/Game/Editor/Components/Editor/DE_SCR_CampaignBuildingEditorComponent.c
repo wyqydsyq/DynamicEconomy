@@ -6,6 +6,9 @@ modded class SCR_CampaignBuildingEditorComponent : SCR_BaseEditorComponent
 		Event_OnResourcesChanged.Invoke();
 	}
 	
+	//---- REFACTOR NOTE START: Has a hot fix for content browser as for some reason it would show an empty entry. So we skip an entry from the catalog and simply hide it ----
+	//------------------------------------------------------------------------------------------------
+	//! Make the area around where is possible to build composition visible for player
 	override protected void EOnEditorActivate()
 	{
 		SCR_CampaignBuildingProviderComponent providerComponent = GetProviderComponent(true);
@@ -30,9 +33,6 @@ modded class SCR_CampaignBuildingEditorComponent : SCR_BaseEditorComponent
 				m_BuildingAreaTrigger.SetFlags(EntityFlags.VISIBLE, false);
 			}
 		}
-		
-		if (providerComponent.ObstrucViewWhenEnemyInRange())
-			SetOnEnterEvent();
 
 		m_ContentBrowserManager = SCR_ContentBrowserEditorComponent.Cast(SCR_ContentBrowserEditorComponent.GetInstance(SCR_ContentBrowserEditorComponent));
 
@@ -92,6 +92,11 @@ modded class SCR_CampaignBuildingEditorComponent : SCR_BaseEditorComponent
 
 		ToggleBuildingTool(false);
 
+		// if we were to call it immediately the editor wouldnt technically be opened yet hence we need to delay the call
+		// we also want to check periodically to look for if a new enemy has entered the range.
+		if (providerComponent.ObstrucViewWhenEnemyInRange())
+			GetGame().GetCallqueue().CallLater(TestForEnemies, TEST_DELAY, true);
+
 		SCR_CampaignBuildingProviderComponent nonMasterProviderComponent = GetProviderComponent(false);
 		if (!nonMasterProviderComponent)
 			return;
@@ -107,4 +112,5 @@ modded class SCR_CampaignBuildingEditorComponent : SCR_BaseEditorComponent
 			bases[0].GetOnMilitaryBaseUnregistered().Insert(OnMilitaryBaseRegistrationChanged);
 		}
 	}
+	//---- REFACTOR NOTE END ----
 }
