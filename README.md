@@ -22,6 +22,9 @@ See included `Arland_Test.ent` world or contents of `Prefabs/DE_Examples` for ex
  - For ATMs, simply add `DE_ATM.et` prefabs to your world / buildings
  - For Banker characters, add `DE_BankComponent` to desired banker character prefab
 
+### [Persistence](./Docs/Persistence.md)
+ - Works out of the box but requires using `GamemodeStorage` to work as expected, see [Persistence](./Docs/Persistence.md) for more details.
+
 ## How it works
 The primary trader and banker components (`DE_TraderComponent`, `DE_VehicleTraderComponent` and `DE_BankComponent`)
 add themselves to a queue in the economy system that is only processed server-side.
