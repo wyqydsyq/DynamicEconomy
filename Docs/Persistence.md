@@ -24,4 +24,5 @@ Uncheck platform mask under Bundles to make persistence save every entity to a s
 
 ### Save Context
 Setting the Main Database save/load context and bundler settings to JSON will make it save data to readable JSON files, helpful for debugging. If you combine this with disabled bundling above it will save a separate JSON file per player in the Player collection making it easy to check or edit player bank accounts.
+
 ![alt text](databases.png)
