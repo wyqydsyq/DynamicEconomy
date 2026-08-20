@@ -63,6 +63,19 @@ modded class SCR_ArsenalComponent : ScriptComponent
 			if (trader.itemWhitelist.Count() > 0 && !trader.itemWhitelist.Contains(item.GetItemResourceName()))
 				continue;
 			
+			bool blacklisted = false;
+			if (trader.resourceBlacklist.Count() > 0)
+				foreach (string blacklistEntry : trader.resourceBlacklist)
+					if (item.GetItemResourceName().GetPath().Contains(blacklistEntry))
+					{
+						//PrintFormat("DE: Blacklist filter match: %1 = %2", item.GetItemResourceName().GetPath(), blacklistEntry);
+						blacklisted = true;
+						break;
+					}
+			
+			if (blacklisted)
+				continue;
+
 			if (trader.types && !SCR_Enum.HasPartialFlag(item.GetItemType(), trader.types))
 				continue;
 			

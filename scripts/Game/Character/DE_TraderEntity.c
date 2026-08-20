@@ -44,6 +44,9 @@ class DE_TraderEntity : GenericEntity
 	[RplProp()]
 	ref array<ResourceName> itemWhitelist = {};
 	
+	[RplProp()]
+	ref array<string> resourceBlacklist = {};
+	
 	// map of player UUID -> rep value
 	// full map is only held on server, clients instead have their own reps for each trader replicated into economySystem.localRepMap
 	ref DE_TraderRepMap repMap = new DE_TraderRepMap();
@@ -141,6 +144,9 @@ class DE_TraderEntity : GenericEntity
 		
 		if (traderComp.itemWhitelist)
 			itemWhitelist = traderComp.itemWhitelist;
+		
+		if (traderComp.resourceBlacklist)
+			resourceBlacklist = traderComp.resourceBlacklist;
 		
 		RegisterTrader(owner);
 		
@@ -290,6 +296,9 @@ class DE_TraderComponent : ScriptComponent
 	
 	[Attribute(desc: "Optional whitelist of ResourceNames to filter items by for e.g. unique traders that only sell specific items like a Safe Zone trader", uiwidget: UIWidgets.ResourcePickerThumbnail, params: "et", category: "Dynamic Economy - Item Traders")]
 	ref array<ResourceName> itemWhitelist;
+	
+	[Attribute(desc: "ResourceName blacklist, partial matches will be excluded from trader even if whitelisted", category: "Dynamic Economy - Item Traders")]
+	ref array<string> resourceBlacklist;
 	
 	[Attribute(desc: "If set, defines what editable entity labels will be available in trader. Leave unset for all", uiwidget: UIWidgets.ComboBox, enums: ParamEnumArray.FromEnum(EEditableEntityLabel), category: "Dynamic Economy - Vehicle Traders")]
 	ref array<EEditableEntityLabel> labels;
