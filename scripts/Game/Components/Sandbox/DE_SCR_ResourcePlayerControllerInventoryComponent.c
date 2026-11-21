@@ -106,9 +106,6 @@ modded class SCR_ResourcePlayerControllerInventoryComponent : ScriptComponent
 		
 		float resourceCost = 0;
 		
-		if (!inventoryManagerComponent.ValidateStorageRequest(resourcesOwner))
-			return;
-		
 		SCR_Faction faction;
 		if (arsenalComponent)
 			faction = arsenalComponent.GetAssignedFaction();
